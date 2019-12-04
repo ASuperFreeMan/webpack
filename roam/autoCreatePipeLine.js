@@ -91,8 +91,8 @@ export class AutoCreatePipeLine {
                 self.pipelines = d.data
             },
             error: function () {
-                // alert("获取失败！")
-                console.log("line获取失败")
+                alert("获取失败！")
+                console.log("line数据获取失败")
             }
         })
     }
@@ -107,8 +107,8 @@ export class AutoCreatePipeLine {
                 self.wells = d.data
             },
             error: function () {
-                // alert("获取失败！")
-                console.log("well获取失败")
+                alert("获取失败！")
+                console.log("well数据获取失败")
 
             }
         })
