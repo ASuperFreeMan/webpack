@@ -23,6 +23,7 @@ export class AutoCreatePipeLine {
         this.pipeline_Iron//铸铁
         this.pipelines
         this.wells
+        this.pipeline_all = []
         this.urls = [
             "glb/pheonixRoad1116/0.glb",
             "glb/pheonixRoad1116/1.glb",
@@ -175,6 +176,7 @@ export class AutoCreatePipeLine {
         this.modelHide.activeClick = false;
         this.pick = this.bustard.use(new Bustard.Pick());
         this.pick.pick = function (node, point) {
+            console.log(node)
             self.showInformationBox.isPipeline(node);
         }
     }
@@ -284,6 +286,7 @@ export class AutoCreatePipeLine {
                 } else {
                     cloneModel.scale.set(long / 10, this.pipelines[i].diameter / 100, this.pipelines[i].diameter / 100);
                 }
+                this.pipeline_all.push(cloneModel)
                 this.bustard.core.getScene().add(cloneModel);
             }
 
@@ -298,6 +301,7 @@ export class AutoCreatePipeLine {
         this.modelHide.hideById("pipeline|plastic");
         this.modelHide.hideById("pipeline|concrete");
         this.bustard.core.render();
+        console.log(this.pipeline_all)
     }
 }
 
