@@ -31,9 +31,9 @@ export class TrajectoryFreeroam {
         // 相机最近经过的点
         this.curCoord;
         // 设置相机坐标Y轴
-        this.positionY = 3;
+        this.positionY = 5;
         // 设置焦点坐标Y轴
-        this.targetY = 2;
+        this.targetY = 4;
 
         // 设定相机与焦点之间的水平距离
         this.length = 20;
@@ -271,9 +271,9 @@ export class TrajectoryFreeroam {
 
     // 鼠标点击事件
     setClickMouseEvents() {
-        let range = 0.5;
+        let range = 1;
         // 前进一下的距离
-        let n = 1;
+        let n = 2;
         let timer;
 
         // 去除右击默认事件
@@ -476,9 +476,9 @@ export class TrajectoryFreeroam {
 
     // 键盘事件
     setKeyEvents() {
-        let range = 0.5;
+        let range = 1;
         // 前进一下的距离
-        let n = 1;
+        let n = 2;
 
         const self = this;
         document.addEventListener('keydown', this.keyDownEventFn = function (e) {
