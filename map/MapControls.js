@@ -43,11 +43,6 @@ export class MapControls {
         this.oldHighLineNameID;
 
         this.init();
-
-        // 取消拖动事件
-        // this.viewer.scene.screenSpaceCameraController.enableRotate = false;
-        // 取消滚轮事件
-        // this.viewer.scene.screenSpaceCameraController.enableZoom = false;
     }
 
     // 取消拖动
