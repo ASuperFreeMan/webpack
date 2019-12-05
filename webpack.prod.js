@@ -4,15 +4,15 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const config = {
   mode: 'production',
   entry: {
-    // map: ['./map/MapControls.js']
-    freeroam: ['./roam/trajectoryfreeroam.js']
+    map: ['./map/MapControls.js']
+    // freeroam: ['./roam/trajectoryfreeroam.js']
   },
   devtool: 'none',
   // 失败之后中断并抛出错误
   bail: true,
   output: {
-    // filename: 'MapControls.min.js',
-    filename: 'TrajectoryFreeroam.min.js',
+    filename: 'MapControls.min.js',
+    // filename: 'TrajectoryFreeroam.min.js',
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'this'
   },
