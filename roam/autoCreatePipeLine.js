@@ -1,9 +1,8 @@
 import { ShowInformationBox } from './showInformationBox';
 
 export class AutoCreatePipeLine {
-    constructor(container) {
+    constructor(container, urls, urls2, dracoLibUrl) {
         this.container = container;
-
         this.bustard;
         this.loader;
         this.sprite;
@@ -13,6 +12,7 @@ export class AutoCreatePipeLine {
         this.pick;
         this.well;
         this.roam;
+        this.light;
         this.pipeline_PE
         this.pipeline_PVC
         this.pipeline_Plastic //塑料
@@ -23,59 +23,16 @@ export class AutoCreatePipeLine {
         this.pipeline_Iron//铸铁
         this.pipelines
         this.wells
-        this.urls = [
-            "glb/pheonixRoad1116/0.glb",
-            "glb/pheonixRoad1116/1.glb",
-            "glb/pheonixRoad1116/2.glb",
-            "glb/pheonixRoad1116/3.glb",
-            "glb/pheonixRoad1116/4.glb",
-            "glb/pheonixRoad1116/5.glb",
-            "glb/pheonixRoad1116/6.glb",
-            "glb/pheonixRoad1116/7.glb",
-            "glb/pheonixRoad1116/8.glb",
-            "glb/pheonixRoad1116/9.glb",
-            "glb/pheonixRoad1116/10.glb",
-            "glb/pheonixRoad1116/11.glb",
-            "glb/pheonixRoad1116/12.glb",
-            "glb/pheonixRoad1116/13.glb",
-            "glb/pheonixRoad1116/14.glb",
-            "glb/pheonixRoad1116/15.glb",
-            "glb/pheonixRoad1116/16.glb"
-        ]
-        this.urls2 = [
-            "glb/floor/CD.glb",
-            "glb/floor/L1.glb",
-            "glb/floor/L2.glb",
-            "glb/floor/L3.glb",
-            "glb/floor/L4.glb",
-            "glb/floor/L5.glb",
-            "glb/floor/L6.glb",
-            "glb/floor/L7.glb",
-            "glb/floor/L8.glb",
-            "glb/floor/L9.glb",
-            "glb/floor/L10.glb",
-            "glb/floor/L11.glb",
-            "glb/floor/L12.glb",
-            "glb/floor/L13.glb",
-            "glb/floor/L14.glb",
-            "glb/floor/L15.glb",
-            "glb/floor/L16.glb",
-            "glb/floor/L17.glb",
-            "glb/floor/L18.glb",
-            "glb/floor/R1.glb",
-            "glb/floor/R2.glb",
-            "glb/floor/R3.glb",
-            "glb/floor/R4.glb",
-            "glb/floor/R5.glb",
-            "glb/floor/R6.glb",
-            "glb/floor/R7.glb",
-            "glb/floor/R8.glb",
-            "glb/floor/R9.glb",
-            "glb/floor/R10.glb",
-            "glb/floor/glassCity1129.glb",
-        ]
-
+        this.pipeline_all = []
+        this.urls = urls
+        this.urls2 = urls2
+        this.dracoLibUrl = dracoLibUrl
         this.showInformationBox = new ShowInformationBox();
+
+        this.camera = {
+            position: { x: -1692.6964275679534, y: 30, z: 117.58047372102737 },
+            target: { x: -1699.8554164102306, y: 20, z: 160.251678000217 }
+        };
 
         this.init();
     }
@@ -88,34 +45,30 @@ export class AutoCreatePipeLine {
             type: "GET",
             success: function (d) {
                 self.pipelines = d.data
+
+                $.ajax({
+                    url: "http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
+                    // url:"http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
+                    type: "GET",
+                    success: function (d) {
+                        self.wells = d.data
+                        self.showPipeline();
+                    },
+                    error: function () {
+                        alert("获取失败！")
+                        console.log("well数据获取失败")
+                    }
+                })
             },
             error: function () {
-                // alert("获取失败！")
-                console.log("line获取失败")
-            }
-        })
-    }
-
-    getWellDatas() {
-        const self = this;
-        $.ajax({
-            url: "http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
-            // url:"http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
-            type: "GET",
-            success: function (d) {
-                self.wells = d.data
-            },
-            error: function () {
-                // alert("获取失败！")
-                console.log("well获取失败")
-
+                alert("获取失败！")
+                console.log("line数据获取失败")
             }
         })
     }
 
     init() {
         this.getPipelineDatas();
-        this.getWellDatas();
         let con = document.getElementById(this.container);
         this.bustard = new Bustard(con);
         this.loader = this.bustard.use(new Bustard.Loader());
@@ -124,57 +77,58 @@ export class AutoCreatePipeLine {
         this.textureTool = this.bustard.use(new Bustard.Texture());
         this.bustard.core.getScene().add(this.bustard.core.getaxesHelper());
         this.roam = this.bustard.use(new Bustard.Roam())
+        // this.light = this.bustard.use(new Bustard.Light())
+        // this.light.addPointLightForScene("sun", { x: 0, y: 100, z: 0 }, 2, 0, 2)
 
         const self = this;
         Promise.all([
             //球铸铁
-            self.loader.gltfLoadByUrl('glb/pipe/pipe-carboniron-100.glb', 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(this.urls[0], 'pipeline', false).then(value => {
                 value.children[0].name = "carboniron"
-                // roam.lookAt(
-                //     {x: 656.4236437059596, y: 83.59638746344339, z: 4500.5857681582875},
-                //     {x: 656.4236437059596, y: 83.59638746344311, z: -128.9163107958525}
-                // )
             }),
             //玻璃钢
-            self.loader.gltfLoadByUrl('glb/pipe/pipe-glasssteel-100.glb', 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(this.urls[1], 'pipeline', false).then(value => {
                 value.children[0].name = "glasssteel"
             }),
             //铁
-            self.loader.gltfLoadByUrl('glb/pipe/pipe-iron-100.glb', 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(this.urls[2], 'pipeline', false).then(value => {
                 value.children[0].name = "iron"
             }),
             //PE
-            self.loader.gltfLoadByUrl('glb/pipe/pipe-PE-100.glb', 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(this.urls[3], 'pipeline', false).then(value => {
                 value.children[0].name = "PE"
             }),
             //钢
-            self.loader.gltfLoadByUrl('glb/pipe/pipe-steel-100.glb', 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(this.urls[4], 'pipeline', false).then(value => {
                 value.children[0].name = "steel"
             }),
             //砼
-            self.loader.gltfLoadByUrl('glb/pipe/pipe_concrete.glb', 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(this.urls[5], 'pipeline', false).then(value => {
                 value.children[0].name = "concrete"
             }),
             //塑料
-            self.loader.gltfLoadByUrl('glb/pipe/pipe_plastic.glb', 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(this.urls[6], 'pipeline', false).then(value => {
                 value.children[0].name = "plastic"
             }),
             //PVC
-            self.loader.gltfLoadByUrl('glb/pipe/pipe_PVC.glb', 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(this.urls[7], 'pipeline', false).then(value => {
                 value.children[0].name = "PVC"
             }),
-            self.loader.gltfLoadByUrl('glb/pipe/well.glb', 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(this.urls[8], 'pipeline', false).then(value => {
                 value.children[0].name = "well"
             }),
-        ]);
-        this.loader.setDraco('js/gltf/');
-        this.loader.gltfLoadByUrls(this.urls2, 'floor').then(value => {
+        ]).then((result) => {
+            self.roam.lookAt(self.camera.position, self.camera.target);
+        });
+        this.loader.setDraco(this.dracoLibUrl);
+        this.loader.gltfLoadByUrls(this.urls2, 'floor', true).then(value => {
         })
 
         this.modelHide = this.bustard.use(new Bustard.Hide());
         this.modelHide.activeClick = false;
         this.pick = this.bustard.use(new Bustard.Pick());
         this.pick.pick = function (node, point) {
+            console.log(node)
             self.showInformationBox.isPipeline(node);
         }
     }
@@ -284,6 +238,7 @@ export class AutoCreatePipeLine {
                 } else {
                     cloneModel.scale.set(long / 10, this.pipelines[i].diameter / 100, this.pipelines[i].diameter / 100);
                 }
+                this.pipeline_all.push(cloneModel)
                 this.bustard.core.getScene().add(cloneModel);
             }
 
@@ -298,6 +253,7 @@ export class AutoCreatePipeLine {
         this.modelHide.hideById("pipeline|plastic");
         this.modelHide.hideById("pipeline|concrete");
         this.bustard.core.render();
+        console.log(this.pipeline_all)
     }
 }
 

@@ -16,18 +16,21 @@ export class HideRoad {
 
     //隐藏路面
     hideRoad() {
-
-        this.modelHide.hideByIdInObject3D("city|63264_")
-        this.modelHide.hideByIdInObject3D("zc|3140775_")
-
+        this.modelHide.hideByIdInObject3D("floor|boliti-CDfbx")
     }
 
     //显示路面
     restoreRoad() {
 
-        this.modelHide.restoreById("city|63264_")
-        this.modelHide.restoreById("zc|3140775_")
+        this.modelHide.restoreById("floor|boliti-CDfbx")
 
+    }
+
+    showFlowTo(pipeline_all, urlImg) {
+        for (let i = 0; i < pipeline_all.length; i++) {
+            textureTool.addRepetitiveTexture(pipelineScene[i], urlImg)
+        }
+        render()
     }
 
 }

@@ -6,8 +6,8 @@ import { AutoCreatePipeLine } from './autoCreatePipeLine';
 import { HideRoad } from './hideRoads';
 
 export class TrajectoryFreeroam {
-    constructor(container) {
-        this.autoCreatePipeLine = new AutoCreatePipeLine(container);
+    constructor(container, urls, urls2, dracoLibUrl) {
+        this.autoCreatePipeLine = new AutoCreatePipeLine(container, urls, urls2, dracoLibUrl);
 
         this.roam = this.autoCreatePipeLine.roam;
         this.pick = this.autoCreatePipeLine.pick;
@@ -48,6 +48,11 @@ export class TrajectoryFreeroam {
 
         // 记录之前相机状态
         this.oldState;
+    }
+
+
+    showFlowTo(urlImg) {
+        this.hideRoad.showFlowTo(this.autoCreatePipeLine.pipeline_all, urlImg)
     }
 
     getHideRoadObject() {
