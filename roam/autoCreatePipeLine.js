@@ -34,20 +34,19 @@ export class AutoCreatePipeLine {
             target: { x: -1699.8554164102306, y: 20, z: 160.251678000217 }
         };
 
-        this.init();
     }
 
     getPipelineDatas() {
         const self = this;
         $.ajax({
-            url: "http://192.168.0.43:8099/api/v1/article/monitor/pipelineModeling",
+            url: "http://277jd48643.wicp.vip/api/v1/article/monitor/pipelineModeling",
             // url:"http://192.168.0.43:8099/api/v1/article/monitor/pipelineModeling",
             type: "GET",
             success: function (d) {
                 self.pipelines = d.data
 
                 $.ajax({
-                    url: "http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
+                    url: "http://277jd48643.wicp.vip/api/v1/article/monitor/wellPointModeling",
                     // url:"http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
                     type: "GET",
                     success: function (d) {
@@ -67,7 +66,7 @@ export class AutoCreatePipeLine {
         })
     }
 
-    init() {
+    init(callback, x, z, id) {
         this.getPipelineDatas();
         let con = document.getElementById(this.container);
         this.bustard = new Bustard(con);
@@ -122,6 +121,7 @@ export class AutoCreatePipeLine {
         });
         this.loader.setDraco(this.dracoLibUrl);
         this.loader.gltfLoadByUrls(this.urls2, 'floor', true).then(value => {
+            callback(x, z, id);
         })
 
         this.modelHide = this.bustard.use(new Bustard.Hide());
@@ -135,8 +135,8 @@ export class AutoCreatePipeLine {
 
     showPipeline() {
         this.getmodel();
-        this.cloneModel();
-        this.getPipelineDatas();
+        this.createModel();
+        //     this.getPipelineDatas();
     }
 
     getmodel() {
@@ -152,7 +152,7 @@ export class AutoCreatePipeLine {
 
     }
 
-    cloneModel() {
+    createModel() {
 
         for (let i = 0; i < this.wells.length; i++) {
             if (this.wells[i].wellX > -2000 && this.wells[i].wellX < 1800 && this.wells[i].wellZ > 400 && this.wells[i].wellZ < 1300) {

@@ -6,8 +6,12 @@ import { AutoCreatePipeLine } from './autoCreatePipeLine';
 import { HideRoad } from './hideRoads';
 
 export class TrajectoryFreeroam {
-    constructor(container, urls, urls2, dracoLibUrl) {
+    constructor(container, urls, urls2, dracoLibUrl, x, z, id) {
         this.autoCreatePipeLine = new AutoCreatePipeLine(container, urls, urls2, dracoLibUrl);
+        const self = this;
+        this.autoCreatePipeLine.init(function (x, z, id) {
+            self.startByParam(x, z, id)
+        }, x, z, id);
 
         this.roam = this.autoCreatePipeLine.roam;
         this.pick = this.autoCreatePipeLine.pick;

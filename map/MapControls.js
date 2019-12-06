@@ -19,13 +19,11 @@ export class MapControls {
             selectionIndicator: false // 关闭点击绿色框
         });
 
-        // 移除所有影像图层
-        // this.viewer.imageryLayers.removeAll();
         //隐藏版权信息
         this.viewer._cesiumWidget._creditContainer.style.display = "none";
 
         // 相机近地面距离
-        this.nearDistance = 4000;
+        this.nearDistance = 400;
         // 相机远地面距离
         this.farDistance = 6500;
         // 默认泰州位置
@@ -36,13 +34,21 @@ export class MapControls {
         this.polylineDataSource;
 
         // 正常路线宽度
-        this.normalLineWidth = 5;
+        this.normalLineWidth = 7;
         // 高亮路线宽度
-        this.highLineWidth = 25;
+        this.highLineWidth = 35;
         // 记录上一个nameID
         this.oldHighLineNameID;
 
         this.init();
+
+        // 取消拖动事件
+        this.viewer.scene.screenSpaceCameraController.enableRotate = false;
+        // 取消滚轮事件
+        this.viewer.scene.screenSpaceCameraController.enableZoom = false;
+        // 取消双击默认效果
+        this.viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+
     }
 
     // 取消拖动
@@ -65,13 +71,11 @@ export class MapControls {
         this.viewer.scene.screenSpaceCameraController.enableZoom = true;
     }
 
-
     // 左键点击事件
     setLeftClickAction(callback) {
         let handler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
         const self = this;
         handler.setInputAction(function (click) {
-
             let pick = self.viewer.scene.pick(click.position);
             if (pick !== undefined && pick.id._name == "mark") {
                 let cartesian = new Cesium.Cartesian3(pick.id._position._value.x, pick.id._position._value.y, pick.id._position._value.z);
@@ -79,7 +83,7 @@ export class MapControls {
                 let lng = Cesium.Math.toDegrees(cartographic.longitude);
                 let lat = Cesium.Math.toDegrees(cartographic.latitude);
                 // console.log(lng + ", " + lat)
-                self.flyTo(lng, lat, self.nearDistance);
+                self.flyTo(lng, lat - 0.00386176411506, self.nearDistance);
 
                 let id = pick.id._id;
                 callback(id);
@@ -101,6 +105,7 @@ export class MapControls {
                         let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
                         let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
                         let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
+                        // console.log("经度：" + lng + ", 纬度： " + lat)
                         // 将经纬度转换成3D模型坐标
                         let x = lngToObject3DX * (lng - origin.x);
                         let z = latToObject3DZ * (lat - origin.z);
@@ -139,7 +144,7 @@ export class MapControls {
             let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
             let height = cartographic.height;
 
-            if (height > 30000 && (-46 <= pitch && pitch <= -45)) {
+            if (height > 30000 && (-46 <= pitch && pitch <= -44)) {
                 self.viewer.scene.camera.flyTo({
                     destination: Cesium.Cartesian3.fromDegrees(lng, lat, height), // 点的坐标
                     orientation: {
@@ -148,7 +153,7 @@ export class MapControls {
                         roll: 0.0                             // default value
                     }
                 })
-            } else if (height <= 30000 && (-90 <= pitch && pitch <= -89)) {
+            } else if (height <= 30000 && (-91 <= pitch && pitch <= -89)) {
                 self.viewer.scene.camera.flyTo({
                     destination: Cesium.Cartesian3.fromDegrees(lng, lat, height), // 点的坐标
                     orientation: {
@@ -164,46 +169,42 @@ export class MapControls {
     // 初始化配置
     init() {
         this.setMouseHoverAction();
-        this.setMouseWheelAction();
-        // this.setMap();
     }
 
     // 销毁配置
-    destory() {
-        // 移除图标
-        for (let i = 0; i < this.markEntities.length; i++) {
-            this.viewer.entities.remove(this.markEntities[i]);
-        }
-        this.markEntities = [];
-        // 去除高亮管线
-        if (this.polylineDataSource !== undefined) {
-            this.viewer.dataSources.remove(this.polylineDataSource);
-        }
-        // 飞到地球外面
-        this.viewer.camera.flyHome();
-
+    destroy() {
+        this.viewer.destroy();
     }
 
     // 相机飞行到泰州市海陵区默认位置
     earthRolling(show) {
         const self = this;
+        // 偏差值
+        let deviation = self.defaultLocation.y - 0.03688723352509;
         if (show) {
-            self.flyTo(self.defaultLocation.x, self.defaultLocation.y, self.defaultLocation.z, function () {
-                setTimeout(function () {
-                    self.showAllMarks();
-                    self.showRoute();
-                }, 2000);
-            });
+            let cartographic = self.viewer.camera.positionCartographic;
+            let height = cartographic.height;
+            self.flyTo(self.defaultLocation.x, deviation, height, function () {
+                self.flyTo(self.defaultLocation.x, deviation, self.defaultLocation.z, function () {
+                    setTimeout(function () {
+                        self.showAllMarks();
+                        self.showRoute();
+                    }, 2000);
+                }, 8);
+            })
+
         } else {
-            self.flyTo(self.defaultLocation.x, self.defaultLocation.y, self.defaultLocation.z);
+            self.flyTo(self.defaultLocation.x, deviation, self.defaultLocation.z);
         }
 
     }
 
     // 设置地图
-    setMap() {
+    setMap(url) {
+        // 移除所有影像图层
+        this.viewer.imageryLayers.removeAll();
         let imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
-            url: 'https://localhost:6443/arcgis/rest/services/map/mapserver_all/MapServer',
+            url: url,
             tilingScheme: new Cesium.WebMercatorTilingScheme(),
             maximumLevel: 20
         });
@@ -212,37 +213,54 @@ export class MapControls {
     }
 
     // 飞行到指定位置
-    flyTo(lng, lat, height, callback) {
-        // 偏差值
-        let deviation = lat - 0.03688723352509;
+    flyTo(lng, lat, height, callback, duration) {
+
         let cartographic = this.viewer.camera.positionCartographic;
 
-        // 相机据地面高度超10000米时，镜头垂直于地面飞行
+        // 相机据地面高度超30000米时，镜头垂直于地面飞行
         if (cartographic.height > 30000 && height < 30000) {
             const self = this;
             self.viewer.scene.camera.flyTo({
-                destination: Cesium.Cartesian3.fromDegrees(lng, deviation, height), // 点的坐标
+                destination: Cesium.Cartesian3.fromDegrees(lng, lat, height), // 点的坐标
                 orientation: {
                     heading: Cesium.Math.toRadians(0.0), // east, default value is 0.0 (north)
                     pitch: Cesium.Math.toRadians(-90),    // default value (looking down)
                     roll: 0.0                             // default value
                 },
+                duration: duration,
                 complete: function () {
-                    self.setView(lng, deviation, height);
+                    self.flyTo(lng, lat, height, undefined, 5);
                     if (callback !== undefined) {
                         callback();
                     }
                 }
+            });
 
+        } else if (cartographic.height > 30000 && height > 30000) {
+            const self = this;
+            self.viewer.scene.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(lng, lat, height), // 点的坐标
+                orientation: {
+                    heading: Cesium.Math.toRadians(0.0), // east, default value is 0.0 (north)
+                    pitch: Cesium.Math.toRadians(-90),    // default value (looking down)
+                    roll: 0.0                             // default value
+                },
+                duration: duration,
+                complete: function () {
+                    if (callback !== undefined) {
+                        callback();
+                    }
+                }
             });
         } else {
             this.viewer.scene.camera.flyTo({
-                destination: Cesium.Cartesian3.fromDegrees(lng, deviation, height), // 点的坐标
+                destination: Cesium.Cartesian3.fromDegrees(lng, lat, height), // 点的坐标
                 orientation: {
                     heading: Cesium.Math.toRadians(0.0), // east, default value is 0.0 (north)
-                    pitch: Cesium.Math.toRadians(-45),    // default value (looking down)
-                    roll: 0.0                             // default value
+                    pitch: Cesium.Math.toRadians(-45),
+                    roll: 0.0                            // default value
                 },
+                duration: duration,
                 complete: function () {
                     if (callback !== undefined) {
                         callback();
@@ -266,37 +284,46 @@ export class MapControls {
         if (distance !== undefined) {
             this.viewer.scene.camera.moveBackward(distance);
         }
-
     }
 
     // 添加一个图标
     addMark(id, position, label, billboard) {
-        let entity = this.viewer.entities.add({
-            id: id,
-            name: "mark",
-            position: Cesium.Cartesian3.fromDegrees(position.lng, position.lat, 0),
-            label: {
-                text: label.text,
-                font: label.font ? label.font : '14pt monospace',
-                style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-                fillColor: label.fillColor !== undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha) : Cesium.Color.WHITE,
-                outlineColor: label.outlineColor !== undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha) : Cesium.Color.BLACK,
-                outlineWidth: label.outlineWidth !== undefined ? label.outlineWidth : 2,
-                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
-                distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100, 30000),
-                scaleByDistance: new Cesium.NearFarScalar(100, 4, 30000, 0)
-            },
-            billboard: billboard !== undefined ? {
-                image: billboard.uri,
-                width: billboard.width !== undefined ? billboard.width : 700,
-                height: billboard.height !== undefined ? billboard.height : 500,
-                distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100, 30000),
-                scaleByDistance: new Cesium.NearFarScalar(100, 4, 30000, 0)
-            } : {}
-        });
-        entity.show = false;
-        this.markEntities.push(entity);
+        let flag = false;
+        for (let i = 0; i < this.markEntities.length; i++) {
+            let curEntity = this.markEntities[i];
+            if (curEntity.id == id) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            let entity = this.viewer.entities.add({
+                id: id,
+                name: "mark",
+                position: Cesium.Cartesian3.fromDegrees(position.lng, position.lat, 0),
+                billboard: billboard !== undefined ? {
+                    image: billboard.uri,
+                    width: billboard.width !== undefined ? billboard.width : 700,
+                    height: billboard.height !== undefined ? billboard.height : 500,
+                    distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100, 30000),
+                } : {},
+                label: label !== undefined ? {
+                    text: label.text,
+                    font: label.font ? label.font : '14pt monospace',
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    fillColor: label.fillColor !== undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha) : Cesium.Color.WHITE,
+                    outlineColor: label.outlineColor !== undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha) : Cesium.Color.WHITE,
+                    outlineWidth: label.outlineWidth !== undefined ? label.outlineWidth : 0,
+                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                    pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
+                    distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100, 30000),
+                } : {},
+
+            });
+            entity.show = false;
+            this.markEntities.push(entity);
+        }
+
     }
 
     // 批量添加图标
@@ -328,9 +355,10 @@ export class MapControls {
     removeMarkById(id) {
         for (var i = 0; i < this.markEntities.length; i++) {
             if (this.markEntities[i].id == id) {
-                this.viewer.entities.remove(this.markEntities[i])
+                this.viewer.entities.remove(this.markEntities[i]);
+                break;
             }
-            break;
+
         }
         this.markEntities.splice(i, 1);
     }
@@ -354,16 +382,11 @@ export class MapControls {
                 let r = entities[i];
                 r.show = false;
                 r.nameID = i;   //给每条线添加一个编号，方便之后对线修改样式
-                // r.polyline.width = self.highLineWidth;  //添加默认样式
-                // r.polyline.material = new Cesium.PolylineGlowMaterialProperty({
-                //     glowPower: .1, //一个数字属性，指定发光强度，占总线宽的百分比。
-                //     color: Cesium.Color.fromCssColorString("#FFAE00")
-                // });
                 if (i <= 5) {
                     r.polyline.width = self.normalLineWidth;
                     r.polyline.material = Cesium.Color.fromCssColorString("#FFAE00");
                 } else {
-                    r.polyline.width = 3;
+                    r.polyline.width = 0;
                     r.polyline.material = Cesium.Color.fromCssColorString("#DCDCDC");
                 }
                 r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, 30000);
