@@ -1,2 +1,3 @@
 /node_modules/*
 /dist/*
+/roam/index.js
