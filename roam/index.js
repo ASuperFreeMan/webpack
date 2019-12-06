@@ -16,9 +16,7 @@ export class Index {
             position: { x: -1692.6964275679534, y: 30, z: 117.58047372102737 },
             target: { x: -1699.8554164102306, y: 20, z: 160.251678000217 }
         };
-
         this.initModel();
-
         this.showInformationBox = new ShowInformationBox();
     }
 

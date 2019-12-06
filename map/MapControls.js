@@ -43,12 +43,28 @@ export class MapControls {
         this.oldHighLineNameID;
 
         this.init();
+    }
 
-        // 取消拖动事件
+    // 取消拖动
+    removeDrag() {
         this.viewer.scene.screenSpaceCameraController.enableRotate = false;
-        // 取消滚轮事件
+    }
+
+    // 取消滚动
+    removeWheel() {
         this.viewer.scene.screenSpaceCameraController.enableZoom = false;
     }
+
+    // 添加拖动
+    addDrag() {
+        this.viewer.scene.screenSpaceCameraController.enableRotate = true;
+    }
+
+    // 添加滚动
+    addWheel() {
+        this.viewer.scene.screenSpaceCameraController.enableZoom = true;
+    }
+
 
     // 左键点击事件
     setLeftClickAction(callback) {
@@ -186,25 +202,12 @@ export class MapControls {
 
     // 设置地图
     setMap() {
-        let imageryProvider = new Cesium.UrlTemplateImageryProvider({
-            url: 'http://localhost:8080/geoserver/gwc/service/tms/1.0.0/workspace%3AL18@BaiduMap@png/{z}/{x}/{reverseY}.png',
-            // tilingScheme: new Cesium.GeographicTilingScheme(),
-            // minimumLevel: level < 4 ? level : 4,
-            // maximumLevel: level
+        let imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
+            url: 'https://localhost:6443/arcgis/rest/services/map/mapserver_all/MapServer',
+            tilingScheme: new Cesium.WebMercatorTilingScheme(),
+            maximumLevel: 20
         });
-        // this.viewer.imageryLayers.addImageryProvider(imageryProvider);
-        // let imageryProvider = new Cesium.WebMapServiceImageryProvider({
-        //     url: 'http://localhost:8080/geoserver/workspace', // 'http://192.168.0.100:8080/geoserver/industry/wms'
-        //     layers: 'industry:L5',
-        //     parameters: {
-        //         service: 'WMS',
-        //         format: 'image/png',
-        //         transparent: true,
-        //         srs: "EPSG:3857",
-        //     },
-        //     // minimumLevel: level < 4 ? level : 4,
-        //     // maximumLevel: level
-        // });
+
         this.viewer.imageryLayers.addImageryProvider(imageryProvider);
     }
 

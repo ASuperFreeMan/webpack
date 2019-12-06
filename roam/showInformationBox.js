@@ -14,7 +14,8 @@ export class ShowInformationBox {
         if (modelName == "pipeline") {
             $.ajax({
                 // url:"http://192.168.0.43:8099/api/v1/article/monitor/pipelineId",
-                url: "http://192.168.0.100:8099/api/v1/article/monitor/pipelineId",
+                // url: "http://192.168.0.100:8099/api/v1/article/monitor/pipelineId",
+                url: "http://277jd48643.wicp.vip/api/v1/article/monitor/pipelineId",
                 data: {
                     pipelineId: nodeName
                 },
@@ -38,7 +39,8 @@ export class ShowInformationBox {
         if (modelName == "well") {
             $.ajax({
                 // url:"http://192.168.0.43:8099/api/v1/article/monitor/wellPointId",
-                url: "http://192.168.0.100:8099/api/v1/article/monitor/wellPointId",
+                // url: "http://192.168.0.100:8099/api/v1/article/monitor/wellPointId",
+                url: "http://277jd48643.wicp.vip/api/v1/article/monitor/wellPointId",
                 data: {
                     wellPointId: nodeName
                 },
@@ -58,7 +60,7 @@ export class ShowInformationBox {
 
     }
 
-    howInformationBox(dataContent) {
+    showInformationBox(dataContent) {
 
         layer.open({
             skin: 'layer-dg',
