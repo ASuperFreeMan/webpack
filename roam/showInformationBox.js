@@ -5,11 +5,13 @@ export class ShowInformationBox {
 
     isPipeline(node) {
         if (node != null && (node.userData.modelName == "pipeline" || node.userData.modelName == "well")) {
+            console.log("11111111111")
             this.selectInformationBox(node.name, node.userData.modelName)
         }
     }
 
     selectInformationBox(nodeName, modelName) {
+        console.log("2222222")
         const self = this;
         if (modelName == "pipeline") {
             $.ajax({
@@ -21,6 +23,8 @@ export class ShowInformationBox {
                 },
                 type: "GET",
                 success: function (d) {
+                    console.log("333333")
+                    console.log(d.data)
                     let content = "#pipeLineInformationBox"
                     self.showInformationBox(content)
                     $("#pipingType").text(d.data.type)
@@ -46,6 +50,8 @@ export class ShowInformationBox {
                 },
                 type: "GET",
                 success: function (d) {
+                    console.log("444444")
+                    console.log(d.data)
                     let content = "#tubeWellInformationBox"
                     self.showInformationBox(content)
                     $("#depth").text(d.data.depth)
@@ -61,7 +67,7 @@ export class ShowInformationBox {
     }
 
     showInformationBox(dataContent) {
-
+        console.log("55555555555")
         layer.open({
             skin: 'layer-dg',
             anim: -1,

@@ -44,7 +44,6 @@ export class AutoCreatePipeLine {
     }
 
     getPipelineDatas() {
-        console.log("我获取数据了！！！！！")
         const self = this;
         $.ajax({
             // url: "http://192.168.0.43:8099/api/v1/article/monitor/pipelineModeling",
@@ -53,6 +52,9 @@ export class AutoCreatePipeLine {
             type: "GET",
             success: function (d) {
                 self.pipelines = d.data
+                let time = new Date();
+                let newdate = time.toLocaleString('chinese', { hour12: false });
+                console.log("获取p" + newdate)
             },
             error: function () {
                 alert("获取失败！")
@@ -70,6 +72,9 @@ export class AutoCreatePipeLine {
             type: "GET",
             success: function (d) {
                 self.wells = d.data
+                let time = new Date();
+                let newdate = time.toLocaleString('chinese', { hour12: false });
+                console.log("获取w" + newdate)
             },
             error: function () {
                 alert("获取失败！")
@@ -134,23 +139,29 @@ export class AutoCreatePipeLine {
                 value.children[0].name = "well"
             })
         ]).then((result) => {
+
             self.getmodel();
             self.roam.lookAt(self.camera.position, self.camera.target);
+            self.loader.setDraco(self.dracoLibUrl);
+            let time1 = new Date();
+            let newdate1 = time1.toLocaleString('chinese', { hour12: false });
+            console.log("加载城市" + newdate1)
+            self.loader.gltfLoadByUrl(self.url3, "dimian", false).then(value => {
+                value.position.set(0, -0.22, 0)
+            })
+            this.loader.gltfLoadByUrls(self.urls2, 'floor', true).then(value => {
+                // self.roam.lookAt(self.camera1.position, self.camera1.target);
+                self.cloneModel();
+                self.hideModel();
+                callback(x, z, id);
 
+            })
+            let time2 = new Date();
+            let newdate2 = time2.toLocaleString('chinese', { hour12: false });
+            console.log("加载城市结束" + newdate2)
         });
-        this.loader.setDraco(this.dracoLibUrl);
 
-        this.loader.gltfLoadByUrl(this.url3, "dimian", false).then(value => {
-            value.position.set(0, -0.22, 0)
-        })
 
-        this.loader.gltfLoadByUrls(self.urls2, 'floor', true).then(value => {
-            // self.roam.lookAt(self.camera1.position, self.camera1.target);
-            self.cloneModel();
-            self.hideModel();
-            callback(x, z, id);
-
-        })
 
         this.pick = this.bustard.use(new Bustard.Pick());
         this.pick.pick = function (node, point) {
