@@ -153,7 +153,9 @@ export class AutoCreatePipeLine {
                 // self.roam.lookAt(self.camera1.position, self.camera1.target);
                 self.cloneModel();
                 self.hideModel();
-                callback(x, z, id);
+                if (callback !== undefined) {
+                    callback(x, z, id);
+                }
 
             })
             let time2 = new Date();

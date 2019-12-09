@@ -14,6 +14,8 @@ export class TrajectoryFreeroam {
             this.autoCreatePipeLine.init(function (x, z, id) {
                 self.startByParam(x, z, id);
             }, x, z, id);
+        } else {
+            this.autoCreatePipeLine.init();
         }
 
         this.roam = this.autoCreatePipeLine.roam;
