@@ -1,10 +1,11 @@
 import { ShowInformationBox } from './showInformationBox';
 
 export class AutoCreatePipeLine {
-    constructor(container, urls, urls2, dracoLibUrl) {
+    constructor(container, urls, urls2, dracoLibUrl, url3, bgImgUrl) {
         this.container = container;
         this.bustard;
         this.loader;
+        this.loader2;
         this.sprite;
         this.color;
         this.textureTool;
@@ -21,11 +22,13 @@ export class AutoCreatePipeLine {
         this.pipeline_DuctileIron //球墨铸铁
         this.pipeline_Steel//钢
         this.pipeline_Iron//铸铁
-        this.pipelines
-        this.wells
+        this.pipelines;
+        this.wells;
         this.pipeline_all = []
         this.urls = urls
         this.urls2 = urls2
+        this.url3 = url3
+        this.bgImgUrl = bgImgUrl
         this.dracoLibUrl = dracoLibUrl
         this.showInformationBox = new ShowInformationBox();
 
@@ -33,31 +36,23 @@ export class AutoCreatePipeLine {
             position: { x: -1692.6964275679534, y: 30, z: 117.58047372102737 },
             target: { x: -1699.8554164102306, y: 20, z: 160.251678000217 }
         };
+        this.camera1 = {
+            position: { x: -1500, y: 30, z: 650 },
+            target: { x: -230, y: 30, z: 800 }
+        };
 
     }
 
     getPipelineDatas() {
+        console.log("我获取数据了！！！！！")
         const self = this;
         $.ajax({
-            url: "http://277jd48643.wicp.vip/api/v1/article/monitor/pipelineModeling",
+            // url: "http://192.168.0.43:8099/api/v1/article/monitor/pipelineModeling",
             // url:"http://192.168.0.43:8099/api/v1/article/monitor/pipelineModeling",
+            url: "http://277jd48643.wicp.vip/api/v1/article/monitor/pipelineModeling",
             type: "GET",
             success: function (d) {
                 self.pipelines = d.data
-
-                $.ajax({
-                    url: "http://277jd48643.wicp.vip/api/v1/article/monitor/wellPointModeling",
-                    // url:"http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
-                    type: "GET",
-                    success: function (d) {
-                        self.wells = d.data
-                        self.showPipeline();
-                    },
-                    error: function () {
-                        alert("获取失败！")
-                        console.log("well数据获取失败")
-                    }
-                })
             },
             error: function () {
                 alert("获取失败！")
@@ -66,77 +61,111 @@ export class AutoCreatePipeLine {
         })
     }
 
+    getWellDatas() {
+        const self = this;
+        $.ajax({
+            // url: "http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
+            // url:"http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
+            url: "http://277jd48643.wicp.vip/api/v1/article/monitor/wellPointModeling",
+            type: "GET",
+            success: function (d) {
+                self.wells = d.data
+            },
+            error: function () {
+                alert("获取失败！")
+                console.log("well数据获取失败")
+            }
+        })
+    }
+
     init(callback, x, z, id) {
         this.getPipelineDatas();
+        this.getWellDatas();
         let con = document.getElementById(this.container);
         this.bustard = new Bustard(con);
         this.loader = this.bustard.use(new Bustard.Loader());
+        this.bustard.core.addImgToBackground(this.bgImgUrl)
         this.color = this.bustard.use(new Bustard.Color({ isMutex: true }));
         this.color.activeClick = false;
         this.textureTool = this.bustard.use(new Bustard.Texture());
         this.bustard.core.getScene().add(this.bustard.core.getaxesHelper());
         this.roam = this.bustard.use(new Bustard.Roam())
+        this.modelHide = this.bustard.use(new Bustard.Hide());
+        this.modelHide.activeClick = false;
         // this.light = this.bustard.use(new Bustard.Light())
-        // this.light.addPointLightForScene("sun", { x: 0, y: 100, z: 0 }, 2, 0, 2)
+        // this.light.activeClick = false;
+        // this.light.addDirectionalLightForCamera("sun", { x: 0, y: 250, z: 0 })
 
         const self = this;
         Promise.all([
             //球铸铁
-            self.loader.gltfLoadByUrl(this.urls[0], 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(self.urls[0], 'pipeline', false).then(value => {
                 value.children[0].name = "carboniron"
             }),
             //玻璃钢
-            self.loader.gltfLoadByUrl(this.urls[1], 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(self.urls[1], 'pipeline', false).then(value => {
                 value.children[0].name = "glasssteel"
             }),
             //铁
-            self.loader.gltfLoadByUrl(this.urls[2], 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(self.urls[2], 'pipeline', false).then(value => {
                 value.children[0].name = "iron"
             }),
             //PE
-            self.loader.gltfLoadByUrl(this.urls[3], 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(self.urls[3], 'pipeline', false).then(value => {
                 value.children[0].name = "PE"
             }),
             //钢
-            self.loader.gltfLoadByUrl(this.urls[4], 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(self.urls[4], 'pipeline', false).then(value => {
                 value.children[0].name = "steel"
             }),
             //砼
-            self.loader.gltfLoadByUrl(this.urls[5], 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(self.urls[5], 'pipeline', false).then(value => {
                 value.children[0].name = "concrete"
             }),
             //塑料
-            self.loader.gltfLoadByUrl(this.urls[6], 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(self.urls[6], 'pipeline', false).then(value => {
                 value.children[0].name = "plastic"
             }),
             //PVC
-            self.loader.gltfLoadByUrl(this.urls[7], 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(self.urls[7], 'pipeline', false).then(value => {
                 value.children[0].name = "PVC"
             }),
-            self.loader.gltfLoadByUrl(this.urls[8], 'pipeline', false).then(value => {
+            self.loader.gltfLoadByUrl(self.urls[8], 'pipeline', false).then(value => {
                 value.children[0].name = "well"
-            }),
+            })
         ]).then((result) => {
+            self.getmodel();
             self.roam.lookAt(self.camera.position, self.camera.target);
+
         });
         this.loader.setDraco(this.dracoLibUrl);
-        this.loader.gltfLoadByUrls(this.urls2, 'floor', true).then(value => {
-            callback(x, z, id);
+
+        this.loader.gltfLoadByUrl(this.url3, "dimian", false).then(value => {
+            value.position.set(0, -0.22, 0)
         })
 
-        this.modelHide = this.bustard.use(new Bustard.Hide());
-        this.modelHide.activeClick = false;
+        this.loader.gltfLoadByUrls(self.urls2, 'floor', true).then(value => {
+            // self.roam.lookAt(self.camera1.position, self.camera1.target);
+            self.cloneModel();
+            self.hideModel();
+            callback(x, z, id);
+
+        })
+
         this.pick = this.bustard.use(new Bustard.Pick());
         this.pick.pick = function (node, point) {
             console.log(node)
             self.showInformationBox.isPipeline(node);
+            // console.log("相机位置：" + self.roam.curPosition().z + "," + self.roam.curPosition().x);
+            // console.log("焦点位置：" + self.roam.curTarget().z + "," + self.roam.curTarget().x);
         }
+        // this.cloneModel();
     }
 
     showPipeline() {
-        this.getmodel();
-        this.createModel();
-        //     this.getPipelineDatas();
+        // this.getmodel();
+        this.cloneModel();
+        this.getPipelineDatas();
     }
 
     getmodel() {
@@ -150,10 +179,21 @@ export class AutoCreatePipeLine {
         this.pipeline_Iron = this.bustard.core.getNodeByName('iron'); //铸铁
         this.well = this.bustard.core.getNodeByName('well');
 
+
+    }
+    hideModel() {
+        this.modelHide.hideById("pipeline|steel");
+        this.modelHide.hideById("pipeline|glasssteel");
+        this.modelHide.hideById("pipeline|carboniron");
+        this.modelHide.hideById("pipeline|iron");
+        this.modelHide.hideById("pipeline|PE");
+        this.modelHide.hideById("pipeline|PVC");
+        this.modelHide.hideById("pipeline|plastic");
+        this.modelHide.hideById("pipeline|concrete");
+        this.modelHide.hideById("pipeline|9848_");
     }
 
-    createModel() {
-
+    cloneModel() {
         for (let i = 0; i < this.wells.length; i++) {
             if (this.wells[i].wellX > -2000 && this.wells[i].wellX < 1800 && this.wells[i].wellZ > 400 && this.wells[i].wellZ < 1300) {
                 let cloneModel = this.well.clone();
@@ -161,7 +201,7 @@ export class AutoCreatePipeLine {
                 cloneModel.userData.modelName = 'well'
                 cloneModel.userData.uniqId = this.wells[i].wellId
                 cloneModel.position.x = this.wells[i].wellX
-                cloneModel.position.y = 0.1
+                cloneModel.position.y = -0.1
                 cloneModel.position.z = this.wells[i].wellZ
                 cloneModel.scale.set(1, 1, 1);
                 this.bustard.core.getScene().add(cloneModel)
@@ -243,17 +283,8 @@ export class AutoCreatePipeLine {
             }
 
         }
-        this.modelHide.hideById("pipeline|well");
-        this.modelHide.hideById("pipeline|steel");
-        this.modelHide.hideById("pipeline|glasssteel");
-        this.modelHide.hideById("pipeline|carboniron");
-        this.modelHide.hideById("pipeline|iron");
-        this.modelHide.hideById("pipeline|PE");
-        this.modelHide.hideById("pipeline|PVC");
-        this.modelHide.hideById("pipeline|plastic");
-        this.modelHide.hideById("pipeline|concrete");
+
         this.bustard.core.render();
-        console.log(this.pipeline_all)
     }
 }
 

@@ -43,9 +43,9 @@ export class MapControls {
         this.init();
 
         // 取消拖动事件
-        this.viewer.scene.screenSpaceCameraController.enableRotate = false;
+        // this.viewer.scene.screenSpaceCameraController.enableRotate = false;
         // 取消滚轮事件
-        this.viewer.scene.screenSpaceCameraController.enableZoom = false;
+        // this.viewer.scene.screenSpaceCameraController.enableZoom = false;
         // 取消双击默认效果
         this.viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
@@ -173,7 +173,7 @@ export class MapControls {
 
     // 销毁配置
     destroy() {
-        this.viewer.destroy();
+
     }
 
     // 相机飞行到泰州市海陵区默认位置
@@ -201,6 +201,7 @@ export class MapControls {
 
     // 设置地图
     setMap(url) {
+
         // 移除所有影像图层
         this.viewer.imageryLayers.removeAll();
         let imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
@@ -288,42 +289,33 @@ export class MapControls {
 
     // 添加一个图标
     addMark(id, position, label, billboard) {
-        let flag = false;
-        for (let i = 0; i < this.markEntities.length; i++) {
-            let curEntity = this.markEntities[i];
-            if (curEntity.id == id) {
-                flag = true;
-                break;
-            }
-        }
-        if (!flag) {
-            let entity = this.viewer.entities.add({
-                id: id,
-                name: "mark",
-                position: Cesium.Cartesian3.fromDegrees(position.lng, position.lat, 0),
-                billboard: billboard !== undefined ? {
-                    image: billboard.uri,
-                    width: billboard.width !== undefined ? billboard.width : 700,
-                    height: billboard.height !== undefined ? billboard.height : 500,
-                    distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100, 30000),
-                } : {},
-                label: label !== undefined ? {
-                    text: label.text,
-                    font: label.font ? label.font : '14pt monospace',
-                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-                    fillColor: label.fillColor !== undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha) : Cesium.Color.WHITE,
-                    outlineColor: label.outlineColor !== undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha) : Cesium.Color.WHITE,
-                    outlineWidth: label.outlineWidth !== undefined ? label.outlineWidth : 0,
-                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                    pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
-                    distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100, 30000),
-                } : {},
-
-            });
-            entity.show = false;
-            this.markEntities.push(entity);
-        }
-
+        let entity = this.viewer.entities.add({
+            id: id,
+            name: "mark",
+            position: Cesium.Cartesian3.fromDegrees(position.lng, position.lat, 0),
+            label: label !== undefined ? {
+                text: label.text,
+                font: label.font !== undefined ? label.font : '14pt monospace',
+                style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                showBackground: true,
+                backgroundPadding: label.backgroundPadding !== undefined ? new Cesium.Cartesian2(label.backgroundPadding.x, label.backgroundPadding.y) : new Cesium.Cartesian2(7, 5),
+                backgroundColor: label.backgroundColor !== undefined ? Cesium.Color.fromCssColorString(label.backgroundColor.color).withAlpha(label.backgroundColor.alpha) : Cesium.Color.BLACK,
+                fillColor: label.fillColor !== undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha) : Cesium.Color.WHITE,
+                outlineColor: label.outlineColor !== undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha) : Cesium.Color.WHITE,
+                outlineWidth: label.outlineWidth !== undefined ? label.outlineWidth : 0,
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
+                distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100, 30000),
+            } : {},
+            billboard: billboard !== undefined ? {
+                image: billboard.uri,
+                width: billboard.width !== undefined ? billboard.width : 700,
+                height: billboard.height !== undefined ? billboard.height : 500,
+                distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100, 30000),
+            } : {}
+        });
+        entity.show = false;
+        this.markEntities.push(entity);
     }
 
     // 批量添加图标
@@ -361,6 +353,13 @@ export class MapControls {
 
         }
         this.markEntities.splice(i, 1);
+    }
+
+    removeAllMark() {
+        for (var i = 0; i < this.markEntities.length; i++) {
+            this.viewer.entities.remove(this.markEntities[i]);
+        }
+        this.markEntities = [];
     }
 
     // 添加高亮路线
