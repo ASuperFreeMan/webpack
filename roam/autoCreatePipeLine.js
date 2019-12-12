@@ -1,7 +1,7 @@
 import { ShowInformationBox } from './showInformationBox';
 
 export class AutoCreatePipeLine {
-    constructor(container, urls, urls2, dracoLibUrl, url3, bgImgUrl) {
+    constructor(container, pipeUrl, cityUrls, dracoLibUrl, groundUrl, bgImgUrl) {
         this.container = container;
         this.bustard;
         this.loader;
@@ -25,9 +25,9 @@ export class AutoCreatePipeLine {
         this.pipelines;
         this.wells;
         this.pipeline_all = []
-        this.urls = urls
-        this.urls2 = urls2
-        this.url3 = url3
+        this.pipeUrl = pipeUrl
+        this.cityUrls = cityUrls
+        this.groundUrl = groundUrl
         this.bgImgUrl = bgImgUrl
         this.dracoLibUrl = dracoLibUrl
         this.showInformationBox = new ShowInformationBox();
@@ -103,64 +103,29 @@ export class AutoCreatePipeLine {
 
         const self = this;
         Promise.all([
-            //球铸铁
-            self.loader.gltfLoadByUrl(self.urls[0], 'pipeline', false).then(value => {
-                value.children[0].name = "carboniron"
+            self.loader.gltfLoadByUrl(self.pipeUrl, 'pipeline', false).then(value => {
             }),
-            //玻璃钢
-            self.loader.gltfLoadByUrl(self.urls[1], 'pipeline', false).then(value => {
-                value.children[0].name = "glasssteel"
-            }),
-            //铁
-            self.loader.gltfLoadByUrl(self.urls[2], 'pipeline', false).then(value => {
-                value.children[0].name = "iron"
-            }),
-            //PE
-            self.loader.gltfLoadByUrl(self.urls[3], 'pipeline', false).then(value => {
-                value.children[0].name = "PE"
-            }),
-            //钢
-            self.loader.gltfLoadByUrl(self.urls[4], 'pipeline', false).then(value => {
-                value.children[0].name = "steel"
-            }),
-            //砼
-            self.loader.gltfLoadByUrl(self.urls[5], 'pipeline', false).then(value => {
-                value.children[0].name = "concrete"
-            }),
-            //塑料
-            self.loader.gltfLoadByUrl(self.urls[6], 'pipeline', false).then(value => {
-                value.children[0].name = "plastic"
-            }),
-            //PVC
-            self.loader.gltfLoadByUrl(self.urls[7], 'pipeline', false).then(value => {
-                value.children[0].name = "PVC"
-            }),
-            self.loader.gltfLoadByUrl(self.urls[8], 'pipeline', false).then(value => {
-                value.children[0].name = "well"
-            })
         ]).then((result) => {
-
             self.getmodel();
             self.roam.lookAt(self.camera.position, self.camera.target);
             self.loader.setDraco(self.dracoLibUrl);
             let time1 = new Date();
             let newdate1 = time1.toLocaleString('chinese', { hour12: false });
             console.log("加载城市" + newdate1)
-            self.loader.gltfLoadByUrl(self.url3, "dimian", false).then(value => {
+            self.loader.gltfLoadByUrl(self.groundUrl, "dimian", false).then(value => {
                 value.position.set(0, -0.22, 0)
+                self.loader.gltfLoadByUrls(self.cityUrls, 'floor', true).then(value => {
+                    // self.roam.lookAt(self.camera1.position, self.camera1.target);
+                    self.cloneModel();
+                    self.hideModel();
+                    if (callback !== undefined) {
+                        callback(x, z, id);
+                    }
+                    let time2 = new Date();
+                    let newdate2 = time2.toLocaleString('chinese', { hour12: false });
+                    console.log("加载城市结束" + newdate2)
+                })
             })
-            this.loader.gltfLoadByUrls(self.urls2, 'floor', true).then(value => {
-                // self.roam.lookAt(self.camera1.position, self.camera1.target);
-                self.cloneModel();
-                self.hideModel();
-                if (callback !== undefined) {
-                    callback(x, z, id);
-                }
-
-            })
-            let time2 = new Date();
-            let newdate2 = time2.toLocaleString('chinese', { hour12: false });
-            console.log("加载城市结束" + newdate2)
         });
 
 
@@ -175,35 +140,29 @@ export class AutoCreatePipeLine {
         // this.cloneModel();
     }
 
-    showPipeline() {
-        // this.getmodel();
-        this.cloneModel();
-        this.getPipelineDatas();
-    }
-
     getmodel() {
-        this.pipeline_PE = this.bustard.core.getNodeByName('PE');//PE
-        this.pipeline_PVC = this.bustard.core.getNodeByName('PVC');//PVC
-        this.pipeline_Plastic = this.bustard.core.getNodeByName('plastic');  //塑料
-        this.pipeline_Concrete = this.bustard.core.getNodeByName('concrete'); //砼
-        this.pipeline_FRP = this.bustard.core.getNodeByName('glasssteel'); //玻璃钢
-        this.pipeline_DuctileIron = this.bustard.core.getNodeByName('carboniron'); //球铸铁
-        this.pipeline_Steel = this.bustard.core.getNodeByName('steel'); //钢
-        this.pipeline_Iron = this.bustard.core.getNodeByName('iron'); //铸铁
-        this.well = this.bustard.core.getNodeByName('well');
-
-
+        this.pipeline_Default = this.bustard.core.getNodeByName("11409_");//默认
+        this.pipeline_PE = this.bustard.core.getNodeByName('1404_');//PE
+        this.pipeline_PVC = this.bustard.core.getNodeByName('1231_');//PVC
+        this.pipeline_Plastic = this.bustard.core.getNodeByName('1058_');  //塑料
+        this.pipeline_Concrete = this.bustard.core.getNodeByName('885_'); //砼
+        this.pipeline_FRP = this.bustard.core.getNodeByName('712_'); //玻璃钢
+        this.pipeline_DuctileIron = this.bustard.core.getNodeByName('539_'); //球铸铁
+        this.pipeline_Steel = this.bustard.core.getNodeByName('365_'); //钢
+        this.pipeline_Iron = this.bustard.core.getNodeByName('164_'); //铸铁
+        this.well = this.bustard.core.getNodeByName('11328_');//管井
     }
     hideModel() {
-        this.modelHide.hideById("pipeline|steel");
-        this.modelHide.hideById("pipeline|glasssteel");
-        this.modelHide.hideById("pipeline|carboniron");
-        this.modelHide.hideById("pipeline|iron");
-        this.modelHide.hideById("pipeline|PE");
-        this.modelHide.hideById("pipeline|PVC");
-        this.modelHide.hideById("pipeline|plastic");
-        this.modelHide.hideById("pipeline|concrete");
-        this.modelHide.hideById("pipeline|9848_");
+        this.modelHide.hideById("pipeline|11328_");//well
+        this.modelHide.hideById("pipeline|11409_");//哑黄色
+        this.modelHide.hideById("pipeline|164_");//绿
+        this.modelHide.hideById("pipeline|1404_");//亮黄
+        this.modelHide.hideById("pipeline|1231_");//湖蓝
+        this.modelHide.hideById("pipeline|1058_");//蓝色
+        this.modelHide.hideById("pipeline|885_");//紫红（粉红）
+        this.modelHide.hideById("pipeline|712_");//紫色
+        this.modelHide.hideById("pipeline|539_");//褐色
+        this.modelHide.hideById("pipeline|365_");//红
     }
 
     cloneModel() {
@@ -242,7 +201,7 @@ export class AutoCreatePipeLine {
                 } else if (this.pipelines[i].material === '铸铁') {
                     cloneModel = this.pipeline_Iron.clone()
                 } else {
-                    cloneModel = this.pipeline_Plastic.clone()
+                    cloneModel = this.pipeline_Default.clone()
                 }
                 let x1 = this.pipelines[i].pipelineX1;
                 let y1 = 0;
