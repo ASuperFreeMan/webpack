@@ -1,7 +1,7 @@
 export class ShowInformationBox {
     constructor() {
-
     }
+
 
     isPipeline(light, node) {
         if (node != null && (node.userData.modelName == "pipeline" || node.userData.modelName == "well")) {
@@ -92,8 +92,10 @@ export class ShowInformationBox {
             } catch{
 
             }
+
         })
     }
+
 }
 
 
