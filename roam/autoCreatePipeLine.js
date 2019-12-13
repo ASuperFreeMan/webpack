@@ -30,6 +30,7 @@ export class AutoCreatePipeLine {
         this.groundUrl = groundUrl
         this.bgImgUrl = bgImgUrl
         this.dracoLibUrl = dracoLibUrl
+        this.renderInterval;
         this.showInformationBox = new ShowInformationBox();
 
         this.camera = {
@@ -97,8 +98,9 @@ export class AutoCreatePipeLine {
         this.roam = this.bustard.use(new Bustard.Roam())
         this.modelHide = this.bustard.use(new Bustard.Hide());
         this.modelHide.activeClick = false;
-        // this.light = this.bustard.use(new Bustard.Light())
-        // this.light.activeClick = false;
+        this.light = this.bustard.use(new Bustard.Light())
+        this.light.activeClick = false;
+        this.renderInterval = 0
         // this.light.addDirectionalLightForCamera("sun", { x: 0, y: 250, z: 0 })
 
         const self = this;
@@ -124,6 +126,9 @@ export class AutoCreatePipeLine {
                     let time2 = new Date();
                     let newdate2 = time2.toLocaleString('chinese', { hour12: false });
                     console.log("加载城市结束" + newdate2)
+                    // self.renderInterval = setInterval(function () {
+                    //     self.bustard.core.render()
+                    // }, 20)
                 })
             })
         });
@@ -132,8 +137,9 @@ export class AutoCreatePipeLine {
 
         this.pick = this.bustard.use(new Bustard.Pick());
         this.pick.pick = function (node, point) {
-            console.log(node)
-            self.showInformationBox.isPipeline(node);
+            // console.log(node)
+            console.log(point)
+            self.showInformationBox.isPipeline(self.light, node);
             // console.log("相机位置：" + self.roam.curPosition().z + "," + self.roam.curPosition().x);
             // console.log("焦点位置：" + self.roam.curTarget().z + "," + self.roam.curTarget().x);
         }

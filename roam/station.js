@@ -928,7 +928,7 @@ export function loadPumpDate() {
         for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
             let pum = bustard.core.getNodeByName(bengzhan[stationName].wushuibeng[i].nodeName);
             if (datas.wushuibeng[i].state === 0) {
-                sprite.addCanvas(addPumpCanvas(datas.wushuibeng[i].data), [pum.position.x - 0.2, (pum.position.y + 0.4), pum.position.z], function (canvas, pos) {
+                sprite.addCanvas(addPumpCanvas(datas.wushuibeng[i].data), [pum.position.x - 0.4, (pum.position.y + 0.4), pum.position.z], function (canvas, pos) {
                     // init();
                 });
             }
@@ -961,7 +961,7 @@ export function addFlow() {
         for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
             if (datas.wushuibeng[i].state == 0) {
                 let pipe1 = bustard.core.getNodeByName(bengzhan[stationName].pipeNodeNames[i].name1)
-                textureTool.addRepetitiveTexture(pipe1, FlowImgUrl1, -0.06, 20)
+                textureTool.addRepetitiveTexture(pipe1, FlowImgUrl1, -0.06, 10)
                 color.setColorById('station|' + bengzhan[stationName].pipeNodeNames[i].name2, 0x91B5F9)
                 color.setColorById('station|' + bengzhan[stationName].pipeNodeNames[i].name3, 0x91B5F9)
             }
