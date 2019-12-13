@@ -6,13 +6,17 @@ import { AutoCreatePipeLine } from './autoCreatePipeLine';
 import { HideRoad } from './hideRoads';
 
 export class TrajectoryFreeroam {
-    constructor(container, urls, urls2, dracoLibUrl, url3, bgImgUrl, x, z, id) {
+    constructor(container, urls, urls2, dracoLibUrl, url3, bgImgUrl, x, z, id, callback) {
         this.autoCreatePipeLine = new AutoCreatePipeLine(container, urls, urls2, dracoLibUrl, url3, bgImgUrl);
         const self = this;
 
         if (x !== undefined && z !== undefined && id !== undefined) {
             this.autoCreatePipeLine.init(function (x, z, id) {
                 self.startByParam(x, z, id);
+                if (callback !== undefined) {
+                    let endFlag = true;
+                    callback(endFlag);
+                }
             }, x, z, id);
         } else {
             this.autoCreatePipeLine.init();
@@ -80,9 +84,9 @@ export class TrajectoryFreeroam {
         return newCoords;
     }
 
-
+    // 根据传入参数定位巡检
     startByParam(x, z, id) {
-        if (x !== undefined && z !== undefined && id !== undefined) {
+        if (x !== undefined && z !== undefined && id !== undefined && id <= 6) {
             for (let i = 0; i + 1 < newCoords[id].length; i++) {
                 let curPoint = newCoords[id][i];
                 let nextPoint = newCoords[id][i + 1];
@@ -152,6 +156,10 @@ export class TrajectoryFreeroam {
         this.addEdge(4, 0, newCoords[4].length - 1);
         this.graph.addEdge("1[" + (newCoords[1].length - 1) + "]", "3[0]");
         this.graph.addEdge("1[" + (newCoords[1].length - 1) + "]", "4[0]");
+        this.addEdge(5, 0, newCoords[5].length - 1);
+        this.addEdge(6, 0, newCoords[6].length - 1);
+        this.graph.addEdge("3[" + (newCoords[3].length - 1) + "]", "5[0]");
+        this.graph.addEdge("3[" + (newCoords[3].length - 1) + "]", "6[0]");
 
     }
 

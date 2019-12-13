@@ -143,9 +143,6 @@ export class AutoCreatePipeLine {
             self.getmodel();
             self.roam.lookAt(self.camera.position, self.camera.target);
             self.loader.setDraco(self.dracoLibUrl);
-            let time1 = new Date();
-            let newdate1 = time1.toLocaleString('chinese', { hour12: false });
-            console.log("加载城市" + newdate1)
             self.loader.gltfLoadByUrl(self.url3, "dimian", false).then(value => {
                 value.position.set(0, -0.22, 0)
             })
@@ -158,11 +155,7 @@ export class AutoCreatePipeLine {
                 }
 
             })
-            let time2 = new Date();
-            let newdate2 = time2.toLocaleString('chinese', { hour12: false });
-            console.log("加载城市结束" + newdate2)
         });
-
 
 
         this.pick = this.bustard.use(new Bustard.Pick());

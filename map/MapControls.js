@@ -25,13 +25,17 @@ export class MapControls {
         // 相机近地面距离
         this.nearDistance = 400;
         // 相机远地面距离
-        this.farDistance = 6500;
+        this.farDistance = 8500;
+        // 开始位置
+        this.startLocation = { x: 119.92392231992083, y: 32.38401248596911 + 0.036887233525095 };
         // 默认泰州位置
-        this.defaultLocation = { x: 119.91421480425896, y: 32.42337447397941, z: 6500 };
+        this.defaultLocation = { x: this.startLocation.x, y: this.startLocation.y, z: this.farDistance };
         // 图标实体集合
         this.markEntities = [];
         // 高亮路线对象
         this.polylineDataSource;
+        // 管线图标集合
+        this.pipelineMarkEntities = [];
 
         // 正常路线宽度
         this.normalLineWidth = 7;
@@ -39,6 +43,9 @@ export class MapControls {
         this.highLineWidth = 35;
         // 记录上一个nameID
         this.oldHighLineNameID;
+
+        // 左击事件
+        this.leftClickHandler;
 
         this.init();
 
@@ -73,17 +80,30 @@ export class MapControls {
 
     // 左键点击事件
     setLeftClickAction(callback) {
-        let handler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
+        if (this.leftClickHandler !== undefined) {
+            this.leftClickHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        }
+        this.leftClickHandler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
         const self = this;
-        handler.setInputAction(function (click) {
+        this.leftClickHandler.setInputAction(function (click) {
+            // let ray = self.viewer.camera.getPickRay(click.position);
+            // let cartesian = self.viewer.scene.globe.pick(ray, self.viewer.scene);
+            // let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+            // let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
+            // let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
+            // let cartographic = self.viewer.camera.positionCartographic;
+            // let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
+            // let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
+            // console.log(lng + "," + lat)
+
             let pick = self.viewer.scene.pick(click.position);
-            if (pick !== undefined && pick.id._name == "mark") {
+            if (pick !== undefined && pick.id._name == "mark" && !pick.id._id.startsWith("pipe_line")) {
                 let cartesian = new Cesium.Cartesian3(pick.id._position._value.x, pick.id._position._value.y, pick.id._position._value.z);
                 let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
                 let lng = Cesium.Math.toDegrees(cartographic.longitude);
                 let lat = Cesium.Math.toDegrees(cartographic.latitude);
                 // console.log(lng + ", " + lat)
-                self.flyTo(lng, lat - 0.00386176411506, self.nearDistance);
+                self.flyTo(lng, lat, self.nearDistance, undefined, undefined, "near");
 
                 let id = pick.id._id;
                 callback(id);
@@ -93,7 +113,7 @@ export class MapControls {
                 if (callback !== undefined) {
                     let name_id = pick.id.nameID;
 
-                    if (name_id <= 4) {
+                    if (name_id <= 6) {
                         // 1经度对应3D模型坐标X轴的长度 => lngToObject3DX
                         // 1纬度对应3D模型坐标Z轴的长度 => latToObject3DZ
                         const lngToObject3DX = 93815.009874142068525748445840366, latToObject3DZ = -112249.66656363197477846898570451;
@@ -125,7 +145,7 @@ export class MapControls {
             let pickedFeature = self.viewer.scene.pick(movement.endPosition);
             if (pickedFeature !== undefined && pickedFeature.id.nameID !== undefined) {
                 let name_id = pickedFeature.id.nameID;
-                if (name_id <= 5) {
+                if (name_id <= 6) {
                     self.changeHighLightLineStateByNameID(name_id);
                 }
             } else {
@@ -176,32 +196,53 @@ export class MapControls {
 
     }
 
+    // 设置管网感知主视角
+    setPipeNetworkPerceptionMainView() {
+        this.flyTo(this.startLocation.x, this.startLocation.y, this.farDistance);
+        this.setDefaultLocation(this.startLocation.x, this.startLocation.y);
+    }
+
+    // 设置泵站监控主视角
+    setPumpStationMonitoringMainView() {
+        this.flyTo(this.startLocation.x, this.startLocation.y, this.farDistance);
+        this.setDefaultLocation(this.startLocation.x, this.startLocation.y);
+    }
+
+    // 设置自由巡检主视角
+    setFreeRoamMainView() {
+        this.flyTo(119.92050928016923, 32.388417918122855 + 0.036887233525095, this.farDistance);
+        this.setDefaultLocation(119.92050928016923, 32.388417918122855 + 0.036887233525095);
+    }
+
+    // 设置默认位置
+    setDefaultLocation(lng, lat) {
+        this.defaultLocation.x = lng;
+        this.defaultLocation.y = lat;
+    }
+
     // 相机飞行到泰州市海陵区默认位置
     earthRolling(show) {
         const self = this;
-        // 偏差值
-        let deviation = self.defaultLocation.y - 0.03688723352509;
         if (show) {
             let cartographic = self.viewer.camera.positionCartographic;
             let height = cartographic.height;
-            self.flyTo(self.defaultLocation.x, deviation, height, function () {
-                self.flyTo(self.defaultLocation.x, deviation, self.defaultLocation.z, function () {
-                    setTimeout(function () {
-                        self.showAllMarks();
-                        self.showRoute();
-                    }, 2000);
-                }, 8);
-            })
-
+            self.setDefaultLocation(this.startLocation.x, this.startLocation.y);
+            self.flyTo(self.defaultLocation.x, self.defaultLocation.y, height, function () {
+                self.flyTo(self.defaultLocation.x, self.defaultLocation.y, self.defaultLocation.z, function () {
+                    self.flyTo(self.defaultLocation.x, self.defaultLocation.y, self.defaultLocation.z, function () {
+                        setTimeout(function () {
+                            self.showAllMarks();
+                        }, 1500);
+                    })
+                }, 5);
+            });
         } else {
-            self.flyTo(self.defaultLocation.x, deviation, self.defaultLocation.z);
+            self.flyTo(self.defaultLocation.x, self.defaultLocation.y, self.defaultLocation.z);
         }
-
     }
 
     // 设置地图
     setMap(url) {
-
         // 移除所有影像图层
         this.viewer.imageryLayers.removeAll();
         let imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
@@ -214,33 +255,22 @@ export class MapControls {
     }
 
     // 飞行到指定位置
-    flyTo(lng, lat, height, callback, duration) {
-
+    flyTo(lng, lat, height, callback, duration, distance) {
         let cartographic = this.viewer.camera.positionCartographic;
-
+        // 偏差值
+        let deviation;
+        if (distance == "near") {
+            deviation = lat - 0.00386176411506;
+        } else if (distance == "normal") {
+            deviation = lat;
+        } else {
+            deviation = lat - 0.03688723352509;
+        }
         // 相机据地面高度超30000米时，镜头垂直于地面飞行
-        if (cartographic.height > 30000 && height < 30000) {
+        if (cartographic.height > 30000) {
             const self = this;
             self.viewer.scene.camera.flyTo({
-                destination: Cesium.Cartesian3.fromDegrees(lng, lat, height), // 点的坐标
-                orientation: {
-                    heading: Cesium.Math.toRadians(0.0), // east, default value is 0.0 (north)
-                    pitch: Cesium.Math.toRadians(-90),    // default value (looking down)
-                    roll: 0.0                             // default value
-                },
-                duration: duration,
-                complete: function () {
-                    self.flyTo(lng, lat, height, undefined, 5);
-                    if (callback !== undefined) {
-                        callback();
-                    }
-                }
-            });
-
-        } else if (cartographic.height > 30000 && height > 30000) {
-            const self = this;
-            self.viewer.scene.camera.flyTo({
-                destination: Cesium.Cartesian3.fromDegrees(lng, lat, height), // 点的坐标
+                destination: Cesium.Cartesian3.fromDegrees(lng, deviation, height), // 点的坐标
                 orientation: {
                     heading: Cesium.Math.toRadians(0.0), // east, default value is 0.0 (north)
                     pitch: Cesium.Math.toRadians(-90),    // default value (looking down)
@@ -255,7 +285,7 @@ export class MapControls {
             });
         } else {
             this.viewer.scene.camera.flyTo({
-                destination: Cesium.Cartesian3.fromDegrees(lng, lat, height), // 点的坐标
+                destination: Cesium.Cartesian3.fromDegrees(lng, deviation, height), // 点的坐标
                 orientation: {
                     heading: Cesium.Math.toRadians(0.0), // east, default value is 0.0 (north)
                     pitch: Cesium.Math.toRadians(-45),
@@ -273,18 +303,23 @@ export class MapControls {
 
     // 设置相机位置
     setView(lng, lat, height, distance) {
+        // 偏差值
+        let deviation = lat - 0.03688723352509;
+        const self = this;
         this.viewer.scene.camera.setView({
-            destination: Cesium.Cartesian3.fromDegrees(lng, lat, height), // 点的坐标
+            destination: Cesium.Cartesian3.fromDegrees(lng, deviation, height), // 点的坐标
             orientation: {
                 heading: Cesium.Math.toRadians(0.0), // east, default value is 0.0 (north)
                 pitch: Cesium.Math.toRadians(-45),    // default value (looking down)
                 roll: 0.0                             // default value
+            },
+            complete: function () {
+                if (distance !== undefined) {
+                    this.viewer.scene.camera.moveBackward(distance);
+                }
+                self.setDefaultLocation(lng, lat);
             }
         });
-
-        if (distance !== undefined) {
-            this.viewer.scene.camera.moveBackward(distance);
-        }
     }
 
     // 添加一个图标
@@ -315,7 +350,12 @@ export class MapControls {
             } : {}
         });
         entity.show = false;
-        this.markEntities.push(entity);
+        if (id.startsWith("pipe_line")) {
+            this.pipelineMarkEntities.push(entity);
+        } else {
+            this.markEntities.push(entity);
+        }
+
     }
 
     // 批量添加图标
@@ -327,7 +367,6 @@ export class MapControls {
             }
         }
     }
-
 
     // 展示所有图标
     showAllMarks() {
@@ -350,7 +389,6 @@ export class MapControls {
                 this.viewer.entities.remove(this.markEntities[i]);
                 break;
             }
-
         }
         this.markEntities.splice(i, 1);
     }
@@ -363,7 +401,7 @@ export class MapControls {
     }
 
     // 添加高亮路线
-    addHighlightRoute(url) {
+    addHighlightRoute(url, imgUrl) {
         let geojsonOptions = {
             clampToGround: true
         };
@@ -371,7 +409,6 @@ export class MapControls {
         // Data from : https://data.cityofnewyork.us/City-Government/Neighborhood-Tabulation-Areas/cpf4-rkhq
         let neighborhoodsPromise = Cesium.GeoJsonDataSource.load(url, geojsonOptions);
         const self = this;
-        // Save an new entity collection of neighborhood data
         neighborhoodsPromise.then(function (dataSource) {
             self.viewer.dataSources.add(dataSource);
             self.polylineDataSource = dataSource;
@@ -381,7 +418,7 @@ export class MapControls {
                 let r = entities[i];
                 r.show = false;
                 r.nameID = i;   //给每条线添加一个编号，方便之后对线修改样式
-                if (i <= 5) {
+                if (i <= 6) {
                     r.polyline.width = self.normalLineWidth;
                     r.polyline.material = Cesium.Color.fromCssColorString("#FFAE00");
                 } else {
@@ -394,8 +431,25 @@ export class MapControls {
                 // 设置这个属性让多边形贴地，ClassificationType.CESIUM_3D_TILE 是贴模型，ClassificationType.BOTH是贴模型和贴地
                 // entity.polygon.classificationType = Cesium.ClassificationType.TERRAIN; // 这个配置会引起不知名异常，接下来的代码不执行
             }
-
         });
+
+        if (Object.prototype.toString.call(imgUrl) == '[object Array]') {
+            let positions = [
+                // 0.00484324834058‬
+                { lng: 119.90859484018362, lat: 32.488835079398744 },
+                { lng: 119.92129694137134, lat: 32.46329064651353 },
+                { lng: 119.9252764567779, lat: 32.47627953588373 },
+                { lng: 119.94340609430826, lat: 32.459344960063315 }
+            ]
+            for (let i = 0; i < imgUrl.length; i++) {
+                console.log(imgUrl[i])
+                this.addMark("pipe_line" + i, positions[i], undefined, {
+                    uri: imgUrl[i],
+                    width: 123.65,
+                    height: 50
+                })
+            }
+        }
     }
 
     // 移到管线上时管线高亮，移出时管线正常
@@ -451,7 +505,11 @@ export class MapControls {
             for (let i = 0; i < entities.length; i++) {
                 entities[i].show = true;
             }
+            for (let i = 0; i < this.pipelineMarkEntities.length; i++) {
+                this.pipelineMarkEntities[i].show = true;
+            }
         }
+
     }
 
     // 隐藏路线
@@ -460,6 +518,9 @@ export class MapControls {
             let entities = this.polylineDataSource.entities.values;
             for (let i = 0; i < entities.length; i++) {
                 entities[i].show = false;
+            }
+            for (let i = 0; i < this.pipelineMarkEntities.length; i++) {
+                this.pipelineMarkEntities[i].show = false;
             }
         }
     }
