@@ -1,7 +1,9 @@
 import { ShowInformationBox } from './showInformationBox';
+import { HideRoad } from './hideRoads';
+import { TrajectoryFreeroam } from './trajectoryfreeroam';
 
 export class AutoCreatePipeLine {
-    constructor(container, pipeUrl, cityUrls, dracoLibUrl, groundUrl, bgImgUrl) {
+    constructor(container, pipeUrl, cityUrls, dracoLibUrl, groundUrl, bgImgUrl, x, z, id) {
         this.container = container;
         this.bustard;
         this.loader;
@@ -31,7 +33,6 @@ export class AutoCreatePipeLine {
         this.bgImgUrl = bgImgUrl
         this.dracoLibUrl = dracoLibUrl
         this.renderInterval;
-        this.showInformationBox = new ShowInformationBox();
 
         this.camera = {
             position: { x: -1692.6964275679534, y: 30, z: 117.58047372102737 },
@@ -42,7 +43,45 @@ export class AutoCreatePipeLine {
             target: { x: -230, y: 30, z: 800 }
         };
 
+        const self = this;
+
+        this.x = x;
+        this.z = z;
+        this.id = id;
+        this.init();
+        this.hideRoad = new HideRoad(this.modelHide, this.textureTool);
+        this.trajectoryFreeroam = new TrajectoryFreeroam(this.roam, this.pick);
+        this.showInformationBox = new ShowInformationBox();
+        this.showInformationBox.setRemoveEvents(function () {
+            self.trajectoryFreeroam.removeEvents();
+        });
+        this.showInformationBox.setAddEvents(function () {
+            self.trajectoryFreeroam.addEvents();
+        });
+        this.loadModels();
+
     }
+
+    start() {
+        this.trajectoryFreeroam.start();
+    }
+
+    startByParam(x, z, id) {
+        this.trajectoryFreeroam.startByParam(x, z, id);
+    }
+
+    showFlowTo(urlImg) {
+        this.hideRoad.showFlowTo(this.autoCreatePipeLine.pipeline_all, urlImg)
+    }
+
+    getHideRoadObject() {
+        return this.hideRoad;
+    }
+
+    setSize(width, height) {
+        this.roam.getCore().resetSize(width, height);
+    }
+
 
     getPipelineDatas() {
         const self = this;
@@ -84,7 +123,7 @@ export class AutoCreatePipeLine {
         })
     }
 
-    init(callback, x, z, id) {
+    init() {
         this.getPipelineDatas();
         this.getWellDatas();
         let con = document.getElementById(this.container);
@@ -103,6 +142,19 @@ export class AutoCreatePipeLine {
         this.renderInterval = 0
         // this.light.addDirectionalLightForCamera("sun", { x: 0, y: 250, z: 0 })
 
+        this.pick = this.bustard.use(new Bustard.Pick());
+        const self = this;
+        this.pick.pick = function (node, point) {
+            // console.log(node)
+            console.log(point)
+            self.showInformationBox.isPipeline(self.light, node);
+            // console.log("相机位置：" + self.roam.curPosition().z + "," + self.roam.curPosition().x);
+            // console.log("焦点位置：" + self.roam.curTarget().z + "," + self.roam.curTarget().x);
+        }
+        // this.cloneModel();
+    }
+
+    loadModels() {
         const self = this;
         Promise.all([
             self.loader.gltfLoadByUrl(self.pipeUrl, 'pipeline', false).then(value => {
@@ -120,8 +172,8 @@ export class AutoCreatePipeLine {
                     // self.roam.lookAt(self.camera1.position, self.camera1.target);
                     self.cloneModel();
                     self.hideModel();
-                    if (callback !== undefined) {
-                        callback(x, z, id);
+                    if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
+                        self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
                     }
                     let time2 = new Date();
                     let newdate2 = time2.toLocaleString('chinese', { hour12: false });
@@ -132,17 +184,6 @@ export class AutoCreatePipeLine {
                 })
             })
         });
-
-
-        this.pick = this.bustard.use(new Bustard.Pick());
-        this.pick.pick = function (node, point) {
-            // console.log(node)
-            console.log(point)
-            self.showInformationBox.isPipeline(self.light, node);
-            // console.log("相机位置：" + self.roam.curPosition().z + "," + self.roam.curPosition().x);
-            // console.log("焦点位置：" + self.roam.curTarget().z + "," + self.roam.curTarget().x);
-        }
-        // this.cloneModel();
     }
 
     getmodel() {

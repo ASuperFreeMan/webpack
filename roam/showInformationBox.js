@@ -1,6 +1,17 @@
 export class ShowInformationBox {
     constructor() {
 
+        this.removeEvents;
+        this.addEvents;
+
+    }
+
+    setRemoveEvents(callback) {
+        this.removeEvents = callback;
+    }
+
+    setAddEvents(callback) {
+        this.addEvents = callback;
     }
 
     isPipeline(light, node) {
@@ -79,11 +90,14 @@ export class ShowInformationBox {
         let mL = document.getElementById("mask")
         let dc = document.getElementById(dataContent)
         mL.style.display = "block"
+        // 移除事件
+        this.removeEvents();
         dc.style.display = "block"
         dc.style.position = "absolute"
         dc.style.left = left
         dc.style.top = top
         let di = document.getElementById(closeContent)
+        const self = this;
         di.addEventListener("click", function () {
             dc.style.display = "none"
             mL.style.display = "none"
@@ -92,6 +106,8 @@ export class ShowInformationBox {
             } catch{
 
             }
+            // 添加事件
+            self.addEvents();
         })
     }
 }
