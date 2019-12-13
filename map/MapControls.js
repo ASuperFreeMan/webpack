@@ -50,9 +50,9 @@ export class MapControls {
         this.init();
 
         // 取消拖动事件
-        // this.viewer.scene.screenSpaceCameraController.enableRotate = false;
+        this.viewer.scene.screenSpaceCameraController.enableRotate = false;
         // 取消滚轮事件
-        // this.viewer.scene.screenSpaceCameraController.enableZoom = false;
+        this.viewer.scene.screenSpaceCameraController.enableZoom = false;
         // 取消双击默认效果
         this.viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
