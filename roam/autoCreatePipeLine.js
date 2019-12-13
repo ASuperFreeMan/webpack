@@ -134,7 +134,6 @@ export class AutoCreatePipeLine {
         });
 
 
-
         this.pick = this.bustard.use(new Bustard.Pick());
         this.pick.pick = function (node, point) {
             // console.log(node)
