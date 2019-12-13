@@ -3,15 +3,22 @@ export class ShowInformationBox {
 
     }
 
-    isPipeline(node) {
+    isPipeline(light, node) {
         if (node != null && (node.userData.modelName == "pipeline" || node.userData.modelName == "well")) {
-            console.log("11111111111")
-            this.selectInformationBox(node.name, node.userData.modelName)
+            // console.log("11111111111")1474 1129
+            // light.highLightByIds([1474, 1129])
+            light.highLight(node)
+            this.selectInformationBox(light, node.name, node.userData.modelName)
+            // let pipeDC = document.getElementById("pipeLineInformationBox")
+            // let wellDC = document.getElementById("tubeWellInformationBox")
+            // pipeDC.style.display = "none"
+            // wellDC.style.display = "none"
+
         }
     }
 
-    selectInformationBox(nodeName, modelName) {
-        console.log("2222222")
+    selectInformationBox(light, nodeName, modelName) {
+        // console.log("2222222")
         const self = this;
         if (modelName == "pipeline") {
             $.ajax({
@@ -25,15 +32,16 @@ export class ShowInformationBox {
                 success: function (d) {
                     console.log("333333")
                     console.log(d.data)
-                    let content = "#pipeLineInformationBox"
-                    self.showInformationBox(content)
+                    let content = "pipeLineInformationBox"
+                    let closeContent = "pipeClose"
+                    self.showInformationBox(light, content, closeContent, "40%", "35%")
                     $("#pipingType").text(d.data.type)
                     $("#startNumber").text(d.data.startElevation)
                     $("#endNumber").text(d.data.endElevation)
                     $("#sectionSize").text(d.data.diameter)
                     $("#material").text(d.data.material)
                     // $("#whereRoad").text(d.data.conduitVo.whereRoad)
-                    self.modelInfoBtnEvenInit()
+                    // self.modelInfoBtnEvenInit()
                 },
                 error: function () {
                     alert("获取失败！1111")
@@ -50,13 +58,14 @@ export class ShowInformationBox {
                 },
                 type: "GET",
                 success: function (d) {
-                    console.log("444444")
-                    console.log(d.data)
-                    let content = "#tubeWellInformationBox"
-                    self.showInformationBox(content)
+                    // console.log("444444")
+                    // console.log(d.data)
+                    let content = "tubeWellInformationBox"
+                    let closeContent = "wellClose"
+                    self.showInformationBox(light, content, closeContent, "40%", "35%")
                     $("#depth").text(d.data.depth)
                     $("#elevation").text(d.data.elevation)
-                    self.modelInfoBtnEvenInit()
+                    // self.modelInfoBtnEvenInit()
                 },
                 error: function () {
                     alert("获取失败！2222")
@@ -66,28 +75,24 @@ export class ShowInformationBox {
 
     }
 
-    showInformationBox(dataContent) {
-        console.log("55555555555")
-        layer.open({
-            skin: 'layer-dg',
-            anim: -1,
-            type: 1, //Layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）,
-            title: false,   //标题
-            area: ['auto', 'auto'],   //宽高
-            shade: 0,   //遮罩透明度
-            content: $(dataContent),//支持获取DOM元素
-            scrollbar: false,//屏蔽浏览器滚动条
-            offset: ['300px', '500px'],
-            shadeClose: true,
-            move: dataContent
-        });
-    }
+    showInformationBox(light, dataContent, closeContent, left, top) {
+        let mL = document.getElementById("mask")
+        let dc = document.getElementById(dataContent)
+        mL.style.display = "block"
+        dc.style.display = "block"
+        dc.style.position = "absolute"
+        dc.style.left = left
+        dc.style.top = top
+        let di = document.getElementById(closeContent)
+        di.addEventListener("click", function () {
+            dc.style.display = "none"
+            mL.style.display = "none"
+            try {
+                light.removeHighLight()
+            } catch{
 
-    modelInfoBtnEvenInit() {
-        $(".layui-layer-setwin").bind("click", function () {
-            $("#pipeLineInformationBox").hide();
-            $("#tubeWellInformationBox").hide();
-        });
+            }
+        })
     }
 }
 
