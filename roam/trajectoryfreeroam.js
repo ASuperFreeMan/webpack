@@ -1,31 +1,24 @@
 import { judgeMent, computeNewPositionAndTarget, computeNewTargetOfCamera } from './Utils'
 import { Graph } from './Graph';
 import { newCoords } from './coords';
-import { AutoCreatePipeLine } from './autoCreatePipeLine';
-
-import { HideRoad } from './hideRoads';
 
 export class TrajectoryFreeroam {
-    constructor(container, urls, urls2, dracoLibUrl, url3, bgImgUrl, x, z, id, callback) {
-        this.autoCreatePipeLine = new AutoCreatePipeLine(container, urls, urls2, dracoLibUrl, url3, bgImgUrl);
-        const self = this;
+    constructor(roam, pick) {
+        // if (x !== undefined && z !== undefined && id !== undefined) {
+        //     this.autoCreatePipeLine.init(function (x, z, id) {
+        //         self.startByParam(x, z, id);
+        //         if (callback !== undefined) {
+        //             let endFlag = true;
+        //             callback(endFlag);
+        //         }
+        //     }, x, z, id);
+        // }
+        // else {
+        //     this.autoCreatePipeLine.init();
+        // }
 
-        if (x !== undefined && z !== undefined && id !== undefined) {
-            this.autoCreatePipeLine.init(function (x, z, id) {
-                self.startByParam(x, z, id);
-                if (callback !== undefined) {
-                    let endFlag = true;
-                    callback(endFlag);
-                }
-            }, x, z, id);
-        } else {
-            this.autoCreatePipeLine.init();
-        }
-
-        this.roam = this.autoCreatePipeLine.roam;
-        this.pick = this.autoCreatePipeLine.pick;
-
-        this.hideRoad = new HideRoad(this.autoCreatePipeLine.modelHide, this.autoCreatePipeLine.textureTool);
+        this.roam = roam;
+        this.pick = pick;
 
         // 记录相机和焦点的连线与x轴的夹角
         this.theta;
@@ -63,25 +56,14 @@ export class TrajectoryFreeroam {
         this.oldState;
     }
 
-
-    showFlowTo(urlImg) {
-        this.hideRoad.showFlowTo(this.autoCreatePipeLine.pipeline_all, urlImg)
+    removeEvents() {
+        document.removeEventListener("keydown", this.keyDownEventFn);
+        document.removeEventListener("mousedown", this.mouseDownEventFn);
     }
 
-    getHideRoadObject() {
-        return this.hideRoad;
-    }
-
-    getAutoCreatePipeLineObject() {
-        return this.autoCreatePipeLine;
-    }
-
-    setSize(width, height) {
-        this.roam.getCore().resetSize(width, height);
-    }
-
-    getNewCoords() {
-        return newCoords;
+    addEvents() {
+        this.setClickMouseEvents();
+        this.setKeyEvents();
     }
 
     // 根据传入参数定位巡检
@@ -133,12 +115,10 @@ export class TrajectoryFreeroam {
         this.roam.lookAt(camera.position, camera.target);
     }
 
-
     init() {
 
         this.vertexs = new Graph();
 
-        // let k = 0;
         for (let i in newCoords) {
             for (let j = 0; j < newCoords[i].length; j++) {
                 this.vertexs.setVertex(i + "[" + j + "]", newCoords[i][j]);
@@ -293,6 +273,11 @@ export class TrajectoryFreeroam {
 
     // 鼠标点击事件
     setClickMouseEvents() {
+
+        if (this.mouseDownEventFn !== undefined) {
+            document.removeEventListener("mousedown", this.mouseDownEventFn);
+        }
+
         let range = 1;
         // 前进一下的距离
         let n = 2;
@@ -498,6 +483,11 @@ export class TrajectoryFreeroam {
 
     // 键盘事件
     setKeyEvents() {
+
+        if (this.keyDownEventFn !== undefined) {
+            document.removeEventListener('keydown', this.keyDownEventFn);
+        }
+
         let range = 1;
         // 前进一下的距离
         let n = 2;

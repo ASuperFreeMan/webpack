@@ -1,7 +1,9 @@
 import { ShowInformationBox } from './showInformationBox';
+import { HideRoad } from './hideRoads';
+import { TrajectoryFreeroam } from './trajectoryfreeroam';
 
 export class AutoCreatePipeLine {
-    constructor(container, pipeUrl, cityUrls, dracoLibUrl, groundUrl, bgImgUrl) {
+    constructor(container, pipeUrl, cityUrls, dracoLibUrl, groundUrl, bgImgUrl, x, z, id) {
         this.container = container;
         this.bustard;
         this.loader;
@@ -31,7 +33,6 @@ export class AutoCreatePipeLine {
         this.bgImgUrl = bgImgUrl
         this.dracoLibUrl = dracoLibUrl
         this.renderInterval;
-        this.showInformationBox = new ShowInformationBox();
 
         this.camera = {
             position: { x: -1692.6964275679534, y: 30, z: 117.58047372102737 },
@@ -42,20 +43,53 @@ export class AutoCreatePipeLine {
             target: { x: -230, y: 30, z: 800 }
         };
 
+        const self = this;
+
+        this.x = x;
+        this.z = z;
+        this.id = id;
+        this.init();
+        this.hideRoad = new HideRoad(this.modelHide, this.textureTool);
+        this.trajectoryFreeroam = new TrajectoryFreeroam(this.roam, this.pick);
+        this.showInformationBox = new ShowInformationBox();
+        this.showInformationBox.setRemoveEvents(function () {
+            self.trajectoryFreeroam.removeEvents();
+        });
+        this.showInformationBox.setAddEvents(function () {
+            self.trajectoryFreeroam.addEvents();
+        });
+        this.loadModels();
+
     }
+
+    start() {
+        this.trajectoryFreeroam.start();
+    }
+
+    startByParam(x, z, id) {
+        this.trajectoryFreeroam.startByParam(x, z, id);
+    }
+
+    showFlowTo(urlImg) {
+        this.hideRoad.showFlowTo(this.autoCreatePipeLine.pipeline_all, urlImg)
+    }
+
+    getHideRoadObject() {
+        return this.hideRoad;
+    }
+
+    setSize(width, height) {
+        this.roam.getCore().resetSize(width, height);
+    }
+
 
     getPipelineDatas() {
         const self = this;
         $.ajax({
-            // url: "http://192.168.0.43:8099/api/v1/article/monitor/pipelineModeling",
-            // url:"http://192.168.0.43:8099/api/v1/article/monitor/pipelineModeling",
             url: "http://277jd48643.wicp.vip/api/v1/article/monitor/pipelineModeling",
             type: "GET",
             success: function (d) {
                 self.pipelines = d.data
-                let time = new Date();
-                let newdate = time.toLocaleString('chinese', { hour12: false });
-                console.log("获取p" + newdate)
             },
             error: function () {
                 alert("获取失败！")
@@ -67,15 +101,10 @@ export class AutoCreatePipeLine {
     getWellDatas() {
         const self = this;
         $.ajax({
-            // url: "http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
-            // url:"http://192.168.0.43:8099/api/v1/article/monitor/wellPointModeling",
             url: "http://277jd48643.wicp.vip/api/v1/article/monitor/wellPointModeling",
             type: "GET",
             success: function (d) {
                 self.wells = d.data
-                let time = new Date();
-                let newdate = time.toLocaleString('chinese', { hour12: false });
-                console.log("获取w" + newdate)
             },
             error: function () {
                 alert("获取失败！")
@@ -84,12 +113,24 @@ export class AutoCreatePipeLine {
         })
     }
 
-    init(callback, x, z, id) {
+    init() {
         this.getPipelineDatas();
         this.getWellDatas();
         let con = document.getElementById(this.container);
         this.bustard = new Bustard(con);
-        this.loader = this.bustard.use(new Bustard.Loader());
+        this.loader = this.bustard.use(new Bustard.Loader({
+            position: {
+                x: -1900,
+                y: 100,
+                z: 700
+            },
+            target: {
+                x: -280,
+                y: 100,
+                z: 435
+            },
+            isCameraFix: true
+        }));
         this.bustard.core.addImgToBackground(this.bgImgUrl)
         this.color = this.bustard.use(new Bustard.Color({ isMutex: true }));
         this.color.activeClick = false;
@@ -103,6 +144,20 @@ export class AutoCreatePipeLine {
         this.renderInterval = 0
         // this.light.addDirectionalLightForCamera("sun", { x: 0, y: 250, z: 0 })
 
+        this.pick = this.bustard.use(new Bustard.Pick());
+        const self = this;
+        this.pick.pick = function (node, point) {
+            // console.log(node)
+            // console.log(point)
+            // console.log("相机位置：" + self.roam.curPosition().z + "," + self.roam.curPosition().y + "," + self.roam.curPosition().x);
+            // console.log("焦点位置：" + self.roam.curTarget().z + "," + self.roam.curTarget().y + "," + self.roam.curTarget().x);
+            self.showInformationBox.isPipeline(self.light, node);
+
+        }
+        // this.cloneModel();
+    }
+
+    loadModels() {
         const self = this;
         Promise.all([
             self.loader.gltfLoadByUrl(self.pipeUrl, 'pipeline', false).then(value => {
@@ -111,38 +166,19 @@ export class AutoCreatePipeLine {
             self.getmodel();
             self.roam.lookAt(self.camera.position, self.camera.target);
             self.loader.setDraco(self.dracoLibUrl);
-            let time1 = new Date();
-            let newdate1 = time1.toLocaleString('chinese', { hour12: false });
-            console.log("加载城市" + newdate1)
             self.loader.gltfLoadByUrl(self.groundUrl, "dimian", false).then(value => {
                 value.position.set(0, -0.22, 0)
                 self.loader.gltfLoadByUrls(self.cityUrls, 'floor', true).then(value => {
                     // self.roam.lookAt(self.camera1.position, self.camera1.target);
                     self.cloneModel();
                     self.hideModel();
-                    if (callback !== undefined) {
-                        callback(x, z, id);
+                    if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
+                        self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
                     }
-                    let time2 = new Date();
-                    let newdate2 = time2.toLocaleString('chinese', { hour12: false });
-                    console.log("加载城市结束" + newdate2)
-                    // self.renderInterval = setInterval(function () {
-                    //     self.bustard.core.render()
-                    // }, 20)
+                    $(".loading").fadeOut();
                 })
             })
         });
-
-
-        this.pick = this.bustard.use(new Bustard.Pick());
-        this.pick.pick = function (node, point) {
-            // console.log(node)
-            console.log(point)
-            self.showInformationBox.isPipeline(self.light, node);
-            // console.log("相机位置：" + self.roam.curPosition().z + "," + self.roam.curPosition().x);
-            // console.log("焦点位置：" + self.roam.curTarget().z + "," + self.roam.curTarget().x);
-        }
-        // this.cloneModel();
     }
 
     getmodel() {
