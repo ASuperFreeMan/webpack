@@ -144,7 +144,6 @@ export class TrajectoryFreeroam {
                 i += 2;
             }
         }
-
     }
 
     addEdge(prefix, start, end) {
