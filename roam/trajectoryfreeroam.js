@@ -2,7 +2,7 @@ import { judgeMent, computeNewPositionAndTarget, computeNewTargetOfCamera } from
 import { Graph } from './Graph';
 import { newCoords } from './coords';
 import { FreeRoamConfiguration } from './freeRoamConfiguration';
-import { Index } from './index';
+// import { Index } from './index';
 
 export class TrajectoryFreeroam {
     constructor(roam, pick) {
