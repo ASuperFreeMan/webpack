@@ -1,6 +1,8 @@
 import { judgeMent, computeNewPositionAndTarget, computeNewTargetOfCamera } from './Utils'
 import { Graph } from './Graph';
 import { newCoords } from './coords';
+import { FreeRoamConfiguration } from './freeRoamConfiguration';
+import { Index } from './index';
 
 export class TrajectoryFreeroam {
     constructor(roam, pick) {
@@ -37,12 +39,12 @@ export class TrajectoryFreeroam {
         // 相机最近经过的点
         this.curCoord;
         // 设置相机坐标Y轴
-        this.positionY = 5;
+        this.positionY = FreeRoamConfiguration.positionY;
         // 设置焦点坐标Y轴
-        this.targetY = 4;
+        this.targetY = FreeRoamConfiguration.targetY;
 
         // 设定相机与焦点之间的水平距离
-        this.length = 20;
+        this.horizontalDistanceBetweenCameraAndTarget = FreeRoamConfiguration.horizontalDistanceBetweenCameraAndTarget;
 
         // 镜头刚旋转时相机及焦点的位置
         this.oldPosition;
@@ -56,11 +58,13 @@ export class TrajectoryFreeroam {
         this.oldState;
     }
 
+    // 移除鼠标事件和键盘事件
     removeEvents() {
         document.removeEventListener("keydown", this.keyDownEventFn);
         document.removeEventListener("mousedown", this.mouseDownEventFn);
     }
 
+    // 配置鼠标事件和键盘事件
     addEvents() {
         this.setClickMouseEvents();
         this.setKeyEvents();
@@ -80,6 +84,7 @@ export class TrajectoryFreeroam {
         }
     }
 
+    // 从初始位置开始巡检
     start(cur, curPoint, next, nextPoint) {
         if (cur !== undefined && curPoint !== undefined && next !== undefined && nextPoint !== undefined) {
             curPoint.y = this.positionY;
@@ -102,20 +107,18 @@ export class TrajectoryFreeroam {
         // 移除cameraControls中的监听事件
         this.pick.getCore().removeAllListenerEventsFromCameraControls();
 
-        this.init();
-        this.setClickMouseEvents();
-        this.setKeyEvents();
+        this.initTheRelationOfVertexsToCoords();
+        this.addEvents();
     }
 
     end() {
-        document.removeEventListener("keydown", this.keyDownEventFn);
-        document.removeEventListener("mousedown", this.mouseDownEventFn);
-
+        this.removeEvents();
         this.pick.getCore().addAllListenerEventsFromCameraControls();
         this.roam.lookAt(camera.position, camera.target);
     }
 
-    init() {
+    // 初始化顶点和坐标之间的关系
+    initTheRelationOfVertexsToCoords() {
 
         this.vertexs = new Graph();
 
@@ -127,19 +130,20 @@ export class TrajectoryFreeroam {
 
         this.graph = new Graph();
 
-        this.addEdge(0, 0, newCoords[0].length - 1);
-        this.addEdge(1, 0, newCoords[1].length - 1);
-        this.addEdge(2, 0, newCoords[2].length - 1);
-        this.graph.addEdge("0[" + (newCoords[0].length - 1) + "]", "1[0]");
-        this.graph.addEdge("0[" + (newCoords[0].length - 1) + "]", "2[0]");
-        this.addEdge(3, 0, newCoords[3].length - 1);
-        this.addEdge(4, 0, newCoords[4].length - 1);
-        this.graph.addEdge("1[" + (newCoords[1].length - 1) + "]", "3[0]");
-        this.graph.addEdge("1[" + (newCoords[1].length - 1) + "]", "4[0]");
-        this.addEdge(5, 0, newCoords[5].length - 1);
-        this.addEdge(6, 0, newCoords[6].length - 1);
-        this.graph.addEdge("3[" + (newCoords[3].length - 1) + "]", "5[0]");
-        this.graph.addEdge("3[" + (newCoords[3].length - 1) + "]", "6[0]");
+        let n = 1;
+        for (let i = 0; i + n + 1 <= FreeRoamConfiguration.lineMaxId;) {
+            this.addEdge(i, 0, newCoords[i].length - 1);
+            this.addEdge(i + n, 0, newCoords[i + n].length - 1);
+            this.addEdge(i + n + 1, 0, newCoords[i + n + 1].length - 1);
+            this.graph.addEdge(i + "[" + (newCoords[i].length - 1) + "]", (i + n) + "[0]");
+            this.graph.addEdge(i + "[" + (newCoords[i].length - 1) + "]", (i + n + 1) + "[0]");
+            if (i == 0) {
+                i++;
+                n = 2;
+            } else {
+                i += 2;
+            }
+        }
 
     }
 
@@ -150,7 +154,7 @@ export class TrajectoryFreeroam {
     }
 
     // 事件开始时的配置
-    dataInit(range, e) {
+    eventStartConfiguration(range, e) {
         let curPosition = this.roam.curPosition();
         let curTarget = this.roam.curTarget();
 
@@ -244,11 +248,11 @@ export class TrajectoryFreeroam {
 
                     if (judgeMent(e, "key", "up") || judgeMent(e, "mouse", "up")) {
 
-                        newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.length, "up");
+                        newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "up");
 
                     } else if (judgeMent(e, "key", "down") || judgeMent(e, "key", "down")) {
 
-                        newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.length, "down");
+                        newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "down");
 
                     }
 
@@ -261,10 +265,10 @@ export class TrajectoryFreeroam {
                     this.moveDirection = [from, to];
                 }
 
-            } else if (nextCoordsCode.length === 0) { //到达终点
+            } else if (this.nextCoordsCode.length === 0) { //到达终点
 
-                changeFlag = true;
-                nextCoordsCode.push(moveDirection[0]);
+                this.changeFlag = true;
+                this.nextCoordsCode.push(this.moveDirection[0]);
 
             }
         }
@@ -278,9 +282,9 @@ export class TrajectoryFreeroam {
             document.removeEventListener("mousedown", this.mouseDownEventFn);
         }
 
-        let range = 1;
+        let range = FreeRoamConfiguration.detectionRange;
         // 前进一下的距离
-        let n = 2;
+        let n = FreeRoamConfiguration.onceForwardDistance;
         let timer;
 
         // 去除右击默认事件
@@ -296,7 +300,7 @@ export class TrajectoryFreeroam {
                 if (e.button === 2) {
                     let point = self.pick.getPoint(e.x, e.y);
 
-                    self.dataInit(range, e);
+                    self.eventStartConfiguration(range, e);
 
                     // 点击上面
                     if (judgeMent(e, "mouse", "up")) {
@@ -324,7 +328,7 @@ export class TrajectoryFreeroam {
                     else if (judgeMent(e, "mouse", "down")) {
                         self.keyChangeLine(e);
                         if (!self.changeFlag) {
-                            self.cameraBack();
+                            self.cameraBackward();
                         }
                     }
                 }
@@ -488,14 +492,14 @@ export class TrajectoryFreeroam {
             document.removeEventListener('keydown', this.keyDownEventFn);
         }
 
-        let range = 1;
+        let range = FreeRoamConfiguration.detectionRange;
         // 前进一下的距离
-        let n = 2;
+        let n = FreeRoamConfiguration.onceForwardDistance;
 
         const self = this;
         document.addEventListener('keydown', this.keyDownEventFn = function (e) {
 
-            self.dataInit(range, e);
+            self.eventStartConfiguration(range, e);
 
             // ascll码 87：W  119：w  38：up
             if (judgeMent(e, "key", "up")) {
@@ -508,7 +512,7 @@ export class TrajectoryFreeroam {
             else if (judgeMent(e, "key", "down")) {
                 self.keyChangeLine(e);
                 if (!self.changeFlag) {
-                    self.cameraBack();
+                    self.cameraBackward();
                 }
             }
             // ascll码 65：A  97：a  37：left
@@ -568,11 +572,11 @@ export class TrajectoryFreeroam {
 
                 if (judgeMent(e, "key", "up")) {
 
-                    newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.length, "up");
+                    newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "up");
 
                 } else if (judgeMent(e, "key", "down")) {
 
-                    newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.length, "down");
+                    newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "down");
 
                 }
 
@@ -608,9 +612,9 @@ export class TrajectoryFreeroam {
     }
 
     // 相机后退的配置
-    cameraBack() {
+    cameraBackward() {
         // 后退一下的距离
-        let n = 1;
+        let n = FreeRoamConfiguration.onceBackwardDistance;
 
         let curPosition = this.roam.curPosition();
         let curTarget = this.roam.curTarget();
@@ -645,7 +649,7 @@ export class TrajectoryFreeroam {
 
         // 逆转镜头方向
         newPosition.y = this.positionY;
-        newTarget = computeNewTargetOfCamera(curTarget, curPosition, curTarget, this.length, "down");
+        newTarget = computeNewTargetOfCamera(curTarget, curPosition, curTarget, this.horizontalDistanceBetweenCameraAndTarget, "down");
         newTarget.y = this.targetY;
         this.roam.lookAt(newPosition, newTarget);
 
@@ -694,7 +698,7 @@ export class TrajectoryFreeroam {
 
         // 旋转镜头
         newPosition.y = this.positionY;
-        newTarget = computeNewTargetOfCamera(curTarget, curPosition, curTarget, this.length, "up", rotationTheta);
+        newTarget = computeNewTargetOfCamera(curTarget, curPosition, curTarget, this.horizontalDistanceBetweenCameraAndTarget, "up", rotationTheta);
         newTarget.y = this.targetY;
         this.roam.lookAt(newPosition, newTarget);
 
