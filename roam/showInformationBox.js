@@ -1,9 +1,8 @@
+import { AutoCreatePipelineConfig } from './autoCreatePipelineConfig';
 export class ShowInformationBox {
     constructor() {
-
         this.removeEvents;
         this.addEvents;
-
     }
 
     setRemoveEvents(callback) {
@@ -17,31 +16,21 @@ export class ShowInformationBox {
 
     isPipeline(light, node) {
         if (node != null && (node.userData.modelName == "pipeline" || node.userData.modelName == "well")) {
-            // console.log("11111111111")1474 1129
-            // light.highLightByIds([1474, 1129])
             light.highLight(node)
             this.selectInformationBox(light, node.name, node.userData.modelName)
-            // let pipeDC = document.getElementById("pipeLineInformationBox")
-            // let wellDC = document.getElementById("tubeWellInformationBox")
-            // pipeDC.style.display = "none"
-            // wellDC.style.display = "none"
-
         }
     }
 
     selectInformationBox(light, nodeName, modelName) {
-        // console.log("2222222")
         const self = this;
         if (modelName == "pipeline") {
             $.ajax({
-                url: "http://277jd48643.wicp.vip/api/v1/article/monitor/pipelineId",
+                url: AutoCreatePipelineConfig.getPipePresentDataUrl,
                 data: {
                     pipelineId: nodeName
                 },
                 type: "GET",
                 success: function (d) {
-                    console.log("333333")
-                    console.log(d.data)
                     let content = "pipeLineInformationBox"
                     let closeContent = "pipeClose"
                     self.showInformationBox(light, content, closeContent, "45%", "300%")
@@ -50,33 +39,28 @@ export class ShowInformationBox {
                     $("#endNumber").text(d.data.endElevation)
                     $("#sectionSize").text(d.data.diameter)
                     $("#material").text(d.data.material)
-                    // $("#whereRoad").text(d.data.conduitVo.whereRoad)
-                    // self.modelInfoBtnEvenInit()
                 },
                 error: function () {
-                    alert("获取失败！1111")
+                    alert("获取管网展示信息失败！")
                 }
             })
         }
         if (modelName == "well") {
             $.ajax({
-                url: "http://277jd48643.wicp.vip/api/v1/article/monitor/wellPointId",
+                url: AutoCreatePipelineConfig.getWellPresentDataUrl,
                 data: {
                     wellPointId: nodeName
                 },
                 type: "GET",
                 success: function (d) {
-                    // console.log("444444")
-                    // console.log(d.data)
                     let content = "tubeWellInformationBox"
                     let closeContent = "wellClose"
                     self.showInformationBox(light, content, closeContent, "46%", "315%")
                     $("#depth").text(d.data.depth)
                     $("#elevation").text(d.data.elevation)
-                    // self.modelInfoBtnEvenInit()
                 },
                 error: function () {
-                    alert("获取失败！2222")
+                    alert("获取管井展示信息失败!")
                 }
             })
         }
