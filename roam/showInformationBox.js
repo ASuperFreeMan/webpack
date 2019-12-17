@@ -44,7 +44,7 @@ export class ShowInformationBox {
                     console.log(d.data)
                     let content = "pipeLineInformationBox"
                     let closeContent = "pipeClose"
-                    self.showInformationBox(light, content, closeContent, "40%", "35%")
+                    self.showInformationBox(light, content, closeContent, "45%", "300%")
                     $("#pipingType").text(d.data.type)
                     $("#startNumber").text(d.data.startElevation)
                     $("#endNumber").text(d.data.endElevation)
@@ -70,7 +70,7 @@ export class ShowInformationBox {
                     // console.log(d.data)
                     let content = "tubeWellInformationBox"
                     let closeContent = "wellClose"
-                    self.showInformationBox(light, content, closeContent, "40%", "35%")
+                    self.showInformationBox(light, content, closeContent, "46%", "315%")
                     $("#depth").text(d.data.depth)
                     $("#elevation").text(d.data.elevation)
                     // self.modelInfoBtnEvenInit()

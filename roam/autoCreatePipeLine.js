@@ -27,6 +27,7 @@ export class AutoCreatePipeLine {
         this.pipelines;
         this.wells;
         this.pipeline_all = []
+        this.well_all = []
         this.pipeUrl = pipeUrl
         this.cityUrls = cityUrls
         this.groundUrl = groundUrl
@@ -71,7 +72,18 @@ export class AutoCreatePipeLine {
     }
 
     showFlowTo(urlImg) {
-        this.hideRoad.showFlowTo(this.autoCreatePipeLine.pipeline_all, urlImg)
+        this.hideRoad.showFlowTo(this.pipeline_all, urlImg)
+        const self = this;
+        this.renderInterval = setInterval(function () {
+            self.bustard.core.render()
+        }, 20)
+    }
+    hideFlowTo() {
+        for (let i = 0; i < this.pipeline_all.length; i++) {
+            this.pipeline_all[i].parent.remove(this.pipeline_all[i])
+        }
+        this.clonePipeModel()
+        clearInterval(this.renderInterval)
     }
 
     getHideRoadObject() {
@@ -158,6 +170,9 @@ export class AutoCreatePipeLine {
     }
 
     loadModels() {
+        // let loadLayer = document.getElementById("loading")
+        // loadLayer.style.display = "block"
+        $(".loading").fadeIn()
         const self = this;
         Promise.all([
             self.loader.gltfLoadByUrl(self.pipeUrl, 'pipeline', false).then(value => {
@@ -167,10 +182,11 @@ export class AutoCreatePipeLine {
             self.roam.lookAt(self.camera.position, self.camera.target);
             self.loader.setDraco(self.dracoLibUrl);
             self.loader.gltfLoadByUrl(self.groundUrl, "dimian", false).then(value => {
-                value.position.set(0, -0.22, 0)
+                value.position.set(0, -1, 0)
                 self.loader.gltfLoadByUrls(self.cityUrls, 'floor', true).then(value => {
                     // self.roam.lookAt(self.camera1.position, self.camera1.target);
-                    self.cloneModel();
+                    self.cloneWellModel();
+                    self.clonePipeModel();
                     self.hideModel();
                     if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
                         self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
@@ -206,7 +222,8 @@ export class AutoCreatePipeLine {
         this.modelHide.hideById("pipeline|365_");//红
     }
 
-    cloneModel() {
+    cloneWellModel() {
+        this.well_all = []
         for (let i = 0; i < this.wells.length; i++) {
             if (this.wells[i].wellX > -2000 && this.wells[i].wellX < 1800 && this.wells[i].wellZ > 400 && this.wells[i].wellZ < 1300) {
                 let cloneModel = this.well.clone();
@@ -217,11 +234,15 @@ export class AutoCreatePipeLine {
                 cloneModel.position.y = -0.1
                 cloneModel.position.z = this.wells[i].wellZ
                 cloneModel.scale.set(1, 1, 1);
+                cloneModel.visible = true
+                this.well_all.push(cloneModel)
                 this.bustard.core.getScene().add(cloneModel)
             }
         }
-
-
+        this.bustard.core.render();
+    }
+    clonePipeModel() {
+        this.pipeline_all = []
         for (let i = 0; i < this.pipelines.length; i++) {
             if (this.pipelines[i].pipelineX1 > -2000 && this.pipelines[i].pipelineX1 < 1800 && this.pipelines[i].pipelineZ1 > 400 && this.pipelines[i].pipelineZ1 < 1300) {
                 let cloneModel;
@@ -291,12 +312,11 @@ export class AutoCreatePipeLine {
                 } else {
                     cloneModel.scale.set(long / 10, this.pipelines[i].diameter / 100, this.pipelines[i].diameter / 100);
                 }
+                cloneModel.visible = true
                 this.pipeline_all.push(cloneModel)
                 this.bustard.core.getScene().add(cloneModel);
             }
-
         }
-
         this.bustard.core.render();
     }
 }
