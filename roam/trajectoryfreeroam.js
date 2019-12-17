@@ -2,6 +2,7 @@ import { judgeMent, computeNewPositionAndTarget, computeNewTargetOfCamera } from
 import { Graph } from './Graph';
 import { newCoords } from './coords';
 import { FreeRoamConfiguration } from './freeRoamConfiguration';
+// import { Index } from './index';
 
 export class TrajectoryFreeroam {
     constructor(roam, pick) {
@@ -129,14 +130,16 @@ export class TrajectoryFreeroam {
 
         this.graph = new Graph();
 
-        for (let i = 0; i + 2 <= FreeRoamConfiguration.lineMaxId;) {
+        let n = 1;
+        for (let i = 0; i + n + 1 <= FreeRoamConfiguration.lineMaxId;) {
             this.addEdge(i, 0, newCoords[i].length - 1);
-            this.addEdge(i + 1, 0, newCoords[i + 1].length - 1);
-            this.addEdge(i + 2, 0, newCoords[i + 2].length - 1);
-            this.graph.addEdge(i + "[" + (newCoords[i].length - 1) + "]", (i + 1) + "[0]");
-            this.graph.addEdge(i + "[" + (newCoords[i].length - 1) + "]", (i + 2) + "[0]");
+            this.addEdge(i + n, 0, newCoords[i + n].length - 1);
+            this.addEdge(i + n + 1, 0, newCoords[i + n + 1].length - 1);
+            this.graph.addEdge(i + "[" + (newCoords[i].length - 1) + "]", (i + n) + "[0]");
+            this.graph.addEdge(i + "[" + (newCoords[i].length - 1) + "]", (i + n + 1) + "[0]");
             if (i == 0) {
                 i++;
+                n = 2;
             } else {
                 i += 2;
             }
@@ -261,10 +264,10 @@ export class TrajectoryFreeroam {
                     this.moveDirection = [from, to];
                 }
 
-            } else if (nextCoordsCode.length === 0) { //到达终点
+            } else if (this.nextCoordsCode.length === 0) { //到达终点
 
-                changeFlag = true;
-                nextCoordsCode.push(moveDirection[0]);
+                this.changeFlag = true;
+                this.nextCoordsCode.push(this.moveDirection[0]);
 
             }
         }
