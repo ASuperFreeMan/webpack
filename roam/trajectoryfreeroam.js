@@ -37,7 +37,7 @@ export class TrajectoryFreeroam {
         // 记录接下来要走的点
         this.nextCoordsCode = [];
         // 相机最近经过的点
-        this.curCoord;
+        this.cameraJustPassedCoord;
         // 设置相机坐标Y轴
         this.positionY = FreeRoamConfiguration.positionY;
         // 设置焦点坐标Y轴
@@ -67,7 +67,7 @@ export class TrajectoryFreeroam {
     // 配置鼠标事件和键盘事件
     addEvents() {
         this.setClickMouseEvents();
-        this.setKeyEvents();
+        this.setKeyboardEvents();
     }
 
     // 根据传入参数定位巡检
@@ -220,7 +220,7 @@ export class TrajectoryFreeroam {
         if (this.vertexs.getItem(this.moveDirection[1]).x - range <= curPosition.x && this.vertexs.getItem(this.moveDirection[1]).x + range >= curPosition.x
             && this.vertexs.getItem(this.moveDirection[1]).z - range <= curPosition.z && this.vertexs.getItem(this.moveDirection[1]).z + range >= curPosition.z) {
 
-            this.curCoord = JSON.parse(JSON.stringify(this.vertexs.getItem(this.moveDirection[1])));
+            this.cameraJustPassedCoord = JSON.parse(JSON.stringify(this.vertexs.getItem(this.moveDirection[1])));
 
             let relatedCoords = JSON.parse(JSON.stringify(this.graph.getItem(this.moveDirection[1])));
 
@@ -239,7 +239,7 @@ export class TrajectoryFreeroam {
 
             } else if (this.nextCoordsCode.length === 1) { // 前方只有一个点
                 this.changeFlag = false;
-                this.curCoord.y = this.positionY;
+                this.cameraJustPassedCoord.y = this.positionY;
                 let nextCoord = JSON.parse(JSON.stringify(this.vertexs.getItem(this.nextCoordsCode[0])));
                 if (nextCoord !== null) {
 
@@ -247,16 +247,16 @@ export class TrajectoryFreeroam {
 
                     if (judgeMent(e, "key", "up") || judgeMent(e, "mouse", "up")) {
 
-                        newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "up");
+                        newTarget = computeNewTargetOfCamera(curTarget, this.cameraJustPassedCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "up");
 
                     } else if (judgeMent(e, "key", "down") || judgeMent(e, "key", "down")) {
 
-                        newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "down");
+                        newTarget = computeNewTargetOfCamera(curTarget, this.cameraJustPassedCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "down");
 
                     }
 
                     newTarget.y = this.targetY;
-                    this.roam.lookAt(this.curCoord, newTarget);
+                    this.roam.lookAt(this.cameraJustPassedCoord, newTarget);
                     this.theta = Math.atan((this.roam.curTarget().z - this.roam.curPosition().z) / (this.roam.curTarget().x - this.roam.curPosition().x));
 
                     let from = this.moveDirection[1];
@@ -312,7 +312,7 @@ export class TrajectoryFreeroam {
                         if (!self.changeFlag) {
 
                         } else {
-                            self.mouseChangeLine(self.nextCoordsCode, point, "right");
+                            self.mouseChangeLineJudge(self.nextCoordsCode, point, "right");
                         }
 
                     }
@@ -320,12 +320,12 @@ export class TrajectoryFreeroam {
                         if (!self.changeFlag) {
                             // this.cameraLeftRotation();
                         } else {
-                            self.mouseChangeLine(self.nextCoordsCode, point, "left");
+                            self.mouseChangeLineJudge(self.nextCoordsCode, point, "left");
                         }
                     }
                     // 点击下面
                     else if (judgeMent(e, "mouse", "down")) {
-                        self.keyChangeLine(e);
+                        self.keyboardChangeLine(e);
                         if (!self.changeFlag) {
                             self.cameraBackward();
                         }
@@ -342,8 +342,8 @@ export class TrajectoryFreeroam {
 
     }
 
-    // 路线切换配置（鼠标）
-    mouseChangeLine(coords, point, direction) {
+    // 路线切换判断（鼠标）
+    mouseChangeLineJudge(coords, point, direction) {
         if (this.changeFlag && point !== null) {
             let curPosition = this.roam.curPosition();
             let curTarget = this.roam.curTarget();
@@ -396,7 +396,7 @@ export class TrajectoryFreeroam {
         }
     }
 
-    // 路线切换详细配置（鼠标）
+    // 路线切换详细判断（鼠标）
     mouseChangeLineDetailJudge(coords, point, judge1, judge2) {
         let curPosition = this.roam.curPosition();
         let curCoord;
@@ -441,13 +441,13 @@ export class TrajectoryFreeroam {
 
                 if (expression) {
 
-                    let length = this.computeVector(this.curCoord, point);
+                    let length = this.computeVector(curCoord, point);
 
                     // 找寻向量乘积最大的那个坐标
                     if (maxLength === null || length > maxLength) {
                         maxLength = length;
                         finalKey = coords[i];
-                        finalCoord = this.curCoord;
+                        finalCoord = curCoord;
                     }
                 }
             } else {
@@ -485,7 +485,7 @@ export class TrajectoryFreeroam {
     }
 
     // 键盘事件
-    setKeyEvents() {
+    setKeyboardEvents() {
 
         if (this.keyDownEventFn !== undefined) {
             document.removeEventListener('keydown', this.keyDownEventFn);
@@ -502,14 +502,14 @@ export class TrajectoryFreeroam {
 
             // ascll码 87：W  119：w  38：up
             if (judgeMent(e, "key", "up")) {
-                self.keyChangeLine(e);
+                self.keyboardChangeLine(e);
                 if (!self.changeFlag) {
                     self.cameraForward(n);
                 }
             }
             // ascll码 115：S  119：s  38：down
             else if (judgeMent(e, "key", "down")) {
-                self.keyChangeLine(e);
+                self.keyboardChangeLine(e);
                 if (!self.changeFlag) {
                     self.cameraBackward();
                 }
@@ -528,7 +528,7 @@ export class TrajectoryFreeroam {
     }
 
     // 键盘切换路线配置
-    keyChangeLine(e) {
+    keyboardChangeLine(e) {
         let curTarget = this.roam.curTarget();
 
         // 在岔路口处通过键盘转向，并且按了前进或后退键后找出下一个点和前进方向
@@ -563,7 +563,7 @@ export class TrajectoryFreeroam {
                 }
             }
 
-            this.curCoord.y = this.positionY;
+            this.cameraJustPassedCoord.y = this.positionY;
             let nextCoord = JSON.parse(JSON.stringify(this.vertexs.getItem(resultLengthCode)));
             if (nextCoord !== null) {
 
@@ -571,16 +571,16 @@ export class TrajectoryFreeroam {
 
                 if (judgeMent(e, "key", "up")) {
 
-                    newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "up");
+                    newTarget = computeNewTargetOfCamera(curTarget, this.cameraJustPassedCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "up");
 
                 } else if (judgeMent(e, "key", "down")) {
 
-                    newTarget = computeNewTargetOfCamera(curTarget, this.curCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "down");
+                    newTarget = computeNewTargetOfCamera(curTarget, this.cameraJustPassedCoord, nextCoord, this.horizontalDistanceBetweenCameraAndTarget, "down");
 
                 }
 
                 newTarget.y = this.targetY;
-                this.roam.lookAt(this.curCoord, newTarget);
+                this.roam.lookAt(this.cameraJustPassedCoord, newTarget);
                 this.theta = Math.atan((this.roam.curTarget().z - this.roam.curPosition().z) / (this.roam.curTarget().x - this.roam.curPosition().x));
 
                 this.nextCoordsCode = [resultLengthCode];
