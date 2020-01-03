@@ -24,6 +24,15 @@ export class MapControls {
         //隐藏版权信息
         this.viewer._cesiumWidget._creditContainer.style.display = "none";
 
+        this.tiltFlag;
+
+        if (MapConfiguration.cameraTiltDegree != 90) {
+            this.tiltFlag = true;
+        }
+
+        this.flyEndShowRoute = MapConfiguration.flyEndShowRoute;
+        this.flyEndShowAllMarks = MapConfiguration.flyEndShowAllMarks;
+
         // 相机近地面距离
         this.nearDistance = MapConfiguration.nearDistance;
         // 相机远地面距离
@@ -54,9 +63,9 @@ export class MapControls {
         this.init();
 
         // 取消拖动事件
-        // this.viewer.scene.screenSpaceCameraController.enableRotate = false;
+        this.viewer.scene.screenSpaceCameraController.enableRotate = false;
         // 取消滚轮事件
-        // this.viewer.scene.screenSpaceCameraController.enableZoom = false;
+        this.viewer.scene.screenSpaceCameraController.enableZoom = false;
         // 取消双击默认效果
         this.viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
@@ -101,8 +110,12 @@ export class MapControls {
             // let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
             // console.log(lng + "," + lat)
 
+            let position = JSON.parse(JSON.stringify(click.position));
+            // position.x = position.x * 2744 / $(window).width();
+            // position.y = position.y * 1134 / $(window).height();
+
             // 获取模型表面的经纬度高程坐标
-            let pick = self.viewer.scene.pick(click.position);
+            let pick = self.viewer.scene.pick(position);
             if (pick !== undefined && pick.id._name == "mark" && !pick.id._id.startsWith("pipe_line") && !pick.id._id.startsWith("light")) {
                 let cartesian = new Cesium.Cartesian3(pick.id._position._value.x, pick.id._position._value.y, pick.id._position._value.z);
                 let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
@@ -140,6 +153,7 @@ export class MapControls {
                 let x = lngToObject3DX * (lng - origin.x);
                 let z = latToObject3DZ * (lat - origin.z);
                 let param = "x=" + x + "&z=" + z + "&id=" + nameId;
+                // console.log("param: ........." + param)
                 callback(param);
             }
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
@@ -150,7 +164,10 @@ export class MapControls {
         let handler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
         const self = this;
         handler.setInputAction(function (movement) {
-            let pickedFeature = self.viewer.scene.pick(movement.endPosition);
+            let position = JSON.parse(JSON.stringify(movement.endPosition));
+            // position.x = position.x * 2744 / $(window).width();
+            // position.y = position.y * 1134 / $(window).height();
+            let pickedFeature = self.viewer.scene.pick(position);
             if (pickedFeature !== undefined) {
                 let nameId;
                 if (pickedFeature.id.nameID !== undefined) {
@@ -203,22 +220,49 @@ export class MapControls {
 
     // 相机飞行到泰州市海陵区默认位置
     earthRolling(isVisible) {
-        const self = this;
+        let oldTiltFlag = this.tiltFlag;
+        // 当前相机高度超过规定高度，需要垂直于地面
+        let cartographic = this.viewer.camera.positionCartographic;
+        let height = cartographic.height;
+
+        if (height > MapConfiguration.cameraTiltMaxHight) {
+            this.tiltFlag = false;
+        }
+
         if (isVisible) {
-            let cartographic = self.viewer.camera.positionCartographic;
-            let height = cartographic.height;
-            self.setDefaultPosition(this.startPosition.x, this.startPosition.y);
-            self.flyTo(self.defaultPosition.x, self.defaultPosition.y, height, function () {
+            const self = this;
+            this.setDefaultPosition(this.startPosition.x, this.startPosition.y);
+            this.flyTo(this.defaultPosition.x, this.defaultPosition.y, height, function () {
                 self.flyTo(self.defaultPosition.x, self.defaultPosition.y, self.defaultPosition.z, function () {
-                    self.flyTo(self.defaultPosition.x, self.defaultPosition.y, self.defaultPosition.z, function () {
+                    if (oldTiltFlag) {
+                        self.tiltFlag = true;
+                        self.flyTo(self.defaultPosition.x, self.defaultPosition.y, self.defaultPosition.z, function () {
+                            setTimeout(function () {
+                                if (self.flyEndShowRoute) {
+                                    self.showRoute();
+                                }
+                                if (self.flyEndShowAllMarks) {
+                                    self.showAllMarks();
+                                }
+                            }, MapConfiguration.waitTimeForShowIcon);
+                        })
+                    } else {
                         setTimeout(function () {
-                            self.showAllMarks();
+                            if (self.flyEndShowRoute) {
+                                self.showRoute();
+                            }
+                            if (self.flyEndShowAllMarks) {
+                                self.showAllMarks();
+                            }
                         }, MapConfiguration.waitTimeForShowIcon);
-                    })
+                    }
                 }, MapConfiguration.flightTime);
             });
         } else {
-            self.flyTo(self.defaultPosition.x, self.defaultPosition.y, self.defaultPosition.z);
+            if (oldTiltFlag) {
+                this.tiltFlag = true;
+            }
+            this.flyTo(this.defaultPosition.x, this.defaultPosition.y, this.defaultPosition.z);
         }
     }
 
@@ -232,24 +276,31 @@ export class MapControls {
         //     maximumLevel: 20
         // });
 
-        let imageryProvider = new Cesium.WebMapServiceImageryProvider({
-            url: url,
-            layers: layers,
-            crs: "EPSG:3785",
-            tilingScheme: new Cesium.WebMercatorTilingScheme(),
-            parameters: {
-                service: 'WMS',
-                format: 'image/jpeg',
-                transparent: true,
-            }
-        });
+        // let imageryProvider = new Cesium.WebMapServiceImageryProvider({
+        //     url: url,
+        //     layers: layers,
+        //     crs: "EPSG:3785",
+        //     tilingScheme: new Cesium.WebMercatorTilingScheme(),
+        //     parameters: {
+        //         service: 'WMS',
+        //         format: 'image/jpeg',
+        //         transparent: true,
+        //     }
+        // });
 
-        this.viewer.imageryLayers.addImageryProvider(imageryProvider);
+        // this.viewer.imageryLayers.addImageryProvider(imageryProvider);
+
+        this.viewer.imageryLayers.addImageryProvider(new Cesium.UrlTemplateImageryProvider({
+            url: url,
+            tilingScheme: new Cesium.WebMercatorTilingScheme(),
+            minimumLevel: 1,
+            maximumLevel: 20
+        }));
     }
 
     // 飞行到指定位置
     flyTo(lng, lat, height, callback, duration, distanceState) {
-        let cartographic = this.viewer.camera.positionCartographic;
+        // let cartographic = this.viewer.camera.positionCartographic;
         // 偏差值
         let deviation;
         if (distanceState == "near") {
@@ -259,10 +310,9 @@ export class MapControls {
         } else {
             deviation = lat - MapConfiguration.farDistanceDeviation;
         }
-        // 相机据地面高度超一定高度时，镜头垂直于地面飞行
-        if (cartographic.height > MapConfiguration.cameraTiltMaxHight) {
-            const self = this;
-            self.viewer.scene.camera.flyTo({
+
+        if (!this.tiltFlag) {
+            this.viewer.scene.camera.flyTo({
                 destination: Cesium.Cartesian3.fromDegrees(lng, deviation, height), // 点的坐标
                 orientation: {
                     heading: Cesium.Math.toRadians(0.0), // east, default value is 0.0 (north)
@@ -350,6 +400,7 @@ export class MapControls {
         } else {
             this.markEntities.push(entity);
         }
+        // console.log("图标" + id + "生成了");
 
     }
 
@@ -367,6 +418,7 @@ export class MapControls {
     showAllMarks() {
         for (let i = 0; i < this.markEntities.length; i++) {
             this.markEntities[i].show = true;
+            // console.log("图标" + i + "显示了")
         }
     }
 
