@@ -1,4 +1,4 @@
-import { AutoCreatePipelineConfig } from './autoCreatePipelineConfig';
+import { PipeNetworkConfig } from './pipeNetworkConfig';
 export class ShowInformationBox {
     constructor() {
         this.removeEvents;
@@ -15,7 +15,7 @@ export class ShowInformationBox {
 
 
     isPipeline(light, node) {
-        if (node != null && (node.userData.modelName == "pipeline" || node.userData.modelName == "well")) {
+        if (node != null && (node.userData.modelName == PipeNetworkConfig.PIPE_MODEL_PREFIX || node.userData.modelName == PipeNetworkConfig.WELL_MODEL_PREFIX)) {
             light.highLight(node)
             this.selectInformationBox(light, node.name, node.userData.modelName)
         }
@@ -23,9 +23,9 @@ export class ShowInformationBox {
 
     selectInformationBox(light, nodeName, modelName) {
         const self = this;
-        if (modelName == "pipeline") {
+        if (modelName == PipeNetworkConfig.PIPE_MODEL_PREFIX) {
             $.ajax({
-                url: AutoCreatePipelineConfig.getPipePresentDataUrl,
+                url: PipeNetworkConfig.GET_PIPE_PRESENT_DATA_URL,
                 data: {
                     pipelineId: nodeName
                 },
@@ -33,7 +33,7 @@ export class ShowInformationBox {
                 success: function (d) {
                     let content = "pipeLineInformationBox"
                     let closeContent = "pipeClose"
-                    self.showInformationBox(light, content, closeContent, "45%", "300%")
+                    self.showInformationBox(light, content, closeContent, "45%", "300%")//300
                     $("#pipingType").text(d.data.type)
                     $("#startNumber").text(d.data.startElevation)
                     $("#endNumber").text(d.data.endElevation)
@@ -45,9 +45,9 @@ export class ShowInformationBox {
                 }
             })
         }
-        if (modelName == "well") {
+        if (modelName == PipeNetworkConfig.WELL_MODEL_PREFIX) {
             $.ajax({
-                url: AutoCreatePipelineConfig.getWellPresentDataUrl,
+                url: PipeNetworkConfig.GET_WELL_PRESENT_DATA_URL,
                 data: {
                     wellPointId: nodeName
                 },
@@ -55,7 +55,7 @@ export class ShowInformationBox {
                 success: function (d) {
                     let content = "tubeWellInformationBox"
                     let closeContent = "wellClose"
-                    self.showInformationBox(light, content, closeContent, "46%", "315%")
+                    self.showInformationBox(light, content, closeContent, "46%", "315%")//315
                     $("#depth").text(d.data.depth)
                     $("#elevation").text(d.data.elevation)
                 },
@@ -84,9 +84,7 @@ export class ShowInformationBox {
             mL.style.display = "none"
             try {
                 light.removeHighLight()
-            } catch{
-
-            }
+            } catch{ }
             // 添加事件
             self.addEvents();
         })
