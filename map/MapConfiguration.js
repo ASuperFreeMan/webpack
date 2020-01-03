@@ -37,6 +37,28 @@ export class MapConfiguration {
     // 路线图标高度
     static pipeLineIconHeight = 50;
 
+    // 高亮图片位置
+    static lightImgPositions = [
+        { lng: 119.90652661526094, lat: 32.44866363140074 },
+        { lng: 119.90807358299854, lat: 32.45888497873569 },
+        { lng: 119.9280609430826, lat: 32.456794960063315 },
+        { lng: 119.90897902843138, lat: 32.46658336701496 },
+        { lng: 119.91840454082125, lat: 32.46066425993072 },
+        { lng: 119.90881500671105, lat: 32.48200263374862 },
+        { lng: 119.9272764567779, lat: 32.47353953588373 }
+    ];
+    // 高亮图片的宽高
+    static lightImgSizes = [
+        { width: 200, height: 300 },
+        { width: 130, height: 62 },
+        { width: 870, height: 130 },
+        { width: 130, height: 180 },
+        { width: 450, height: 90 },
+        { width: 100, height: 240 },
+        { width: 680, height: 90 }
+    ];
+
+
     // 1经度对应3D模型坐标X轴的长度 => lngToObject3DX
     // 1纬度对应3D模型坐标Z轴的长度 => latToObject3DZ
     static lngToObject3DX = 93815.009874142068525748445840366;

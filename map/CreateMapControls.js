@@ -1,4 +1,4 @@
-import { MapControls } from './MapControls';
+import { MapControls } from './mapControls';
 
 let CreateMapControls = (function () {
     let instance;

@@ -1,4 +1,4 @@
-import { MapConfiguration } from './MapConfiguration';
+import { MapConfiguration } from './mapConfiguration';
 
 export class MapControls {
 
@@ -38,6 +38,8 @@ export class MapControls {
         this.polylineDataSource;
         // 管线图标集合
         this.pipelineMarkEntities = [];
+        // 发光图片集合
+        this.lightImgEntities = [];
 
         // 正常路线宽度
         this.normalLineWidth = MapConfiguration.normalLineWidth;
@@ -88,6 +90,7 @@ export class MapControls {
         this.leftClickHandler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
         const self = this;
         this.leftClickHandler.setInputAction(function (click) {
+            //获取地形表面的经纬度高程坐标
             // let ray = self.viewer.camera.getPickRay(click.position);
             // let cartesian = self.viewer.scene.globe.pick(ray, self.viewer.scene);
             // let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
@@ -98,56 +101,65 @@ export class MapControls {
             // let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
             // console.log(lng + "," + lat)
 
+            // 获取模型表面的经纬度高程坐标
             let pick = self.viewer.scene.pick(click.position);
-            if (pick !== undefined && pick.id._name == "mark" && !pick.id._id.startsWith("pipe_line")) {
+            if (pick !== undefined && pick.id._name == "mark" && !pick.id._id.startsWith("pipe_line") && !pick.id._id.startsWith("light")) {
                 let cartesian = new Cesium.Cartesian3(pick.id._position._value.x, pick.id._position._value.y, pick.id._position._value.z);
                 let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
                 let lng = Cesium.Math.toDegrees(cartographic.longitude);
                 let lat = Cesium.Math.toDegrees(cartographic.latitude);
                 // console.log(lng + ", " + lat)
                 self.flyTo(lng, lat, self.nearDistance, undefined, undefined, "near");
-
-                let id = pick.id._id;
-                callback(id);
+                if (callback !== undefined) {
+                    let id = pick.id._id;
+                    callback(id);
+                }
             }
 
-            if (pick !== undefined && pick.id.nameID !== undefined) {
-                if (callback !== undefined) {
-                    let name_id = pick.id.nameID;
+            let nameId;
+            if (pick !== undefined && pick.id._id.startsWith('light')) {
+                nameId = pick.id._id.substring(pick.id._id.indexOf('_') + 1);
+            } else if (pick !== undefined && pick.id.nameID !== undefined) {
+                nameId = pick.id.nameID;
+            }
 
-                    if (name_id <= MapConfiguration.lineMaxId) {
-                        // 1经度对应3D模型坐标X轴的长度 => lngToObject3DX
-                        // 1纬度对应3D模型坐标Z轴的长度 => latToObject3DZ
-                        const lngToObject3DX = MapConfiguration.lngToObject3DX, latToObject3DZ = MapConfiguration.latToObject3DZ;
-                        // 3D模型坐标系的原点对应经纬度
-                        const origin = MapConfiguration.origin;
-                        // 获取鼠标点击位置经纬度
-                        let ray = self.viewer.camera.getPickRay(click.position);
-                        let cartesian = self.viewer.scene.globe.pick(ray, self.viewer.scene);
-                        let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-                        let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
-                        let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
-                        // console.log("经度：" + lng + ", 纬度： " + lat)
-                        // 将经纬度转换成3D模型坐标
-                        let x = lngToObject3DX * (lng - origin.x);
-                        let z = latToObject3DZ * (lat - origin.z);
-                        let param = "x=" + x + "&z=" + z + "&id=" + name_id;
-                        callback(param);
-                    }
-                }
+            if (callback !== undefined && nameId !== undefined && nameId <= MapConfiguration.lineMaxId) {
+                // 1经度对应3D模型坐标X轴的长度 => lngToObject3DX
+                // 1纬度对应3D模型坐标Z轴的长度 => latToObject3DZ
+                const lngToObject3DX = MapConfiguration.lngToObject3DX, latToObject3DZ = MapConfiguration.latToObject3DZ;
+                // 3D模型坐标系的原点对应经纬度
+                const origin = MapConfiguration.origin;
+                // 获取鼠标点击位置经纬度
+                let ray = self.viewer.camera.getPickRay(click.position);
+                let cartesian = self.viewer.scene.globe.pick(ray, self.viewer.scene);
+                let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
+                let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
+                // console.log("经度：" + lng + ", 纬度： " + lat)
+                // 将经纬度转换成3D模型坐标
+                let x = lngToObject3DX * (lng - origin.x);
+                let z = latToObject3DZ * (lat - origin.z);
+                let param = "x=" + x + "&z=" + z + "&id=" + nameId;
+                callback(param);
             }
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     }
 
+    // hover事件
     setMouseHoverAction() {
         let handler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
         const self = this;
         handler.setInputAction(function (movement) {
             let pickedFeature = self.viewer.scene.pick(movement.endPosition);
-            if (pickedFeature !== undefined && pickedFeature.id.nameID !== undefined) {
-                let name_id = pickedFeature.id.nameID;
-                if (name_id <= MapConfiguration.lineMaxId) {
-                    self.changeHighLightLineStateByNameID(name_id);
+            if (pickedFeature !== undefined) {
+                let nameId;
+                if (pickedFeature.id.nameID !== undefined) {
+                    nameId = pickedFeature.id.nameID;
+                } else if (pickedFeature.id._id.startsWith('light')) {
+                    nameId = pickedFeature.id._id.substring(pickedFeature.id._id.indexOf('_') + 1);
+                }
+                if (nameId <= MapConfiguration.lineMaxId) {
+                    self.changeHighLightLineStateByNameID(nameId);
                 }
             } else {
                 self.changeHighLightLineStateByNameID();
@@ -201,7 +213,7 @@ export class MapControls {
                     self.flyTo(self.defaultPosition.x, self.defaultPosition.y, self.defaultPosition.z, function () {
                         setTimeout(function () {
                             self.showAllMarks();
-                        }, 1500);
+                        }, MapConfiguration.waitTimeForShowIcon);
                     })
                 }, MapConfiguration.flightTime);
             });
@@ -333,6 +345,8 @@ export class MapControls {
         entity.show = false;
         if (id.startsWith("pipe_line")) {
             this.pipelineMarkEntities.push(entity);
+        } else if (id.startsWith("light")) {
+            this.lightImgEntities.push(entity);
         } else {
             this.markEntities.push(entity);
         }
@@ -383,7 +397,7 @@ export class MapControls {
     }
 
     // 添加高亮路线
-    addHighlightRoute(url, imgUrl) {
+    addHighlightRoute(url, iconUrl, lightImgUrl) {
         let geojsonOptions = {
             clampToGround: true
         };
@@ -412,30 +426,64 @@ export class MapControls {
             }
         });
 
-        if (Object.prototype.toString.call(imgUrl) == '[object Array]') {
+        if (Object.prototype.toString.call(iconUrl) == '[object Array]') {
             let positions = MapConfiguration.pipeLineIconPositions;
-            for (let i = 0; i < imgUrl.length; i++) {
+            for (let i = 0; i < iconUrl.length; i++) {
                 this.addMark("pipe_line" + i, positions[i], undefined, {
-                    uri: imgUrl[i],
+                    uri: iconUrl[i],
                     width: MapConfiguration.pipeLineIconWidth,
                     height: MapConfiguration.pipeLineIconHeight
                 })
             }
         }
+
+        if (Object.prototype.toString.call(lightImgUrl) == '[object Array]') {
+            let positions = MapConfiguration.lightImgPositions;
+            let lightImgSizes = MapConfiguration.lightImgSizes;
+            for (let i = 0; i < positions.length; i++) {
+                this.addMark("light_" + i, positions[i], undefined, {
+                    uri: lightImgUrl[i],
+                    width: lightImgSizes[i].width,
+                    height: lightImgSizes[i].height
+                });
+            }
+        }
+    }
+
+    showLightImgById(id) {
+        for (let i = 0; i < this.lightImgEntities.length; i++) {
+            if (this.lightImgEntities[i].id == "light_" + id) {
+                this.lightImgEntities[i].show = true;
+                break;
+            }
+        }
+    }
+
+    hideLightImgById(id) {
+        for (let i = 0; i < this.lightImgEntities.length; i++) {
+            if (this.lightImgEntities[i].id == "light_" + id) {
+                this.lightImgEntities[i].show = false;
+                break;
+            }
+        }
     }
 
     // 移到管线上时管线高亮，移出时管线正常
-    changeHighLightLineStateByNameID(nameid) {
-        if (nameid !== undefined && nameid !== this.oldHighLineNameID) {
-            this.setLineMaterial(nameid, "highlight");
-            this.setLineMaterial(this.oldHighLineNameID, "normal");
-            this.oldHighLineNameID = nameid;
+    changeHighLightLineStateByNameID(nameId) {
+        if (nameId !== undefined && nameId !== this.oldHighLineNameID) {
+            // this.setLineMaterial(nameId, "highlight");
+            // this.setLineMaterial(this.oldHighLineNameID, "normal");
+            if (this.oldHighLineNameID !== undefined) {
+                this.hideLightImgById(this.oldHighLineNameID);
+            }
+            this.oldHighLineNameID = nameId;
+            this.showLightImgById(nameId);
         } else {
             if (this.oldHighLineNameID !== undefined) {
-                this.setLineMaterial(this.oldHighLineNameID, "normal");
+                // this.setLineMaterial(this.oldHighLineNameID, "normal");
+                this.hideLightImgById(this.oldHighLineNameID);
                 this.oldHighLineNameID = undefined;
             }
-
         }
     }
 
