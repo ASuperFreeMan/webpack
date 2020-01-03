@@ -1,11 +1,7 @@
 import { ShowInformationBox } from './showInformationBox';
 import { HideRoad } from './hideRoads';
-<<<<<<< HEAD
 import { TrajectoryFreeroam } from './trajectoryfreeroam';
 import { PipeNetworkConfig } from './pipeNetworkConfig';
-=======
-import { TrajectoryFreeroam } from './trajectoryFreeRoam';
->>>>>>> 25e25fb06753a7d1c458ac1308ea49a021aa4564
 
 export class AutoCreatePipeLine {
     constructor(container, pipeUrl, cityUrls, dracoLibUrl, groundUrl, bgImgUrl, x, z, id) {
