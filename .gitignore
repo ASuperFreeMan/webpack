@@ -2,3 +2,4 @@
 /dist/*
 /roam/index.js
 webpack.prod.js
+/glb/*
