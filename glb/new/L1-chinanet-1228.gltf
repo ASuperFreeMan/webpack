@@ -1,0 +1,3403 @@
+{
+  "asset": {
+    "generator": "FBX2glTF v0.9.7",
+    "version": "2.0"
+  },
+  "scene": 0,
+  "extensionsUsed": [
+    "KHR_draco_mesh_compression"
+  ],
+  "extensionsRequired": [
+    "KHR_draco_mesh_compression"
+  ],
+  "buffers": [
+    {
+      "uri": "L1-chinanet-1228_data.bin",
+      "byteLength": 1860060
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 108220,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 29680,
+      "byteOffset": 108220
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1464,
+      "byteOffset": 137900
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1548,
+      "byteOffset": 139364
+    },
+    {
+      "buffer": 0,
+      "byteLength": 10592,
+      "byteOffset": 140912
+    },
+    {
+      "buffer": 0,
+      "byteLength": 6416,
+      "byteOffset": 151504
+    },
+    {
+      "buffer": 0,
+      "byteLength": 548,
+      "byteOffset": 157920
+    },
+    {
+      "buffer": 0,
+      "byteLength": 414696,
+      "byteOffset": 158468
+    },
+    {
+      "buffer": 0,
+      "byteLength": 414212,
+      "byteOffset": 573164
+    },
+    {
+      "buffer": 0,
+      "byteLength": 675776,
+      "byteOffset": 987376
+    },
+    {
+      "buffer": 0,
+      "byteLength": 15500,
+      "byteOffset": 1663152
+    },
+    {
+      "buffer": 0,
+      "byteLength": 280,
+      "byteOffset": 1678652
+    },
+    {
+      "buffer": 0,
+      "byteLength": 600,
+      "byteOffset": 1678932
+    },
+    {
+      "buffer": 0,
+      "byteLength": 73012,
+      "byteOffset": 1679532
+    },
+    {
+      "buffer": 0,
+      "byteLength": 3936,
+      "byteOffset": 1752544
+    },
+    {
+      "buffer": 0,
+      "byteLength": 300,
+      "byteOffset": 1756480
+    },
+    {
+      "buffer": 0,
+      "byteLength": 300,
+      "byteOffset": 1756780
+    },
+    {
+      "buffer": 0,
+      "byteLength": 13336,
+      "byteOffset": 1757080
+    },
+    {
+      "buffer": 0,
+      "byteLength": 396,
+      "byteOffset": 1770416
+    },
+    {
+      "buffer": 0,
+      "byteLength": 332,
+      "byteOffset": 1770812
+    },
+    {
+      "buffer": 0,
+      "byteLength": 57192,
+      "byteOffset": 1771144
+    },
+    {
+      "buffer": 0,
+      "byteLength": 416,
+      "byteOffset": 1828336
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1408,
+      "byteOffset": 1828752
+    },
+    {
+      "buffer": 0,
+      "byteLength": 392,
+      "byteOffset": 1830160
+    },
+    {
+      "buffer": 0,
+      "byteLength": 376,
+      "byteOffset": 1830552
+    },
+    {
+      "buffer": 0,
+      "byteLength": 384,
+      "byteOffset": 1830928
+    },
+    {
+      "buffer": 0,
+      "byteLength": 316,
+      "byteOffset": 1831312
+    },
+    {
+      "buffer": 0,
+      "byteLength": 560,
+      "byteOffset": 1831628
+    },
+    {
+      "buffer": 0,
+      "byteLength": 844,
+      "byteOffset": 1832188
+    },
+    {
+      "buffer": 0,
+      "byteLength": 26012,
+      "byteOffset": 1833032
+    },
+    {
+      "buffer": 0,
+      "byteLength": 676,
+      "byteOffset": 1859044
+    },
+    {
+      "buffer": 0,
+      "byteLength": 340,
+      "byteOffset": 1859720
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Root Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "accessors": [
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 19206
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 18221,
+      "min": [
+        -0.211237162351608,
+        -0.156680271029472,
+        -0.00656167976558208
+      ],
+      "max": [
+        0.264874845743179,
+        1.01094055175781,
+        0.246062979102135
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 18221
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 18221
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 9417
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 6380,
+      "min": [
+        -56.0944747924805,
+        -19.2009830474854,
+        -0.00656167976558208
+      ],
+      "max": [
+        -53.0302658081055,
+        -17.8158931732178,
+        0.0164041984826326
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 6380
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 6380
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 696
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 205,
+      "min": [
+        -55.9965133666992,
+        -18.8781661987305,
+        -0.00656167976558208
+      ],
+      "max": [
+        -55.8287925720215,
+        -18.626838684082,
+        0.244883969426155
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 205
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 205
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 756
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 215,
+      "min": [
+        -56.0255699157715,
+        -18.6288967132568,
+        -0.00656167976558208
+      ],
+      "max": [
+        -55.9902763366699,
+        -18.3324871063232,
+        0.244883969426155
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 215
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 215
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 1680
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 1407,
+      "min": [
+        -56.0138854980469,
+        -18.3338012695313,
+        -0.00656167976558208
+      ],
+      "max": [
+        -55.5725479125977,
+        -17.8847904205322,
+        0.244883969426155
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 1407
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 1407
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 5163
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 1240,
+      "min": [
+        -56.0255813598633,
+        -19.004789352417,
+        0.251062989234924
+      ],
+      "max": [
+        -55.5725479125977,
+        -17.8847904205322,
+        0.606955349445343
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 1240
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 1240
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 114
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 59,
+      "min": [
+        -55.599910736084,
+        -19.004789352417,
+        -3.3087223762564e-26
+      ],
+      "max": [
+        -54.6805152893066,
+        -18.9982261657715,
+        0.199944645166397
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 59
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 59
+    },
+    {
+      "componentType": 5125,
+      "type": "SCALAR",
+      "count": 77670
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 75982,
+      "min": [
+        -53.9707107543945,
+        -18.2523307800293,
+        0.600393712520599
+      ],
+      "max": [
+        -53.3040351867676,
+        -17.4974784851074,
+        3.95172786712646
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 75982
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 75982
+    },
+    {
+      "componentType": 5125,
+      "type": "SCALAR",
+      "count": 77706
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 75999,
+      "min": [
+        -54.9349632263184,
+        -18.2523307800293,
+        0.600393712520599
+      ],
+      "max": [
+        -54.2682914733887,
+        -17.4974784851074,
+        3.95172786712646
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 75999
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 75999
+    },
+    {
+      "componentType": 5125,
+      "type": "SCALAR",
+      "count": 125175
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 124293,
+      "min": [
+        -54.8352241516113,
+        -18.1486034393311,
+        3.94871854782104
+      ],
+      "max": [
+        -53.4037780761719,
+        -17.6762676239014,
+        4.77678442001343
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 124293
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 124293
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 5682
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 3622,
+      "min": [
+        -56.1061172485352,
+        -19.1288051605225,
+        0.244501292705536
+      ],
+      "max": [
+        -53.0269927978516,
+        -17.4998779296875,
+        3.31017398834229
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 3622
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 3622
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 36
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "min": [
+        -54.3491554260254,
+        -19.2878379821777,
+        0.242782145738602
+      ],
+      "max": [
+        -53.8898468017578,
+        -19.1261806488037,
+        0.249343827366829
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 24
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 186
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 92,
+      "min": [
+        -54.6756172180176,
+        -18.3405170440674,
+        0.600393712520599
+      ],
+      "max": [
+        -53.5633811950684,
+        -18.2372856140137,
+        3.3234121799469
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 92
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 92
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 86505
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 14844,
+      "min": [
+        -56.0190238952637,
+        -18.9877529144287,
+        0.606955349445343
+      ],
+      "max": [
+        -54.9184379577637,
+        -17.8875827789307,
+        1.15724730491638
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 14844
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 14844
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 3237
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 768,
+      "min": [
+        -56.0384559631348,
+        -19.0203762054443,
+        0.252371668815613
+      ],
+      "max": [
+        -55.5946197509766,
+        -18.2866554260254,
+        0.604724943637848
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 768
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 768
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 36
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "min": [
+        -55.5163116455078,
+        -19.0277538299561,
+        0.199944645166397
+      ],
+      "max": [
+        -54.7321929931641,
+        -19.0211925506592,
+        0.354493707418442
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 24
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 36
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "min": [
+        -53.5584869384766,
+        -19.022912979126,
+        0.198396563529968
+      ],
+      "max": [
+        -53.0187110900879,
+        -19.0163516998291,
+        0.260905504226685
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 24
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 6864
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 4076,
+      "min": [
+        -54.6772346496582,
+        -19.2927589416504,
+        0.261126726865768
+      ],
+      "max": [
+        -53.561767578125,
+        -19.1255226135254,
+        0.905352234840393
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 4076
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 4076
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 84
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 40,
+      "min": [
+        -54.3537445068359,
+        -19.1320838928223,
+        -0.00656167976558208
+      ],
+      "max": [
+        -53.8865699768066,
+        -19.1255226135254,
+        0.242782145738602
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 40
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 40
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 84
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 40,
+      "min": [
+        -54.3537445068359,
+        -19.1261806488037,
+        0.242782145738602
+      ],
+      "max": [
+        -53.8865699768066,
+        -19.1196174621582,
+        0.688976347446442
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 40
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 40
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 10023
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 9095,
+      "min": [
+        -55.5732650756836,
+        -19.1320838928223,
+        -0.00656167976558208
+      ],
+      "max": [
+        -53.0237083435059,
+        -17.4965972900391,
+        0.688976347446442
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 9095
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 9095
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 78
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 38,
+      "min": [
+        -53.8865699768066,
+        -19.1320838928223,
+        -0.00656167976558208
+      ],
+      "max": [
+        -53.5584869384766,
+        -19.1255226135254,
+        0.688976347446442
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 38
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 38
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 678
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 195,
+      "min": [
+        -55.8331680297852,
+        -19.004789352417,
+        -0.00656167976558208
+      ],
+      "max": [
+        -55.5990333557129,
+        -18.8732738494873,
+        0.244883969426155
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 195
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 195
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 51
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 31,
+      "min": [
+        -55.599910736084,
+        -19.004789352417,
+        -0.00656167976558208
+      ],
+      "max": [
+        -54.6739540100098,
+        -18.9982261657715,
+        0.688976347446442
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 31
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 31
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 54
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 32,
+      "min": [
+        -53.5650482177734,
+        -19.0113506317139,
+        -0.00656167976558208
+      ],
+      "max": [
+        -53.0237083435059,
+        -19.004789352417,
+        0.260905504226685
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 32
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 32
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 69
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 36,
+      "min": [
+        -53.0302658081055,
+        -19.0113506317139,
+        -0.00656167976558208
+      ],
+      "max": [
+        -53.0237083435059,
+        -17.8847904205322,
+        0.606955349445343
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 36
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 36
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 54
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 26,
+      "min": [
+        -53.5650482177734,
+        -19.0113506317139,
+        0.260905504226685
+      ],
+      "max": [
+        -53.0237083435059,
+        -19.004789352417,
+        0.606955349445343
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 26
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 26
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 138
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 66,
+      "min": [
+        -54.6805152893066,
+        -19.1320838928223,
+        -0.00656167976558208
+      ],
+      "max": [
+        -53.5584869384766,
+        -18.9982261657715,
+        0.688976347446442
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 66
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 66
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 216
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 144,
+      "min": [
+        -0.111548557877541,
+        -0.000492125982418656,
+        0.00164041994139552
+      ],
+      "max": [
+        0.111548557877541,
+        0.000492125982418656,
+        0.164041996002197
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 144
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 144
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 9180
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 6454,
+      "min": [
+        -0.114829391241074,
+        -0.00295341573655605,
+        -1.32348895050256e-25
+      ],
+      "max": [
+        0.114829391241074,
+        0.00295341573655605,
+        0.16732282936573
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 6454
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 6454
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 216
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 122,
+      "min": [
+        -54.6756172180176,
+        -17.5040416717529,
+        0.600393712520599
+      ],
+      "max": [
+        -53.5633811950684,
+        -17.4958553314209,
+        3.3234121799469
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 122
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 122
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 54
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 30,
+      "min": [
+        -54.3570251464844,
+        -19.0966529846191,
+        -0.00656167976558208
+      ],
+      "max": [
+        -53.8832893371582,
+        -19.0900917053223,
+        0.688976347446442
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 30
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 30
+    }
+  ],
+  "images": [
+    {
+      "name": "L1-17.jpg",
+      "uri": "L1-chinanet-1228_img0.jpg"
+    },
+    {
+      "name": "l1-12-1.jpg",
+      "uri": "L1-chinanet-1228_img1.jpg"
+    },
+    {
+      "name": "L1=16.jpg",
+      "uri": "L1-chinanet-1228_img2.jpg"
+    },
+    {
+      "name": "L1-19.jpg",
+      "uri": "L1-chinanet-1228_img3.jpg"
+    },
+    {
+      "name": "l1-13.jpg",
+      "uri": "L1-chinanet-1228_img4.jpg"
+    },
+    {
+      "name": "l1-8.jpg",
+      "uri": "L1-chinanet-1228_img5.jpg"
+    },
+    {
+      "name": "L1-22-1.jpg",
+      "uri": "L1-chinanet-1228_img6.jpg"
+    },
+    {
+      "name": "l1-18.jpg",
+      "uri": "L1-chinanet-1228_img7.jpg"
+    },
+    {
+      "name": "L1-1.jpg",
+      "uri": "L1-chinanet-1228_img8.jpg"
+    },
+    {
+      "name": "l1-14.jpg",
+      "uri": "L1-chinanet-1228_img9.jpg"
+    },
+    {
+      "name": "guanggao.jpg",
+      "uri": "L1-chinanet-1228_img10.jpg"
+    },
+    {
+      "name": "L1-7.jpg",
+      "uri": "L1-chinanet-1228_img11.jpg"
+    },
+    {
+      "name": "L1-4.jpg",
+      "uri": "L1-chinanet-1228_img12.jpg"
+    },
+    {
+      "name": "l1-15.jpg",
+      "uri": "L1-chinanet-1228_img13.jpg"
+    },
+    {
+      "name": "L1-6.jpg",
+      "uri": "L1-chinanet-1228_img14.jpg"
+    },
+    {
+      "name": "l1-21.jpg",
+      "uri": "L1-chinanet-1228_img15.jpg"
+    },
+    {
+      "name": "L1-15-1.jpg",
+      "uri": "L1-chinanet-1228_img16.jpg"
+    },
+    {
+      "name": "L1-11-1.jpg",
+      "uri": "L1-chinanet-1228_img17.jpg"
+    },
+    {
+      "name": "L-20.jpg",
+      "uri": "L1-chinanet-1228_img18.jpg"
+    },
+    {
+      "name": "L1-5.jpg",
+      "uri": "L1-chinanet-1228_img19.jpg"
+    },
+    {
+      "name": "L1-3.jpg",
+      "uri": "L1-chinanet-1228_img20.jpg"
+    },
+    {
+      "name": "L1-18-1.jpg",
+      "uri": "L1-chinanet-1228_img21.jpg"
+    }
+  ],
+  "samplers": [
+    {}
+  ],
+  "textures": [
+    {
+      "name": "L1_offset_0.8_0_ratio_2.5_2",
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "name": "L1_offset_-0.0769_0",
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "name": "L1_offset_-0.1154_0",
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "name": "L1_offset_0_0.0652_ratio_28",
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "name": "L1_offset_0.0333_-0",
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "name": "L1_offset_0_0_ratio_90_20",
+      "sampler": 0,
+      "source": 5
+    },
+    {
+      "name": "L1_offset_0_0.2580_ratio_8_15",
+      "sampler": 0,
+      "source": 6
+    },
+    {
+      "name": "L1_offset_0_0_ratio_3_1",
+      "sampler": 0,
+      "source": 7
+    },
+    {
+      "name": "L1_offset_0_0",
+      "sampler": 0,
+      "source": 8
+    },
+    {
+      "name": "L1_offset_0_0_ratio_5_7",
+      "sampler": 0,
+      "source": 9
+    },
+    {
+      "name": "L1_offset_-0.109_-0.2857_ratio_91",
+      "sampler": 0,
+      "source": 10
+    },
+    {
+      "name": "L1_offset_0_0.2469_ratio_78_16",
+      "sampler": 0,
+      "source": 11
+    },
+    {
+      "name": "L1_offset_0_0.3333_ratio_54",
+      "sampler": 0,
+      "source": 12
+    },
+    {
+      "name": "L1_offset_-0.0819_0",
+      "sampler": 0,
+      "source": 13
+    },
+    {
+      "name": "L1_offset_0_0_ratio_47_24",
+      "sampler": 0,
+      "source": 14
+    },
+    {
+      "name": "L1_offset_0_-0",
+      "sampler": 0,
+      "source": 15
+    },
+    {
+      "name": "L1_offset_0_-0",
+      "sampler": 0,
+      "source": 16
+    },
+    {
+      "name": "L1_offset_-0.090_0.0417_ratio_22",
+      "sampler": 0,
+      "source": 17
+    },
+    {
+      "name": "L1_offset_-0.0666_-0",
+      "sampler": 0,
+      "source": 18
+    },
+    {
+      "name": "L1_offset_0_0.1_ratio_56",
+      "sampler": 0,
+      "source": 19
+    },
+    {
+      "name": "L1_offset_0.0185_-0",
+      "sampler": 0,
+      "source": 20
+    },
+    {
+      "name": "L1_offset_0_0",
+      "sampler": 0,
+      "source": 21
+    }
+  ],
+  "materials": [
+    {
+      "name": "10 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "L1_offset_0_62.91_ratio_110_270",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "09 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 2,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "19 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 3,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "DefaultMaterial",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Lambert",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.5,
+          0.5,
+          0.5,
+          1
+        ],
+        "metallicFactor": 0.200000002980232,
+        "roughnessFactor": 0.800000011920929
+      }
+    },
+    {
+      "name": "17 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 4,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "06 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 5,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "21 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 6,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "15 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 7,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "01 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 8,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "04 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 9,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "22 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 10,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "05 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 11,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "11 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 12,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "02 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 13,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "14 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 14,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "20 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 15,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "03 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 16,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "07 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 17,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "18 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 18,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "12 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 19,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "13 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 20,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    },
+    {
+      "name": "16 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 21,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "浅肉粉15",
+      "primitives": [
+        {
+          "material": 0,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 2,
+            "POSITION": 1,
+            "TEXCOORD_0": 3
+          },
+          "indices": 0,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 0,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉(1)",
+      "primitives": [
+        {
+          "material": 0,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TEXCOORD_0": 7
+          },
+          "indices": 4,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 1,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉13",
+      "primitives": [
+        {
+          "material": 1,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 10,
+            "POSITION": 9,
+            "TEXCOORD_0": 11
+          },
+          "indices": 8,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 2,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉12",
+      "primitives": [
+        {
+          "material": 2,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 14,
+            "POSITION": 13,
+            "TEXCOORD_0": 15
+          },
+          "indices": 12,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 3,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉11",
+      "primitives": [
+        {
+          "material": 3,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 18,
+            "POSITION": 17,
+            "TEXCOORD_0": 19
+          },
+          "indices": 16,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 4,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉10",
+      "primitives": [
+        {
+          "material": 5,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 22,
+            "POSITION": 21,
+            "TEXCOORD_0": 23
+          },
+          "indices": 20,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 5,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉6",
+      "primitives": [
+        {
+          "material": 6,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 26,
+            "POSITION": 25,
+            "TEXCOORD_0": 27
+          },
+          "indices": 24,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 6,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "银灰色3",
+      "primitives": [
+        {
+          "material": 7,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 30,
+            "POSITION": 29,
+            "TEXCOORD_0": 31
+          },
+          "indices": 28,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 7,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "银灰色2",
+      "primitives": [
+        {
+          "material": 7,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 34,
+            "POSITION": 33,
+            "TEXCOORD_0": 35
+          },
+          "indices": 32,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 8,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "银灰色5",
+      "primitives": [
+        {
+          "material": 8,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 38,
+            "POSITION": 37,
+            "TEXCOORD_0": 39
+          },
+          "indices": 36,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 9,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "模型屋顶",
+      "primitives": [
+        {
+          "material": 8,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 42,
+            "POSITION": 41,
+            "TEXCOORD_0": 43
+          },
+          "indices": 40,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 10,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "模型屋顶(1)",
+      "primitives": [
+        {
+          "material": 8,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 46,
+            "POSITION": 45,
+            "TEXCOORD_0": 47
+          },
+          "indices": 44,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 11,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "银灰色",
+      "primitives": [
+        {
+          "material": 9,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 50,
+            "POSITION": 49,
+            "TEXCOORD_0": 51
+          },
+          "indices": 48,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 12,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "钢，45-345",
+      "primitives": [
+        {
+          "material": 10,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 54,
+            "POSITION": 53,
+            "TEXCOORD_0": 55
+          },
+          "indices": 52,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 13,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CN显示屏",
+      "primitives": [
+        {
+          "material": 11,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 58,
+            "POSITION": 57,
+            "TEXCOORD_0": 59
+          },
+          "indices": 56,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 14,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "草绿",
+      "primitives": [
+        {
+          "material": 12,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 62,
+            "POSITION": 61,
+            "TEXCOORD_0": 63
+          },
+          "indices": 60,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 15,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "白色2",
+      "primitives": [
+        {
+          "material": 13,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 66,
+            "POSITION": 65,
+            "TEXCOORD_0": 67
+          },
+          "indices": 64,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 16,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "电信蓝",
+      "primitives": [
+        {
+          "material": 14,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 70,
+            "POSITION": 69,
+            "TEXCOORD_0": 71
+          },
+          "indices": 68,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 17,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉2",
+      "primitives": [
+        {
+          "material": 15,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 74,
+            "POSITION": 73,
+            "TEXCOORD_0": 75
+          },
+          "indices": 72,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 18,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉3",
+      "primitives": [
+        {
+          "material": 16,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 78,
+            "POSITION": 77,
+            "TEXCOORD_0": 79
+          },
+          "indices": 76,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 19,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉",
+      "primitives": [
+        {
+          "material": 17,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 82,
+            "POSITION": 81,
+            "TEXCOORD_0": 83
+          },
+          "indices": 80,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 20,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉7",
+      "primitives": [
+        {
+          "material": 17,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 86,
+            "POSITION": 85,
+            "TEXCOORD_0": 87
+          },
+          "indices": 84,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 21,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉14",
+      "primitives": [
+        {
+          "material": 18,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 90,
+            "POSITION": 89,
+            "TEXCOORD_0": 91
+          },
+          "indices": 88,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 22,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉5",
+      "primitives": [
+        {
+          "material": 19,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 94,
+            "POSITION": 93,
+            "TEXCOORD_0": 95
+          },
+          "indices": 92,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 23,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉8",
+      "primitives": [
+        {
+          "material": 20,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 98,
+            "POSITION": 97,
+            "TEXCOORD_0": 99
+          },
+          "indices": 96,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 24,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉4",
+      "primitives": [
+        {
+          "material": 21,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 102,
+            "POSITION": 101,
+            "TEXCOORD_0": 103
+          },
+          "indices": 100,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 25,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉9",
+      "primitives": [
+        {
+          "material": 21,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 106,
+            "POSITION": 105,
+            "TEXCOORD_0": 107
+          },
+          "indices": 104,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 26,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "浅肉粉7(1)",
+      "primitives": [
+        {
+          "material": 22,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 110,
+            "POSITION": 109,
+            "TEXCOORD_0": 111
+          },
+          "indices": 108,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 27,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "玻璃",
+      "primitives": [
+        {
+          "material": 4,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 114,
+            "POSITION": 113,
+            "TEXCOORD_0": 115
+          },
+          "indices": 112,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 28,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "常规",
+      "primitives": [
+        {
+          "material": 4,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 118,
+            "POSITION": 117,
+            "TEXCOORD_0": 119
+          },
+          "indices": 116,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 29,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "银灰色4",
+      "primitives": [
+        {
+          "material": 4,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 122,
+            "POSITION": 121,
+            "TEXCOORD_0": 123
+          },
+          "indices": 120,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 30,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "白色",
+      "primitives": [
+        {
+          "material": 4,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 126,
+            "POSITION": 125,
+            "TEXCOORD_0": 127
+          },
+          "indices": 124,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 31,
+              "attributes": {
+                "NORMAL": 1,
+                "POSITION": 0,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "RootNode",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "children": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "name": "浅肉粉15",
+      "translation": [
+        -1701.8544921875,
+        0,
+        575.45361328125
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 0
+    },
+    {
+      "name": "浅肉粉13",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 2
+    },
+    {
+      "name": "浅肉粉12",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 3
+    },
+    {
+      "name": "浅肉粉11",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 4
+    },
+    {
+      "name": "玻璃",
+      "translation": [
+        -1698.70373535156,
+        4,
+        577.093139648438
+      ],
+      "rotation": [
+        -0.18448506295681,
+        0.682616472244263,
+        0.682616472244263,
+        0.18448506295681
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 28
+    },
+    {
+      "name": "常规",
+      "translation": [
+        -1698.70373535156,
+        4,
+        577.093139648438
+      ],
+      "rotation": [
+        -0.18448506295681,
+        0.682616472244263,
+        0.682616472244263,
+        0.18448506295681
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 29
+    },
+    {
+      "name": "浅肉粉10",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 5
+    },
+    {
+      "name": "浅肉粉6",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 6
+    },
+    {
+      "name": "银灰色3",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 7
+    },
+    {
+      "name": "银灰色5",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 9
+    },
+    {
+      "name": "银灰色4",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 30
+    },
+    {
+      "name": "银灰色",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 12
+    },
+    {
+      "name": "银灰色2",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 8
+    },
+    {
+      "name": "钢，45-345",
+      "translation": [
+        0,
+        -0.199999988079071,
+        0.199999988079071
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 13
+    },
+    {
+      "name": "CN显示屏",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 14
+    },
+    {
+      "name": "模型屋顶",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 10
+    },
+    {
+      "name": "草绿",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 15
+    },
+    {
+      "name": "浅肉粉(1)",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 1
+    },
+    {
+      "name": "白色2",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 16
+    },
+    {
+      "name": "电信蓝",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 17
+    },
+    {
+      "name": "白色",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 31
+    },
+    {
+      "name": "模型屋顶(1)",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 11
+    },
+    {
+      "name": "浅肉粉2",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 18
+    },
+    {
+      "name": "浅肉粉3",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 19
+    },
+    {
+      "name": "浅肉粉",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 20
+    },
+    {
+      "name": "浅肉粉14",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 22
+    },
+    {
+      "name": "浅肉粉5",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 23
+    },
+    {
+      "name": "浅肉粉8",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 24
+    },
+    {
+      "name": "浅肉粉7",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 21
+    },
+    {
+      "name": "浅肉粉4",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 25
+    },
+    {
+      "name": "浅肉粉7(1)",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 27
+    },
+    {
+      "name": "浅肉粉9",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        30.4799995422363,
+        30.4799995422363,
+        30.4799995422363
+      ],
+      "mesh": 26
+    }
+  ]
+}

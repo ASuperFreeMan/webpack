@@ -1,3 +1,5 @@
+import { PipeNetworkConfig } from "./pipeNetworkConfig";
+
 export class HideRoad {
 
     constructor(modelHide, textureTool) {
@@ -17,20 +19,16 @@ export class HideRoad {
 
     //隐藏路面
     hideRoad() {
-        this.modelHide.hideByIdInObject3D("floor|boliti-CDfbx")
-        this.modelHide.hideByIdInObject3D("floor|CDfbx")
-        this.modelHide.hideByIdInObject3D("floor|标线fbx")
-        this.modelHide.hideByIdInObject3D("dimian|boliti-CDfbx")
-        // this.modelHide.hideByIdInObject3D("floor|boliti-buildingfbx")
+        for (let i = 0; i < PipeNetworkConfig.HIDE_ROAD_MODEL_NAME.length; i++) {
+            this.modelHide.hideByIdInObject3D(PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX + "|" + PipeNetworkConfig.HIDE_ROAD_MODEL_NAME[i])
+        }
     }
 
     //显示路面
     restoreRoad() {
-        this.modelHide.restoreById("floor|boliti-CDfbx")
-        this.modelHide.restoreById("floor|CDfbx")
-        this.modelHide.restoreById("floor|标线fbx")
-        this.modelHide.restoreById("dimian|boliti-CDfbx")
-        // this.modelHide.restoreById("floor|boliti-buildingfbx")
+        for (let i = 0; i < PipeNetworkConfig.HIDE_ROAD_MODEL_NAME.length; i++) {
+            this.modelHide.restoreById(PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX + "|" + PipeNetworkConfig.HIDE_ROAD_MODEL_NAME[i])
+        }
     }
 
     showFlowTo(pipeline_all, urlImg) {

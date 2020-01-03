@@ -1,9 +1,9 @@
 export class FreeRoamConfiguration {
 
     // 设置相机坐标Y轴
-    static positionY = 5;
+    static positionY = 7;
     // 设置焦点坐标Y轴
-    static targetY = 4;
+    static targetY = 6;
     // 设定相机与焦点之间的水平距离
     static horizontalDistanceBetweenCameraAndTarget = 20;
     // 路线最大id

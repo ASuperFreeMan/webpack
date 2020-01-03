@@ -1,0 +1,623 @@
+{
+  "asset": {
+    "generator": "FBX2glTF v0.9.7",
+    "version": "2.0"
+  },
+  "scene": 0,
+  "buffers": [
+    {
+      "uri": "biaoxian-tietu-test-1217(2)_data.bin",
+      "byteLength": 3360
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 72,
+      "byteOffset": 0,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 288,
+      "byteOffset": 72,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 288,
+      "byteOffset": 360,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 192,
+      "byteOffset": 648,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 72,
+      "byteOffset": 840,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 288,
+      "byteOffset": 912,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 288,
+      "byteOffset": 1200,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 192,
+      "byteOffset": 1488,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 72,
+      "byteOffset": 1680,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 288,
+      "byteOffset": 1752,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 288,
+      "byteOffset": 2040,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 192,
+      "byteOffset": 2328,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 72,
+      "byteOffset": 2520,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 288,
+      "byteOffset": 2592,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 288,
+      "byteOffset": 2880,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 192,
+      "byteOffset": 3168,
+      "target": 34962
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Root Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "accessors": [
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 36,
+      "bufferView": 0,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "bufferView": 1,
+      "byteOffset": 0,
+      "min": [
+        -56.3324432373047,
+        -21.5588226318359,
+        0
+      ],
+      "max": [
+        -48.3207054138184,
+        -21.510311126709,
+        0.0000656167976558208
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "bufferView": 2,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 24,
+      "bufferView": 3,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 36,
+      "bufferView": 4,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "bufferView": 5,
+      "byteOffset": 0,
+      "min": [
+        -56.3324432373047,
+        -21.4262161254883,
+        0
+      ],
+      "max": [
+        -48.3207054138184,
+        -21.3777046203613,
+        0.0000656167976558208
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "bufferView": 6,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 24,
+      "bufferView": 7,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 36,
+      "bufferView": 8,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "bufferView": 9,
+      "byteOffset": 0,
+      "min": [
+        -56.3309173583984,
+        -21.1671504974365,
+        0
+      ],
+      "max": [
+        -48.3191795349121,
+        -21.1186370849609,
+        0.0000656167976558208
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "bufferView": 10,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 24,
+      "bufferView": 11,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5123,
+      "type": "SCALAR",
+      "count": 36,
+      "bufferView": 12,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "bufferView": 13,
+      "byteOffset": 0,
+      "min": [
+        -56.3309173583984,
+        -21.0345420837402,
+        0
+      ],
+      "max": [
+        -48.3191795349121,
+        -20.9860324859619,
+        0.0000656167976558208
+      ]
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC3",
+      "count": 24,
+      "bufferView": 14,
+      "byteOffset": 0
+    },
+    {
+      "componentType": 5126,
+      "type": "VEC2",
+      "count": 24,
+      "bufferView": 15,
+      "byteOffset": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "贴图 #3",
+      "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+    }
+  ],
+  "samplers": [
+    {}
+  ],
+  "textures": [
+    {
+      "name": "贴图 #3",
+      "sampler": 0,
+      "source": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "01 - Default",
+      "alphaMode": "OPAQUE",
+      "extras": {
+        "fromFBX": {
+          "shadingModel": "Phong",
+          "isTruePBR": false
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0,
+          "texCoord": 0
+        },
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 0.400000005960464,
+        "roughnessFactor": 0.70710676908493
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "标线4",
+      "primitives": [
+        {
+          "material": 0,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 2,
+            "POSITION": 1,
+            "TEXCOORD_0": 3
+          },
+          "indices": 0
+        }
+      ]
+    },
+    {
+      "name": "标线3",
+      "primitives": [
+        {
+          "material": 0,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TEXCOORD_0": 7
+          },
+          "indices": 4
+        }
+      ]
+    },
+    {
+      "name": "标线2",
+      "primitives": [
+        {
+          "material": 0,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 10,
+            "POSITION": 9,
+            "TEXCOORD_0": 11
+          },
+          "indices": 8
+        }
+      ]
+    },
+    {
+      "name": "标线1",
+      "primitives": [
+        {
+          "material": 0,
+          "mode": 4,
+          "attributes": {
+            "NORMAL": 14,
+            "POSITION": 13,
+            "TEXCOORD_0": 15
+          },
+          "indices": 12
+        }
+      ]
+    }
+  ],
+  "cameras": [
+    {
+      "name": "",
+      "type": "orthographic",
+      "orthographic": {
+        "znear": 20224.373046875,
+        "zfar": 8088.42919921875,
+        "xmag": 1,
+        "ymag": 1
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "name": "RootNode",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "children": [
+        1
+      ]
+    },
+    {
+      "name": "标线贴图面.fbx",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        -0.70710676908493,
+        0,
+        0,
+        0.70710676908493
+      ],
+      "scale": [
+        2.53999996185303,
+        2.53999996185303,
+        2.53999996185303
+      ],
+      "children": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        10
+      ]
+    },
+    {
+      "name": "标线4",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        12,
+        12,
+        12
+      ],
+      "mesh": 0
+    },
+    {
+      "name": "标线3",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        12,
+        12,
+        12
+      ],
+      "mesh": 1
+    },
+    {
+      "name": "标线2",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        12,
+        12,
+        12
+      ],
+      "mesh": 2
+    },
+    {
+      "name": "标线1",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        12,
+        12,
+        12
+      ],
+      "mesh": 3
+    },
+    {
+      "name": "指南针001",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "children": [
+        7
+      ]
+    },
+    {
+      "name": "SunAndSky-002",
+      "translation": [
+        162.575012207031,
+        -185.510498046875,
+        282.296722412109
+      ],
+      "rotation": [
+        0.247265964746475,
+        0.249689966440201,
+        -0.0661106258630753,
+        0.933886408805847
+      ],
+      "scale": [
+        0.999999940395355,
+        1,
+        0.999999940395355
+      ],
+      "children": [
+        8,
+        9
+      ]
+    },
+    {
+      "name": "Sun001",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0.70710676908493,
+        1.58050674770038e-8,
+        -5.26835641778689e-9,
+        0.70710676908493
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "天空002",
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0.70710676908493,
+        1.58050674770038e-8,
+        -5.26835641778689e-9,
+        0.70710676908493
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "三维视图: {三维}",
+      "translation": [
+        -645.828796386719,
+        -301.178253173828,
+        21.8367652893066
+      ],
+      "rotation": [
+        0.545732021331787,
+        -0.0977945923805237,
+        -0.146797016263008,
+        0.819184601306915
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "camera": 0
+    }
+  ]
+}

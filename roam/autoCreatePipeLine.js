@@ -1,13 +1,17 @@
 import { ShowInformationBox } from './showInformationBox';
 import { HideRoad } from './hideRoads';
+<<<<<<< HEAD
+import { TrajectoryFreeroam } from './trajectoryfreeroam';
+import { PipeNetworkConfig } from './pipeNetworkConfig';
+=======
 import { TrajectoryFreeroam } from './trajectoryFreeRoam';
+>>>>>>> 25e25fb06753a7d1c458ac1308ea49a021aa4564
 
 export class AutoCreatePipeLine {
     constructor(container, pipeUrl, cityUrls, dracoLibUrl, groundUrl, bgImgUrl, x, z, id) {
         this.container = container;
         this.bustard;
         this.loader;
-        this.loader2;
         this.sprite;
         this.color;
         this.textureTool;
@@ -16,35 +20,17 @@ export class AutoCreatePipeLine {
         this.well;
         this.roam;
         this.light;
-        this.pipeline_PE
-        this.pipeline_PVC
-        this.pipeline_Plastic //塑料
-        this.pipeline_Concrete //砼
-        this.pipeline_FRP //玻璃钢
-        this.pipeline_DuctileIron //球墨铸铁
-        this.pipeline_Steel//钢
-        this.pipeline_Iron//铸铁
-        this.pipelines;
-        this.wells;
+        this.pipeNetworkTemplate = []
         this.pipeline_all = []
+        this.well_all = []
         this.pipeUrl = pipeUrl
         this.cityUrls = cityUrls
         this.groundUrl = groundUrl
         this.bgImgUrl = bgImgUrl
         this.dracoLibUrl = dracoLibUrl
         this.renderInterval;
-
-        this.camera = {
-            position: { x: -1692.6964275679534, y: 30, z: 117.58047372102737 },
-            target: { x: -1699.8554164102306, y: 20, z: 160.251678000217 }
-        };
-        this.camera1 = {
-            position: { x: -1500, y: 30, z: 650 },
-            target: { x: -230, y: 30, z: 800 }
-        };
-
+        this.progressBarTimer;
         const self = this;
-
         this.x = x;
         this.z = z;
         this.id = id;
@@ -58,7 +44,7 @@ export class AutoCreatePipeLine {
         this.showInformationBox.setAddEvents(function () {
             self.trajectoryFreeroam.addEvents();
         });
-        this.loadModels();
+
 
     }
 
@@ -70,8 +56,21 @@ export class AutoCreatePipeLine {
         this.trajectoryFreeroam.startByParam(x, z, id);
     }
 
+    //显示管道
     showFlowTo(urlImg) {
-        this.hideRoad.showFlowTo(this.autoCreatePipeLine.pipeline_all, urlImg)
+        this.hideRoad.showFlowTo(this.pipeline_all, urlImg)
+        const self = this;
+        this.renderInterval = setInterval(function () {
+            self.bustard.core.render()
+        }, 20)
+    }
+    //隐藏管道
+    hideFlowTo() {
+        for (let i = 0; i < this.pipeline_all.length; i++) {
+            this.pipeline_all[i].parent.remove(this.pipeline_all[i])
+        }
+        this.createPipeModels()
+        clearInterval(this.renderInterval)
     }
 
     getHideRoadObject() {
@@ -83,54 +82,40 @@ export class AutoCreatePipeLine {
     }
 
 
-    getPipelineDatas() {
+    getPipelinesData() {
         const self = this;
         $.ajax({
-            url: "http://277jd48643.wicp.vip/api/v1/article/monitor/pipelineModeling",
+            url: PipeNetworkConfig.GET_PIPES_DATA_URL,
             type: "GET",
             success: function (d) {
                 self.pipelines = d.data
             },
             error: function () {
-                alert("获取失败！")
-                console.log("line数据获取失败")
+                console.log("管道数据获取失败")
             }
         })
     }
 
-    getWellDatas() {
+    getWellsData() {
         const self = this;
         $.ajax({
-            url: "http://277jd48643.wicp.vip/api/v1/article/monitor/wellPointModeling",
+            url: PipeNetworkConfig.GET_WELLS_DATA_URL,
             type: "GET",
             success: function (d) {
                 self.wells = d.data
             },
             error: function () {
-                alert("获取失败！")
-                console.log("well数据获取失败")
+                console.log("管井数据获取失败！")
             }
         })
     }
 
     init() {
-        this.getPipelineDatas();
-        this.getWellDatas();
+        this.getPipelinesData();
+        this.getWellsData();
         let con = document.getElementById(this.container);
         this.bustard = new Bustard(con);
-        this.loader = this.bustard.use(new Bustard.Loader({
-            position: {
-                x: -1900,
-                y: 100,
-                z: 700
-            },
-            target: {
-                x: -280,
-                y: 100,
-                z: 435
-            },
-            isCameraFix: true
-        }));
+        this.loader = this.bustard.use(new Bustard.Loader(PipeNetworkConfig.LOADER_CAMERA_CONFIG));
         this.bustard.core.addImgToBackground(this.bgImgUrl)
         this.color = this.bustard.use(new Bustard.Color({ isMutex: true }));
         this.color.activeClick = false;
@@ -147,102 +132,116 @@ export class AutoCreatePipeLine {
         this.pick = this.bustard.use(new Bustard.Pick());
         const self = this;
         this.pick.pick = function (node, point) {
-            // console.log(node)
-            // console.log(point)
+            console.log(node)
+            console.log(point)
             // console.log("相机位置：" + self.roam.curPosition().z + "," + self.roam.curPosition().y + "," + self.roam.curPosition().x);
             // console.log("焦点位置：" + self.roam.curTarget().z + "," + self.roam.curTarget().y + "," + self.roam.curTarget().x);
             self.showInformationBox.isPipeline(self.light, node);
 
+            console.log(self.bustard.core.getNodeByName("boliti-buildingfbx").chilren[2])
+
         }
         // this.cloneModel();
+        this.loadModels();
+
+    }
+
+    //进度条定时器
+    addProgressBarTimer() {
+        let progressBarWidth = 0
+        this.progressBarTimer = setInterval(function () {
+            progressBarWidth = progressBarWidth + 20
+            if (progressBarWidth >= 740) {
+                progressBarWidth = 740
+            }
+            document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = progressBarWidth + 'px';
+        }, 13)
     }
 
     loadModels() {
+        $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeIn()
+        this.addProgressBarTimer();
         const self = this;
         Promise.all([
-            self.loader.gltfLoadByUrl(self.pipeUrl, 'pipeline', false).then(value => {
-            }),
+            self.loader.gltfLoadByUrl(self.pipeUrl, PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_PREFIX,
+                true).then(value => {
+                }),
         ]).then((result) => {
-            self.getmodel();
-            self.roam.lookAt(self.camera.position, self.camera.target);
+            self.getPipeNetworkTemplate();
+            self.roam.lookAt(PipeNetworkConfig.TRANSITION_CAMERA.position, PipeNetworkConfig.TRANSITION_CAMERA.target);
             self.loader.setDraco(self.dracoLibUrl);
-            self.loader.gltfLoadByUrl(self.groundUrl, "dimian", false).then(value => {
+            self.loader.gltfLoadByUrl(self.groundUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                 value.position.set(0, -0.22, 0)
-                self.loader.gltfLoadByUrls(self.cityUrls, 'floor', true).then(value => {
-                    // self.roam.lookAt(self.camera1.position, self.camera1.target);
-                    self.cloneModel();
-                    self.hideModel();
+                self.loader.gltfLoadByUrls(self.cityUrls, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                    self.createWellModels();
+                    self.createPipeModels();
+                    self.hidePipeNetworkTemplate();
                     if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
                         self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
                     }
-                    $(".loading").fadeOut();
+                    clearInterval(this.progressBarTimer);
+                    document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = PipeNetworkConfig.PROGRESS_BAR_WIDTH_MAX;
+                    $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeOut();
                 })
             })
         });
     }
 
-    getmodel() {
-        this.pipeline_Default = this.bustard.core.getNodeByName("11409_");//默认
-        this.pipeline_PE = this.bustard.core.getNodeByName('1404_');//PE
-        this.pipeline_PVC = this.bustard.core.getNodeByName('1231_');//PVC
-        this.pipeline_Plastic = this.bustard.core.getNodeByName('1058_');  //塑料
-        this.pipeline_Concrete = this.bustard.core.getNodeByName('885_'); //砼
-        this.pipeline_FRP = this.bustard.core.getNodeByName('712_'); //玻璃钢
-        this.pipeline_DuctileIron = this.bustard.core.getNodeByName('539_'); //球铸铁
-        this.pipeline_Steel = this.bustard.core.getNodeByName('365_'); //钢
-        this.pipeline_Iron = this.bustard.core.getNodeByName('164_'); //铸铁
-        this.well = this.bustard.core.getNodeByName('11328_');//管井
+    getPipeNetworkTemplate() {
+        for (let i = 0; i < PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_NAME.length; i++) {
+            this.pipeNetworkTemplate[i] = this.bustard.core.getNodeByName(PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_NAME[i])
+        }
     }
-    hideModel() {
-        this.modelHide.hideById("pipeline|11328_");//well
-        this.modelHide.hideById("pipeline|11409_");//哑黄色
-        this.modelHide.hideById("pipeline|164_");//绿
-        this.modelHide.hideById("pipeline|1404_");//亮黄
-        this.modelHide.hideById("pipeline|1231_");//湖蓝
-        this.modelHide.hideById("pipeline|1058_");//蓝色
-        this.modelHide.hideById("pipeline|885_");//紫红（粉红）
-        this.modelHide.hideById("pipeline|712_");//紫色
-        this.modelHide.hideById("pipeline|539_");//褐色
-        this.modelHide.hideById("pipeline|365_");//红
+    hidePipeNetworkTemplate() {
+        for (let i = 0; i < PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_NAME.length; i++) {
+            this.modelHide.hideById(PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_PREFIX + "|" + PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_NAME[i]);
+        }
     }
 
-    cloneModel() {
+
+
+    createWellModels() {
+        this.well_all = []
         for (let i = 0; i < this.wells.length; i++) {
-            if (this.wells[i].wellX > -2000 && this.wells[i].wellX < 1800 && this.wells[i].wellZ > 400 && this.wells[i].wellZ < 1300) {
-                let cloneModel = this.well.clone();
+            if (this.wells[i].wellX > -2050 && this.wells[i].wellX < 3400 && this.wells[i].wellZ > -2275 && this.wells[i].wellZ < 2005) {
+                let cloneModel = this.pipeNetworkTemplate[0].clone();
                 cloneModel.name = this.wells[i].wellId
-                cloneModel.userData.modelName = 'well'
+                cloneModel.userData.modelName = PipeNetworkConfig.WELL_MODEL_PREFIX
                 cloneModel.userData.uniqId = this.wells[i].wellId
                 cloneModel.position.x = this.wells[i].wellX
                 cloneModel.position.y = -0.1
                 cloneModel.position.z = this.wells[i].wellZ
                 cloneModel.scale.set(1, 1, 1);
+                cloneModel.visible = true
+                this.well_all.push(cloneModel)
                 this.bustard.core.getScene().add(cloneModel)
             }
         }
-
-
+        this.bustard.core.render();
+    }
+    createPipeModels() {
+        this.pipeline_all = []
         for (let i = 0; i < this.pipelines.length; i++) {
-            if (this.pipelines[i].pipelineX1 > -2000 && this.pipelines[i].pipelineX1 < 1800 && this.pipelines[i].pipelineZ1 > 400 && this.pipelines[i].pipelineZ1 < 1300) {
+            if (this.pipelines[i].pipelineX1 > -2050 && this.pipelines[i].pipelineX1 < 3400 && this.pipelines[i].pipelineZ1 > -2275 && this.pipelines[i].pipelineZ1 < 2005 && this.pipelines[i].diameter >= 400) {
                 let cloneModel;
                 if (this.pipelines[i].material === 'PE') {
-                    cloneModel = this.pipeline_PE.clone()
+                    cloneModel = this.pipeNetworkTemplate[2].clone()
                 } else if (this.pipelines[i].material === 'PVC') {
-                    cloneModel = this.pipeline_PVC.clone()
+                    cloneModel = this.pipeNetworkTemplate[3].clone()
                 } else if (this.pipelines[i].material === '塑料') {
-                    cloneModel = this.pipeline_Plastic.clone()
+                    cloneModel = this.pipeNetworkTemplate[4].clone()
                 } else if (this.pipelines[i].material === '砼') {
-                    cloneModel = this.pipeline_Concrete.clone()
+                    cloneModel = this.pipeNetworkTemplate[5].clone()
                 } else if (this.pipelines[i].material === "玻璃钢") {
-                    cloneModel = this.pipeline_FRP.clone()
+                    cloneModel = this.pipeNetworkTemplate[6].clone()
                 } else if (this.pipelines[i].material === '球墨铸铁') {
-                    cloneModel = this.pipeline_DuctileIron.clone()
+                    cloneModel = this.pipeNetworkTemplate[7].clone()
                 } else if (this.pipelines[i].material === '钢') {
-                    cloneModel = this.pipeline_Steel.clone()
+                    cloneModel = this.pipeNetworkTemplate[8].clone()
                 } else if (this.pipelines[i].material === '铸铁') {
-                    cloneModel = this.pipeline_Iron.clone()
+                    cloneModel = this.pipeNetworkTemplate[9].clone()
                 } else {
-                    cloneModel = this.pipeline_Default.clone()
+                    cloneModel = this.pipeNetworkTemplate[1].clone()
                 }
                 let x1 = this.pipelines[i].pipelineX1;
                 let y1 = 0;
@@ -253,7 +252,7 @@ export class AutoCreatePipeLine {
                 let radian = Math.atan(Math.abs(z2 - z1) / Math.abs(x2 - x1));
                 let long = Math.sqrt((z2 - z1) * (z2 - z1) + (x2 - x1) * (x2 - x1));
                 cloneModel.name = this.pipelines[i].pipelineId;
-                cloneModel.userData.modelName = 'pipeline'
+                cloneModel.userData.modelName = PipeNetworkConfig.PIPE_MODEL_PREFIX
                 cloneModel.userData.uniqId = this.pipelines[i].pipelineId;
                 if (z2 - z1 < 0 && x2 - x1 > 0) {
                     cloneModel.position.x = x1 + Math.abs(x2 - x1) / 2;
@@ -291,14 +290,14 @@ export class AutoCreatePipeLine {
                 } else {
                     cloneModel.scale.set(long / 10, this.pipelines[i].diameter / 100, this.pipelines[i].diameter / 100);
                 }
+                cloneModel.visible = true
                 this.pipeline_all.push(cloneModel)
                 this.bustard.core.getScene().add(cloneModel);
             }
-
         }
-
         this.bustard.core.render();
     }
+
 }
 
 

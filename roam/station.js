@@ -10,117 +10,154 @@ export var FlowImgUrl2
 export var datas
 export var renderInterval
 export var stationName
+export var STATION_MODEL_ALL
 export var bengzhan = {
 
     //春兰
     chunlanStation: {
+        qiang: [
+            {
+                start: 2,
+                end: 11
+            }
+        ],
+        controlBox: [
+            {
+                start: 44,
+                end: 47
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64415_",
-                nodeName: '64415_'
+                index: 19
             },
             {
                 name: "污水泵2",
-                id: "station|64485_",
-                nodeName: '64485_'
+                index: 20
             },
             {
                 name: "污水泵3",
-                id: "station|64529_",
-                nodeName: '64529_'
+                index: 21
             },
             {
                 name: "污水泵4",
-                id: "station|64574_",
-                nodeName: '64574_'
+                index: 22
             }
         ],
         pipeNodeNames: [
             {
-                name1: "64797_",
-                name2: "106472_",
-                name3: "64624_",
+                index1: 23,
+                index2: 28,
+                index3: 35,
+                index4: 33,
+                index5: 43
             },
             {
-                name1: "65088_",
-                name2: "106364_",
-                name3: "64943_",
+                index1: 24,
+                index2: 27,
+                index3: 34,
+                index4: 37,
+                index5: 42
             },
             {
-                name1: "65378_",
-                name2: "106556_",
-                name3: "65233_",
+                index1: 25,
+                index2: 29,
+                index3: 31,
+                index4: 32,
+                index5: 41
             },
             {
-                name1: "65668_",
-                name2: "106640_",
-                name3: "65523_",
+                index1: 26,
+                index2: 30,
+                index3: 36,
+                index4: 38,
+                index5: 40
             }
+        ],
+        mainPipelineIndex: [
+            39
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                id: "station|121617_"
+                index: 52
             },
             {
                 name: "捞渣机1",
-                id: "station|102819_"
+                index: 50
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                nodeName: "106813_"
+                index: 56
             },
             {
                 name: "传送带2",
-                nodeName: "121751_"
+                index: 55
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                id: "station|87557_"
+                index: 49
             },
             {
                 name: "启闭机2",
-                id: "station|77505_"
+                index: 48
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                id: "station|123660_"
+                index: 51
             },
         ]
     },
 
     //三号小区
     districtthreeStation: {
+        qiang: [
+            {
+                start: 1,
+                end: 9
+            }
+        ],
+        controlBox: [
+            {
+                start: 25,
+                end: 26
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64392_",
-                nodeName: '64392_'
+                index: 12
             },
             {
                 name: "污水泵2",
-                id: "station|64463_",
-                nodeName: '64463_'
+                index: 13
             }
         ],
         pipeNodeNames: [
             {
-                name1: "64687_",
-                name2: "69704_",
-                name3: "64514_",
+                index1: 14,
+                index2: 17,
+                index3: 20,
+                index4: 18,
+                index5: 24
             },
             {
-                name1: "64978_",
-                name2: "69812_",
-                name3: "64833_",
+                index1: 15,
+                index2: 16,
+                index3: 19,
+                index4: 21,
+                index5: 23
             }
+        ],
+        mainPipelineIndex: [
+            22
         ],
         laozhaji: [
 
@@ -135,39 +172,57 @@ export var bengzhan = {
 
     //东风
     eastwindStation: {
+        qiang: [
+            {
+                start: 1,
+                end: 9
+            }
+        ],
+        controlBox: [
+            {
+                start: 31,
+                end: 33
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64393_",
-                nodeName: '64393_'
+                index: 12
             },
             {
                 name: "污水泵2",
-                id: "station|69099_",
-                nodeName: '69099_'
+                index: 13
             },
             {
                 name: "污水泵3",
-                id: "station|69934_",
-                nodeName: '69934_'
+                index: 14
             }
         ],
         pipeNodeNames: [
             {
-                name1: "64642_",
-                name2: "68964_",
-                name3: "64469_",
+                index1: 15,
+                index2: 19,
+                index3: 25,
+                index4: 23,
+                index5: 30
             },
             {
-                name1: "69293_",
-                name2: "69838_",
-                name3: "69148_",
+                index1: 16,
+                index2: 18,
+                index3: 24,
+                index4: 26,
+                index5: 28
             },
             {
-                name1: "70128_",
-                name2: "70673_",
-                name3: "69983_",
+                index1: 17,
+                index2: 20,
+                index3: 21,
+                index4: 22,
+                index5: 29
             }
+        ],
+        mainPipelineIndex: [
+            27
         ],
         laozhaji: [
 
@@ -182,365 +237,456 @@ export var bengzhan = {
 
     //鼓楼
     gulouStation: {
+        qiang: [
+            {
+                start: 2,
+                end: 11
+            }
+        ],
+        controlBox: [
+            {
+                start: 44,
+                end: 47
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64414_",
-                nodeName: '64414_'
+                index: 19
+
             },
             {
                 name: "污水泵2",
-                id: "station|64485_",
-                nodeName: '64485_'
+                index: 20
             },
             {
                 name: "污水泵3",
-                id: "station|64530_",
-                nodeName: '64530_'
+                index: 21
             },
             {
                 name: "污水泵4",
-                id: "station|64574_",
-                nodeName: '64574_'
+                index: 22
             }
         ],
         pipeNodeNames: [
             {
-                name1: "64797_",
-                name2: "106472_",
-                name3: "64624_",
+                index1: 23,
+                index2: 28,
+                index3: 35,
+                index4: 33,
+                index5: 43
             },
             {
-                name1: "65088_",
-                name2: "106364_",
-                name3: "64943_",
+                index1: 24,
+                index2: 27,
+                index3: 34,
+                index4: 37,
+                index5: 42
             },
             {
-                name1: "65378_",
-                name2: "106556_",
-                name3: "65233_",
+                index1: 25,
+                index2: 29,
+                index3: 31,
+                index4: 32,
+                index5: 41
             },
             {
-                name1: "65668_",
-                name2: "106640_",
-                name3: "65523_",
+                index1: 26,
+                index2: 30,
+                index3: 36,
+                index4: 38,
+                index5: 40
             }
+        ],
+        mainPipelineIndex: [
+            39
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                id: "station|121617_"
+                index: 52
             },
             {
-                name: "捞渣机2",
-                id: "station|102819_"
+                name: "捞渣机1",
+                index: 50
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                nodeName: "106813_"
+                index: 56
             },
             {
                 name: "传送带2",
-                nodeName: "121751_"
+                index: 55
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                id: "station|87557_"
+                index: 49
             },
             {
                 name: "启闭机2",
-                id: "station|77505_"
+                index: 48
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                id: "station|123660_"
-            }
+                index: 51
+            },
         ]
     },
 
     //济川
     jichuanStation: {
+        qiang: [
+            {
+                start: 2,
+                end: 14
+            }
+        ],
+        controlBox: [
+            {
+                start: 53,
+                end: 56
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64415_",
-                nodeName: '64415_'
+                index: 20
+
             },
             {
                 name: "污水泵2",
-                id: "station|64486_",
-                nodeName: '64486_'
+                index: 21
             },
             {
                 name: "污水泵3",
-                id: "station|64530_",
-                nodeName: '64530_'
+                index: 22
             },
             {
                 name: "污水泵4",
-                id: "station|64574_",
-                nodeName: '64574_'
+                index: 23
             }
         ],
         pipeNodeNames: [
             {
-                name1: "64797_",
-                name2: "106472_",
-                name3: "64624_",
+                index1: 24,
+                index2: 29,
+                index3: 36,
+                index4: 34,
+                index5: 43
             },
             {
-                name1: "65088_",
-                name2: "106364_",
-                name3: "64943_",
+                index1: 25,
+                index2: 28,
+                index3: 35,
+                index4: 38,
+                index5: 42
             },
             {
-                name1: "65378_",
-                name2: "106556_",
-                name3: "65233_",
+                index1: 26,
+                index2: 30,
+                index3: 32,
+                index4: 33,
+                index5: 41
             },
             {
-                name1: "65668_",
-                name2: "106640_",
-                name3: "65523_",
+                index1: 27,
+                index2: 31,
+                index3: 37,
+                index4: 39,
+                index5: 40
             }
+        ],
+        mainPipelineIndex: [
+            49
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                id: "station|121617_"
+                index: 63
             },
             {
-                name: "捞渣机2",
-                id: "station|102819_"
+                name: "捞渣机1",
+                index: 61
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                nodeName: "106813_"
+                index: 67
             },
             {
                 name: "传送带2",
-                nodeName: "121751_"
+                index: 66
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                id: "station|154178_"
+                index: 58
             },
             {
                 name: "启闭机2",
-                id: "station|87557_"
+                index: 59
             },
             {
                 name: "启闭机3",
-                id: "station|77505_"
+                index: 60
             },
             {
                 name: "启闭机4",
-                id: "station|144127_"
+                index: 57
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                id: "station|123660_"
-            }
+                index: 62
+            },
         ]
     },
 
     //新区
     newdistrictStation: {
+        qiang: [
+            {
+                start: 2,
+                end: 14
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64393_",
-                nodeName: '64393_'
+                index: 18
+
             },
             {
                 name: "污水泵2",
-                id: "station|64464_",
-                nodeName: '64464_'
+                index: 19
             },
             {
                 name: "污水泵3",
-                id: "station|64508_",
-                nodeName: '64508_'
+                index: 20
             },
             {
                 name: "污水泵4",
-                id: "station|64552_",
-                nodeName: '64552_'
+                index: 21
             }
         ],
         pipeNodeNames: [
             {
-                name1: "64775_",
-                name2: "91438_",
-                name3: "64602_",
+                index1: 22,
+                index2: 27,
+                index3: 34,
+                index4: 32,
+                index5: 39
             },
             {
-                name1: "65066_",
-                name2: "91330_",
-                name3: "64921_",
+                index1: 23,
+                index2: 26,
+                index3: 33,
+                index4: 36,
+                index5: 40
             },
             {
-                name1: "65356_",
-                name2: "91522_",
-                name3: "65211_",
+                index1: 24,
+                index2: 28,
+                index3: 30,
+                index4: 31,
+                index5: 41
             },
             {
-                name1: "65646_",
-                name2: "91606_",
-                name3: "65501_",
+                index1: 25,
+                index2: 29,
+                index3: 35,
+                index4: 37,
+                index5: 42
             }
+        ],
+        mainPipelineIndex: [
+            38
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                id: "station|106633_"
+                index: 47
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                nodeName: "91781_"
+                index: 51
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                id: "station|87535_"
+                index: 64
             },
             {
                 name: "启闭机2",
-                id: "station|77483_"
+                index: 65
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                id: "station|108457_"
+                index: 48
             }
         ]
     },
 
     //泰山公园
     parkStation: {
+        qiang: [
+            {
+                start: 2,
+                end: 11
+            }
+        ],
+        controlBox: [
+            {
+                start: 44,
+                end: 47
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64414_",
-                nodeName: '64414_'
+                index: 19
+
             },
             {
                 name: "污水泵2",
-                id: "station|64484_",
-                nodeName: '64484_'
+                index: 20
             },
             {
                 name: "污水泵3",
-                id: "station|64528_",
-                nodeName: '64528_'
+                index: 21
             },
             {
                 name: "污水泵4",
-                id: "station|64573_",
-                nodeName: '64573_'
+                index: 22
             }
         ],
         pipeNodeNames: [
             {
-                name1: "64796_",
-                name2: "106472_",
-                name3: "64623_",
+                index1: 23,
+                index2: 28,
+                index3: 35,
+                index4: 33,
+                index5: 43
             },
             {
-                name1: "65087_",
-                name2: "106364_",
-                name3: "64942_",
+                index1: 24,
+                index2: 27,
+                index3: 34,
+                index4: 37,
+                index5: 42
             },
             {
-                name1: "65377_",
-                name2: "106556_",
-                name3: "65232_",
+                index1: 25,
+                index2: 29,
+                index3: 31,
+                index4: 32,
+                index5: 41
             },
             {
-                name1: "65667_",
-                name2: "106640_",
-                name3: "65522_",
+                index1: 26,
+                index2: 30,
+                index3: 36,
+                index4: 38,
+                index5: 40
             }
+        ],
+        mainPipelineIndex: [
+            39
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                id: "station|121617_"
+                index: 52
             },
             {
-                name: "捞渣机2",
-                id: "station|102818_"
+                name: "捞渣机1",
+                index: 50
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                nodeName: "106813_"
+                index: 56
             },
             {
                 name: "传送带2",
-                nodeName: "121751_"
+                index: 55
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                id: "station|87556_"
+                index: 49
             },
             {
                 name: "启闭机2",
-                id: "station|77504_"
+                index: 48
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                id: "station|123660_"
-            }
+                index: 51
+            },
         ]
     },
 
     //人民路三栋
     peopleStation: {
+        qiang: [
+            {
+                start: 1,
+                end: 9
+            }
+        ],
+        controlBox: [
+            {
+                start: 25,
+                end: 26
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64393_",
-                nodeName: '64393_'
+                index: 12
             },
             {
                 name: "污水泵2",
-                id: "station|64463_",
-                nodeName: '64463_'
+                index: 13
             }
         ],
         pipeNodeNames: [
             {
-                name1: "64686_",
-                name2: "69703_",
-                name3: "64513_",
+                index1: 14,
+                index2: 17,
+                index3: 20,
+                index4: 18,
+                index5: 24
             },
             {
-                name1: "64977_",
-                name2: "69812_",
-                name3: "64832_",
+                index1: 15,
+                index2: 16,
+                index3: 19,
+                index4: 21,
+                index5: 23
             }
+        ],
+        mainPipelineIndex: [
+            22
         ],
         laozhaji: [
 
@@ -555,123 +701,161 @@ export var bengzhan = {
 
     //凤凰河
     pheonixStation: {
+        qiang: [
+            {
+                start: 2,
+                end: 11
+            }
+        ],
+        controlBox: [
+            {
+                start: 49,
+                end: 53
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|134212_",
-                nodeName: '134212_'
+                index: 18
+
             },
             {
                 name: "污水泵2",
-                id: "station|133377_",
-                nodeName: '133377_'
+                index: 19
             },
             {
                 name: "污水泵3",
-                id: "station|132542_",
-                nodeName: '132542_'
+                index: 20
             },
             {
                 name: "污水泵4",
-                id: "station|131706_",
-                nodeName: '131706_'
+                index: 21
             },
             {
                 name: "污水泵5",
-                id: "station|64432_",
-                nodeName: '64432_'
+                index: 22
             }
         ],
         pipeNodeNames: [
             {
-                name1: "134406_",
-                name2: "134951_",
-                name3: "134261_",
+                index1: 23,
+                index2: 28,
+                index3: 35,
+                index4: 33,
+                index5: 40
             },
             {
-                name1: "133571_",
-                name2: "134116_",
-                name3: "133426_",
+                index1: 24,
+                index2: 27,
+                index3: 34,
+                index4: 37,
+                index5: 41
             },
             {
-                name1: "132736_",
-                name2: "133281_",
-                name3: "132591_",
+                index1: 25,
+                index2: 29,
+                index3: 31,
+                index4: 32,
+                index5: 42
             },
             {
-                name1: "131900_",
-                name2: "132445_",
-                name3: "131755_",
+                index1: 26,
+                index2: 30,
+                index3: 36,
+                index4: 38,
+                index5: 43
             },
             {
-                name1: "64681_",
-                name2: "104163_",
-                name3: "64508_",
+                index1: 44,
+                index2: 45,
+                index3: 46,
+                index4: 47,
+                index5: 48
             }
+        ],
+        mainPipelineIndex: [
+            39
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                id: "station|119164_"
+                index: 58
             },
             {
-                name: "捞渣机2",
-                id: "station|100618_"
+                name: "捞渣机1",
+                index: 56
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                nodeName: "104360_"
+                index: 62
             },
             {
                 name: "传送带2",
-                nodeName: "119298_"
+                index: 61
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                id: "station|85356_"
+                index: 55
             },
             {
                 name: "启闭机2",
-                id: "station|75304_"
+                index: 54
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                id: "station|121207_"
-            }
+                index: 57
+            },
         ]
     },
 
     //西湖翠苑
     xihucuiyuanStation: {
+        qiang: [
+            {
+                start: 1,
+                end: 9
+            }
+        ],
+        controlBox: [
+            {
+                start: 25,
+                end: 26
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64392_",
-                nodeName: '64392_'
+                index: 12
             },
             {
                 name: "污水泵2",
-                id: "station|64463_",
-                nodeName: '64463_'
+                index: 13
             }
         ],
         pipeNodeNames: [
             {
-                name1: "64686_",
-                name2: "69703_",
-                name3: "64513_",
+                index1: 14,
+                index2: 17,
+                index3: 20,
+                index4: 18,
+                index5: 24
             },
             {
-                name1: "64977_",
-                name2: "69812_",
-                name3: "64832_",
+                index1: 15,
+                index2: 16,
+                index3: 19,
+                index4: 21,
+                index5: 23
             }
+        ],
+        mainPipelineIndex: [
+            22
         ],
         laozhaji: [
 
@@ -686,30 +870,46 @@ export var bengzhan = {
 
     //朝阳河
     zhaoyangriverStation: {
+        qiang: [
+            {
+                start: 1,
+                end: 9
+            }
+        ],
+        controlBox: [
+            {
+                start: 25,
+                end: 26
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|64393_",
-                nodeName: '64393_'
+                index: 12
             },
             {
                 name: "污水泵2",
-                id: "station|64464_",
-                nodeName: '64464_'
+                index: 13
             }
-
         ],
         pipeNodeNames: [
             {
-                name1: "64687_",
-                name2: "69704_",
-                name3: "64514_",
+                index1: 14,
+                index2: 17,
+                index3: 20,
+                index4: 18,
+                index5: 24
             },
             {
-                name1: "64978_",
-                name2: "69812_",
-                name3: "64833_",
+                index1: 15,
+                index2: 16,
+                index3: 19,
+                index4: 21,
+                index5: 23
             }
+        ],
+        mainPipelineIndex: [
+            22
         ],
         laozhaji: [
 
@@ -724,111 +924,135 @@ export var bengzhan = {
 
     //周山
     zhoushanriverStation: {
+        qiang: [
+            {
+                start: 2,
+                end: 11
+            }
+        ],
+        controlBox: [
+            {
+                start: 49,
+                end: 53
+            }
+        ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                id: "station|134200_",
-                nodeName: '134200_'
+                index: 18
+
             },
             {
                 name: "污水泵2",
-                id: "station|133377_",
-                nodeName: '133377_'
+                index: 19
             },
             {
                 name: "污水泵3",
-                id: "station|132542_",
-                nodeName: '132542_'
+                index: 20
             },
             {
                 name: "污水泵4",
-                id: "station|131707_",
-                nodeName: '131707_'
+                index: 21
             },
             {
                 name: "污水泵5",
-                id: "station|64431_",
-                nodeName: '64431_'
+                index: 22
             }
         ],
         pipeNodeNames: [
             {
-                name1: "134394_",
-                name2: "134939_",
-                name3: "134249_",
+                index1: 23,
+                index2: 28,
+                index3: 35,
+                index4: 33,
+                index5: 40
             },
             {
-                name1: "133571_",
-                name2: "134116_",
-                name3: "133426_",
+                index1: 24,
+                index2: 27,
+                index3: 34,
+                index4: 37,
+                index5: 41
             },
             {
-                name1: "132736_",
-                name2: "133281_",
-                name3: "132591_",
+                index1: 25,
+                index2: 29,
+                index3: 31,
+                index4: 32,
+                index5: 42
             },
             {
-                name1: "131901_",
-                name2: "132446_",
-                name3: "131756_",
+                index1: 26,
+                index2: 30,
+                index3: 36,
+                index4: 38,
+                index5: 43
             },
             {
-                name1: "64681_",
-                name2: "104163_",
-                name3: "64508_",
+                index1: 44,
+                index2: 45,
+                index3: 46,
+                index4: 47,
+                index5: 48
             }
+        ],
+        mainPipelineIndex: [
+            39
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                id: "station|119165_"
+                index: 58
             },
             {
-                name: "捞渣机2",
-                id: "station|100618_"
+                name: "捞渣机1",
+                index: 56
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                nodeName: "104361_"
+                index: 62
             },
             {
                 name: "传送带2",
-                nodeName: "119299_"
+                index: 61
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                id: "station|85356_"
+                index: 55
             },
             {
                 name: "启闭机2",
-                id: "station|75304_"
+                index: 54
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                id: "station|121208_"
-            }
+                index: 57
+            },
         ]
     },
 
 }
 
 
-export function initWithConfig(StationName, glburl, imgUrl1, imgUrl2, bgUrl, data) {
-    analyticalData(StationName, glburl, imgUrl1, imgUrl2, bgUrl, data);
+export function initWithConfig(StationName, glburl, imgUrl1, imgUrl2, bgUrl, data, dracoUrl) {
+    analyticalData(StationName, glburl, imgUrl1, imgUrl2, bgUrl, data, dracoUrl);
 }
 
-export function init(glburl, bgUrl) {
+export function init(glburl, bgUrl, dracoUrl) {
     var sss = document.getElementById('station');
     bustard = new Bustard(sss);
     bustard.core.addImgToBackground(bgUrl)
     var roam = bustard.use(new Bustard.Roam())
     loader = bustard.use(new Bustard.Loader());
+    loader.setDraco(dracoUrl)
+    var transparent = bustard.use(new Bustard.Transparent())
+    transparent.activeClick = false
     sprite = bustard.use(new Bustard.Sprite({
         fontSize: 20,
         borderThickness: 5,
@@ -839,17 +1063,26 @@ export function init(glburl, bgUrl) {
     textureTool = bustard.use(new Bustard.Texture());
     Promise.all([
         loader.gltfLoadByUrl(glburl, 'station').then(value => {
+            STATION_MODEL_ALL = value.children[0].children
             roam.lookAt(
                 {
-                    x: -1.7740101496072087,
-                    y: 4.6080794038340525,
-                    z: 7.2764601327242175
+                    x: -1.6,
+                    y: 5,
+                    z: 10.5
                 },
                 {
-                    x: -0.4214138276875019,
-                    y: 1.3958300352096553,
-                    z: 0.3464430570602419
-                })
+                    x: -0.46,
+                    y: -0.5,
+                    z: 1.2
+                });
+            //主管线
+            textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex], FlowImgUrl1, -0.06, 10)
+            //控制箱颜色
+            for (let i = bengzhan[stationName].controlBox[0].start; i <= bengzhan[stationName].controlBox[0].end; i++) {
+                for (let j = 0; j <= 2; j++) {
+                    color.setMeshColor(STATION_MODEL_ALL[i].children[j], 0x858590)
+                }
+            }
             loadData();
         })
     ]);
@@ -857,7 +1090,7 @@ export function init(glburl, bgUrl) {
     modelHide.activeClick = false;
     pick = bustard.use(new Bustard.Pick());
     pick.pick = function (node, point) {
-        // console.log(node)
+        console.log(node)
         // console.log("相机位置：" + roam.curPosition().z + "," + roam.curPosition().y + "," + roam.curPosition().x);
         // console.log("焦点位置：" + roam.curTarget().z + "," + roam.curTarget().y + "," + roam.curTarget().x);
         // modelHide.hideById(node.userData.uniqId)
@@ -865,12 +1098,12 @@ export function init(glburl, bgUrl) {
     }
 }
 
-export function analyticalData(StationName, glburl, imgUrl1, imgUrl2, bgUrl, data) {
+export function analyticalData(StationName, glburl, imgUrl1, imgUrl2, bgUrl, data, dracoUrl) {
     FlowImgUrl1 = imgUrl1;
     FlowImgUrl2 = imgUrl2;
     datas = data;
     stationName = StationName;
-    init(glburl, bgUrl);
+    init(glburl, bgUrl, dracoUrl);
 }
 
 export function loadData() {
@@ -891,46 +1124,51 @@ export function loadEquipmentState() {
     // 污水泵
     if (bengzhan[stationName].wushuibeng.length > 0) {
         for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
-            changeEquipmentState(bengzhan[stationName].wushuibeng[i].id, datas.wushuibeng[i].state)
+            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index], datas.wushuibeng[i].state)
         }
     }
     if (bengzhan[stationName].laozhaji.length > 0) {
         for (let i = 0; i < bengzhan[stationName].laozhaji.length; i++) {
-            changeEquipmentState(bengzhan[stationName].laozhaji[i].id, datas.laozhaji[i].state)
+            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].laozhaji[i].index], datas.laozhaji[i].state)
         }
     }
     if (bengzhan[stationName].qibiji.length > 0) {
         for (let i = 0; i < bengzhan[stationName].qibiji.length; i++) {
-            changeEquipmentState(bengzhan[stationName].qibiji[i].id, datas.qibiji[i].state)
+            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].qibiji[i].index], datas.qibiji[i].state)
         }
     }
     if (bengzhan[stationName].lajichuansongji.length > 0) {
         for (let i = 0; i < bengzhan[stationName].lajichuansongji.length; i++) {
-            changeEquipmentState(bengzhan[stationName].lajichuansongji[i].id, datas.lajichuansongji[i].state)
+            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].lajichuansongji[i].index], datas.lajichuansongji[i].state)
         }
     }
 }
 
-export function changeEquipmentState(EquipmentCode, state) {
+export function changeEquipmentState(mesh, state) {
     if (state === 0) {
-        color.setColorById(EquipmentCode, 0x008000)
+        color.setMeshColor(mesh, 0x008000)
     }
     if (state === 1) {
-        color.setColorById(EquipmentCode, 0x808080)
+        color.setMeshColor(mesh, 0x808080)
     }
     if (state === 2) {
-        color.setColorById(EquipmentCode, 0xFF0000)
+        color.setMeshColor(mesh, 0xFF0000)
     }
 }
 
 export function loadPumpDate() {
     if (bengzhan[stationName].wushuibeng.length > 0) {
         for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
-            let pum = bustard.core.getNodeByName(bengzhan[stationName].wushuibeng[i].nodeName);
+            let pum = STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index]
             if (datas.wushuibeng[i].state === 0) {
-                sprite.addCanvas(addPumpCanvas(datas.wushuibeng[i].data), [pum.position.x - 0.4, (pum.position.y + 0.4), pum.position.z], function (canvas, pos) {
+                // sprite.addText(datas.wushuibeng[i].data, [pum.position.x, (pum.position.y + 1), pum.position.z])
+                sprite.addCanvas(addPumpCanvas(datas.wushuibeng[i].data), [pum.position.x, (pum.position.y + 1), pum.position.z], function (canvas, pos) {
                     // init();
+
+
                 });
+
+
             }
         }
     }
@@ -940,8 +1178,10 @@ export function addPumpCanvas(data) {
     let canvas = document.createElement("canvas");
     canvas.width = 150;
     canvas.height = 400;
+    // canvas.textAlign = 'center'
     canvas.setAttribute('cursor', 'pointer');
     let ctx = canvas.getContext("2d");
+    ctx.textAlign = 'center'
     ctx.lineWidth = 1;
     ctx.strokeStyle = 'rgba(25,25,112,0.7)';
     ctx.fillStyle = 'rgba(25,25,112,0.7)';
@@ -950,28 +1190,34 @@ export function addPumpCanvas(data) {
     ctx.stroke();
     ctx.fill();
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = "40px bold 黑体";
-    ctx.fillText(data, 15, 70);
-    ctx.fillText("A", 85, 70);
+    ctx.font = "40px Cambria";
+    ctx.fillText(data + "A", 15, 70);
+    // ctx.fillText("A", 85, 70);
     return canvas;
 }
 
 export function addFlow() {
-    if (bengzhan[stationName].wushuibeng.length > 0) {
-        for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
-            if (datas.wushuibeng[i].state == 0) {
-                let pipe1 = bustard.core.getNodeByName(bengzhan[stationName].pipeNodeNames[i].name1)
-                textureTool.addRepetitiveTexture(pipe1, FlowImgUrl1, -0.06, 10)
-                color.setColorById('station|' + bengzhan[stationName].pipeNodeNames[i].name2, 0x91B5F9)
-                color.setColorById('station|' + bengzhan[stationName].pipeNodeNames[i].name3, 0x91B5F9)
-            }
-        }
-    }
     if (bengzhan[stationName].laozhaji.length > 0) {
         for (let i = 0; i < bengzhan[stationName].laozhaji.length; i++) {
             if (datas.laozhaji[i].state == 0) {
-                let chuansongdai = bustard.core.getNodeByName(bengzhan[stationName].chuansongdai[i].nodeName)
-                textureTool.addRepetitiveTexture(chuansongdai, FlowImgUrl2, 0.01, -2)
+                let chuansongdai = STATION_MODEL_ALL[bengzhan[stationName].chuansongdai[i].index]
+                textureTool.addRepetitiveTextureOnMesh(chuansongdai, FlowImgUrl2, 0.01, -2)
+            }
+        }
+    }
+    if (bengzhan[stationName].wushuibeng.length > 0) {
+        for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
+            if (datas.wushuibeng[i].state == 0) {
+                textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index3], FlowImgUrl1, -0.06, 10)
+                textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index4], FlowImgUrl1, -0.06, 2)
+                if (stationName == "xihucuiyuanStation" || stationName == "districtthreeStation" || stationName == "peopleStation" || stationName == "zhaoyangriverStation" || stationName == "eastwindStation") {
+                    textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index5], FlowImgUrl1, -0.06, 2)
+                } else {
+                    textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index5], FlowImgUrl1, -0.06, 10)
+                }
+                textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1], FlowImgUrl1, -0.06, 10, Math.PI / 2)
+                // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1], 0x91B5F9)
+                color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index2], 0x91B5F9)
             }
         }
     }
