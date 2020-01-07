@@ -48,6 +48,8 @@ export class HideRoad {
 
     //控制地面透明度
     adjustRoadTransparency(roadId, transparency) {
+        console.log(roadId)
+        console.log(transparency)
         console.log(this.transparent.getCore().getNodeByName(roadId))
         let obj = this.transparent.getCore().getNodeByName(roadId)
         for (let i = 0; i < obj.children.length; i++) {

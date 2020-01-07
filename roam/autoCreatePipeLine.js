@@ -136,7 +136,7 @@ export class AutoCreatePipeLine {
         this.loader = this.bustard.use(new Bustard.Loader(PipeNetworkConfig.LOADER_CAMERA_CONFIG));
         //加载解压器
         this.loader.setDraco(this.dracoLibUrl);
-        this.bustard.core.addImgToBackground(this.bgImgUrl2)
+        this.bustard.core.addImgToBackground(this.bgImgUrl1)
         this.color = this.bustard.use(new Bustard.Color({ isMutex: true }));
         this.color.activeClick = false;
         this.textureTool = this.bustard.use(new Bustard.Texture());
@@ -201,13 +201,13 @@ export class AutoCreatePipeLine {
                         //加载玻璃体
                         self.loader.gltfLoadByUrl(self.BLTUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                             // console.log(value.children[0].children[0].children[2])
-                            value.children[0].children[0].children[2].material.transparent = true
-                            value.children[0].children[0].children[2].material.opacity = 0.9
-                            value.children[0].children[0].children[3].material.transparent = true
-                            value.children[0].children[0].children[3].material.opacity = 0.9
-                            self.color.setMeshColor(value.children[0].children[0].children[2], 0xaaa7a7)
-                            self.color.setMeshColor(value.children[0].children[0].children[3], 0xaaa7a7)
-                            self.color.setMeshColor(value.children[0].children[0].children[4], 0x6e6e6e)
+                            // value.children[0].children[0].children[2].material.transparent = true
+                            // value.children[0].children[0].children[2].material.opacity = 0.9
+                            // value.children[0].children[0].children[3].material.transparent = true
+                            // value.children[0].children[0].children[3].material.opacity = 0.9
+                            // self.color.setMeshColor(value.children[0].children[0].children[2], 0xaaa7a7)
+                            // self.color.setMeshColor(value.children[0].children[0].children[3], 0xaaa7a7)
+                            // self.color.setMeshColor(value.children[0].children[0].children[4], 0x6e6e6e)
 
                             //加载建筑
                             self.loader.gltfLoadByUrls(self.floorUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
@@ -274,8 +274,8 @@ export class AutoCreatePipeLine {
             // 记录之前相机状态
             oldState: this.trajectoryFreeroam.oldState,
             camera: {
-                position: this.roam.position,
-                target: this.roam.target
+                position: { x: this.roam.curPosition().x, y: this.roam.curPosition().y, z: this.roam.curPosition().z },
+                target: { x: this.roam.curTarget().x, y: this.roam.curTarget().y, z: this.roam.curTarget().z }
             }
         }
         this.trajectoryFreeroam.removeEvents();
@@ -286,8 +286,6 @@ export class AutoCreatePipeLine {
 
     //切换巡检视角
     toggleInspectionPerspective() {
-        this.toggleInspectionBackground();
-        this.toggleInspectionCameraControl();
         // 读取行人巡检视角信息
         this.trajectoryFreeroam.theta = this.humanPerspectiveInfo.theta;
         this.trajectoryFreeroam.changeFlag = this.humanPerspectiveInfo.changeFlag;
@@ -298,18 +296,20 @@ export class AutoCreatePipeLine {
         this.trajectoryFreeroam.oldPosition = this.humanPerspectiveInfo.oldPosition;
         this.trajectoryFreeroam.oldTarget = this.humanPerspectiveInfo.oldTarget;
         this.trajectoryFreeroam.oldState = this.humanPerspectiveInfo.oldState;
-        // 移除cameraControls中的监听事件
-        this.pick.getCore().removeAllListenerEventsFromCameraControls();
+
+        this.toggleInspectionBackground();
+        this.toggleInspectionCameraControl();
         this.trajectoryFreeroam.addEvents();
         this.roam.lookAt(this.humanPerspectiveInfo.camera.position, this.humanPerspectiveInfo.camera.target);
+
     }
 
 
-    //切换全景背景
+    //切换成全景背景
     togglePanoramicBackground() {
         this.bustard.core.addImgToBackground(this.bgImgUrl2)
     }
-    //切换巡检背景
+    //切换成巡检背景
     toggleInspectionBackground() {
         this.bustard.core.addImgToBackground(this.bgImgUrl1)
     }
@@ -426,9 +426,6 @@ export class AutoCreatePipeLine {
                     cloneModel.scale.set(long / 10, this.pipelines[i].diameter / 100, this.pipelines[i].diameter / 100);
                 }
                 cloneModel.visible = true
-                if (cloneModel.name == 395) {
-                    console.log(cloneModel)
-                }
                 this.pipeline_all.push(cloneModel)
                 this.bustard.core.getScene().add(cloneModel);
             }
@@ -444,11 +441,12 @@ export class AutoCreatePipeLine {
 
     //控制地面透明度
     adjustRoadTransparency(transparency) {
-        if (transparent == 0) {
+        if (transparency == 0) {
             this.hideRoad.hideRoad()
         } else {
             this.hideRoad.restoreRoad()
             for (let i = 0; i < PipeNetworkConfig.HIDE_ROAD_MODEL_NAME.length; i++) {
+                console.log(PipeNetworkConfig.HIDE_ROAD_MODEL_NAME[i])
                 this.hideRoad.adjustRoadTransparency(PipeNetworkConfig.HIDE_ROAD_MODEL_NAME[i], transparency)
             }
         }
