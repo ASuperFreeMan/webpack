@@ -106,7 +106,7 @@ export class AutoCreatePipeLine {
             type: "GET",
             success: function (d) {
                 self.pipelines = d.data
-                console.log(d.data)
+                // console.log(d.data)
             },
             error: function () {
                 console.log("管道数据获取失败")
@@ -280,7 +280,7 @@ export class AutoCreatePipeLine {
         }
         this.trajectoryFreeroam.removeEvents();
 
-        this.toggleInspectionBackground();
+        this.togglePanoramicBackground();
         this.togglePanoramicCameraControl();
     }
 
@@ -304,6 +304,10 @@ export class AutoCreatePipeLine {
 
     }
 
+    restoreInspectionPerspectiveConfig() {
+        this.toggleInspectionBackground();
+        this.toggleInspectionCameraControl();
+    }
 
     //切换成全景背景
     togglePanoramicBackground() {
@@ -446,7 +450,6 @@ export class AutoCreatePipeLine {
         } else {
             this.hideRoad.restoreRoad()
             for (let i = 0; i < PipeNetworkConfig.HIDE_ROAD_MODEL_NAME.length; i++) {
-                console.log(PipeNetworkConfig.HIDE_ROAD_MODEL_NAME[i])
                 this.hideRoad.adjustRoadTransparency(PipeNetworkConfig.HIDE_ROAD_MODEL_NAME[i], transparency)
             }
         }
