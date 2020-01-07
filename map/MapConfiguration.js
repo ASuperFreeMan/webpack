@@ -5,7 +5,9 @@ export class MapConfiguration {
     // 自由巡检主视角经纬度
     static freeRoamMainView = { lng: 119.92050928016923, lat: 32.388417918122855 + 0.036887233525095 };
     // 从地球上空飞行到指定位置的时间
-    static flightTime = 5;
+    static flightTime = undefined;
+    // 从地球上空飞行到指定位置后等待显示图标的时间
+    static waitTimeForShowIcon = 0;
     // 相机近地面距离
     static nearDistance = 400;
     // 相机远地面距离
@@ -18,6 +20,10 @@ export class MapConfiguration {
     static cameraTiltMaxHight = 30000;
     // 相机倾斜角度
     static cameraTiltDegree = -45;
+    // 飞行结束后是否显示路线
+    static flyEndShowRoute = false;
+    // 飞行结束后是否显示图标
+    static flyEndShowAllMarks = true;
 
     // 正常路线宽度
     static normalLineWidth = 7;
