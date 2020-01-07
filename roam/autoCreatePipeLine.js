@@ -298,12 +298,16 @@ export class AutoCreatePipeLine {
         this.trajectoryFreeroam.oldPosition = this.humanPerspectiveInfo.oldPosition;
         this.trajectoryFreeroam.oldTarget = this.humanPerspectiveInfo.oldTarget;
         this.trajectoryFreeroam.oldState = this.humanPerspectiveInfo.oldState;
-        // 移除cameraControls中的监听事件
-        this.pick.getCore().removeAllListenerEventsFromCameraControls();
+
         this.trajectoryFreeroam.addEvents();
         this.roam.lookAt(this.humanPerspectiveInfo.camera.position, this.humanPerspectiveInfo.camera.target);
     }
 
+    // 恢复正常巡检设置
+    restoreInspectionPerspectiveConfig() {
+        this.toggleInspectionBackground();
+        this.toggleInspectionCameraControl();
+    }
 
     //切换全景背景
     togglePanoramicBackground() {
