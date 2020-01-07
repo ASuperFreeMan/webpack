@@ -1,14 +1,10 @@
 import { ShowInformationBox } from './showInformationBox';
 import { HideRoad } from './hideRoads';
-<<<<<<< HEAD
 import { TrajectoryFreeroam } from './trajectoryfreeroam';
 import { PipeNetworkConfig } from './pipeNetworkConfig';
-=======
-import { TrajectoryFreeroam } from './trajectoryFreeRoam';
->>>>>>> 25e25fb06753a7d1c458ac1308ea49a021aa4564
 
 export class AutoCreatePipeLine {
-    constructor(container, pipeUrl, cityUrls, dracoLibUrl, groundUrl, bgImgUrl, x, z, id) {
+    constructor(container, urls, x, z, id) {
         this.container = container;
         this.bustard;
         this.loader;
@@ -20,14 +16,21 @@ export class AutoCreatePipeLine {
         this.well;
         this.roam;
         this.light;
+        this.transparent
         this.pipeNetworkTemplate = []
         this.pipeline_all = []
         this.well_all = []
-        this.pipeUrl = pipeUrl
-        this.cityUrls = cityUrls
-        this.groundUrl = groundUrl
-        this.bgImgUrl = bgImgUrl
-        this.dracoLibUrl = dracoLibUrl
+        this.pipeTemplateUrl = urls.pipeTemplateUrl
+        this.groundUrl = urls.groundUrl
+        this.CDAndBXUrl = urls.CDAndBXUrl
+        this.BLTUrl = urls.BLTUrl
+        this.floorUrl = urls.floorUrl
+        this.roadSignsUrl = urls.roadSignsUrl
+        this.treeUrl = urls.treeUrl
+        this.otherUrl = urls.otherUrl
+        this.bgImgUrl1 = urls.bgImgUrl1
+        this.bgImgUrl2 = urls.bgImgUrl2
+        this.dracoLibUrl = urls.dracoLibUrl
         this.renderInterval;
         this.progressBarTimer;
         const self = this;
@@ -35,7 +38,7 @@ export class AutoCreatePipeLine {
         this.z = z;
         this.id = id;
         this.init();
-        this.hideRoad = new HideRoad(this.modelHide, this.textureTool);
+        this.hideRoad = new HideRoad(this.modelHide, this.textureTool, this.transparent);
         this.trajectoryFreeroam = new TrajectoryFreeroam(this.roam, this.pick);
         this.showInformationBox = new ShowInformationBox();
         this.showInformationBox.setRemoveEvents(function () {
@@ -44,6 +47,8 @@ export class AutoCreatePipeLine {
         this.showInformationBox.setAddEvents(function () {
             self.trajectoryFreeroam.addEvents();
         });
+
+        this.humanPerspectiveInfo = {};
 
 
     }
@@ -58,6 +63,8 @@ export class AutoCreatePipeLine {
 
     //显示管道
     showFlowTo(urlImg) {
+        // this.addGateway()
+
         this.hideRoad.showFlowTo(this.pipeline_all, urlImg)
         const self = this;
         this.renderInterval = setInterval(function () {
@@ -73,6 +80,16 @@ export class AutoCreatePipeLine {
         clearInterval(this.renderInterval)
     }
 
+    //显示路面
+    showRoads() {
+        this.hideRoad.restoreRoad();
+    }
+    //隐藏路面
+    hideRoads() {
+        this.hideRoad.hideRoad()
+    }
+
+
     getHideRoadObject() {
         return this.hideRoad;
     }
@@ -81,7 +98,7 @@ export class AutoCreatePipeLine {
         this.roam.getCore().resetSize(width, height);
     }
 
-
+    //获取管线数据
     getPipelinesData() {
         const self = this;
         $.ajax({
@@ -89,13 +106,14 @@ export class AutoCreatePipeLine {
             type: "GET",
             success: function (d) {
                 self.pipelines = d.data
+                console.log(d.data)
             },
             error: function () {
                 console.log("管道数据获取失败")
             }
         })
     }
-
+    //获取管井信息
     getWellsData() {
         const self = this;
         $.ajax({
@@ -116,7 +134,9 @@ export class AutoCreatePipeLine {
         let con = document.getElementById(this.container);
         this.bustard = new Bustard(con);
         this.loader = this.bustard.use(new Bustard.Loader(PipeNetworkConfig.LOADER_CAMERA_CONFIG));
-        this.bustard.core.addImgToBackground(this.bgImgUrl)
+        //加载解压器
+        this.loader.setDraco(this.dracoLibUrl);
+        this.bustard.core.addImgToBackground(this.bgImgUrl2)
         this.color = this.bustard.use(new Bustard.Color({ isMutex: true }));
         this.color.activeClick = false;
         this.textureTool = this.bustard.use(new Bustard.Texture());
@@ -127,7 +147,9 @@ export class AutoCreatePipeLine {
         this.light = this.bustard.use(new Bustard.Light())
         this.light.activeClick = false;
         this.renderInterval = 0
-        // this.light.addDirectionalLightForCamera("sun", { x: 0, y: 250, z: 0 })
+        this.transparent = this.bustard.use(new Bustard.Transparent())
+        this.transparent.activeClick = false
+
 
         this.pick = this.bustard.use(new Bustard.Pick());
         const self = this;
@@ -137,13 +159,9 @@ export class AutoCreatePipeLine {
             // console.log("相机位置：" + self.roam.curPosition().z + "," + self.roam.curPosition().y + "," + self.roam.curPosition().x);
             // console.log("焦点位置：" + self.roam.curTarget().z + "," + self.roam.curTarget().y + "," + self.roam.curTarget().x);
             self.showInformationBox.isPipeline(self.light, node);
-
-            console.log(self.bustard.core.getNodeByName("boliti-buildingfbx").chilren[2])
-
         }
-        // this.cloneModel();
-        this.loadModels();
 
+        this.loadModels();
     }
 
     //进度条定时器
@@ -157,41 +175,152 @@ export class AutoCreatePipeLine {
             document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = progressBarWidth + 'px';
         }, 13)
     }
-
+    //加载模型
     loadModels() {
         $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeIn()
         this.addProgressBarTimer();
         const self = this;
         Promise.all([
-            self.loader.gltfLoadByUrl(self.pipeUrl, PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_PREFIX,
+            //加载管网模板
+            self.loader.gltfLoadByUrl(self.pipeTemplateUrl, PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_PREFIX,
                 true).then(value => {
                 }),
         ]).then((result) => {
+            //获取管网模板
             self.getPipeNetworkTemplate();
+            //设置过渡相机
             self.roam.lookAt(PipeNetworkConfig.TRANSITION_CAMERA.position, PipeNetworkConfig.TRANSITION_CAMERA.target);
-            self.loader.setDraco(self.dracoLibUrl);
-            self.loader.gltfLoadByUrl(self.groundUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
-                value.position.set(0, -0.22, 0)
-                self.loader.gltfLoadByUrls(self.cityUrls, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
-                    self.createWellModels();
-                    self.createPipeModels();
-                    self.hidePipeNetworkTemplate();
-                    if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
-                        self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
-                    }
-                    clearInterval(this.progressBarTimer);
-                    document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = PipeNetworkConfig.PROGRESS_BAR_WIDTH_MAX;
-                    $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeOut();
+            //加载路牌
+            self.loader.gltfLoadByUrls(self.roadSignsUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                //加载地面
+                self.loader.gltfLoadByUrl(self.groundUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                    //压低地面
+                    value.position.set(0, -0.22, 0)
+                    //加载cd和标线
+                    self.loader.gltfLoadByUrls(self.CDAndBXUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                        //加载玻璃体
+                        self.loader.gltfLoadByUrl(self.BLTUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                            // console.log(value.children[0].children[0].children[2])
+                            value.children[0].children[0].children[2].material.transparent = true
+                            value.children[0].children[0].children[2].material.opacity = 0.9
+                            value.children[0].children[0].children[3].material.transparent = true
+                            value.children[0].children[0].children[3].material.opacity = 0.9
+                            self.color.setMeshColor(value.children[0].children[0].children[2], 0xaaa7a7)
+                            self.color.setMeshColor(value.children[0].children[0].children[3], 0xaaa7a7)
+                            self.color.setMeshColor(value.children[0].children[0].children[4], 0x6e6e6e)
+
+                            //加载建筑
+                            self.loader.gltfLoadByUrls(self.floorUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                                //加载其他（树）
+                                // self.loader.gltfLoadByUrl(self.treeUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                                //创建管网
+                                self.createWellModels();
+                                self.createPipeModels();
+                                //隐藏管网模板
+                                self.hidePipeNetworkTemplate();
+                                //移动相机到巡检起始位置
+                                if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
+                                    self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
+                                }
+                                //清除进度条
+                                clearInterval(this.progressBarTimer);
+                                document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = PipeNetworkConfig.PROGRESS_BAR_WIDTH_MAX;
+                                $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeOut();
+                                // })
+
+                            })
+
+                        })
+
+                    })
+
                 })
+
             })
+
         });
     }
 
+    //切换全景相机
+    togglePanoramicCameraControl() {
+        this.bustard.core.removeAllListenerEventsFromCameraControls();
+        this.bustard.core.addListenerEventsFromCameraControls();
+    }
+    //切换巡检相机
+    toggleInspectionCameraControl() {
+        this.bustard.core.addAllListenerEventsFromCameraControls();
+        this.bustard.core.setCameraValues(3500);
+    }
+
+
+    //进入全景视角
+    togglePanoramicPerspective() {
+        // 保存行人巡检视角信息
+        this.humanPerspectiveInfo = {
+            theta: this.trajectoryFreeroam.theta,
+            // 记录有没有到岔路口
+            changeFlag: this.trajectoryFreeroam.changeFlag,
+            // 记录有没有在岔路口旋转
+            atForkRoadRotateFlag: this.trajectoryFreeroam.atForkRoadRotateFlag,
+            // 记录当前朝向
+            moveDirection: this.trajectoryFreeroam.moveDirection,
+            // 记录接下来要走的点
+            nextCoordsCode: this.trajectoryFreeroam.nextCoordsCode,
+            // 相机最近经过的点
+            cameraJustPassedCoord: this.trajectoryFreeroam.cameraJustPassedCoord,
+            // 镜头刚旋转时相机及焦点的位置
+            oldPosition: this.trajectoryFreeroam.oldPosition,
+            oldTarget: this.trajectoryFreeroam.oldTarget,
+            // 记录之前相机状态
+            oldState: this.trajectoryFreeroam.oldState,
+            camera: {
+                position: this.roam.position,
+                target: this.roam.target
+            }
+        }
+        this.trajectoryFreeroam.removeEvents();
+
+        this.toggleInspectionBackground();
+        this.togglePanoramicCameraControl();
+    }
+
+    //切换巡检视角
+    toggleInspectionPerspective() {
+        this.toggleInspectionBackground();
+        this.toggleInspectionCameraControl();
+        // 读取行人巡检视角信息
+        this.trajectoryFreeroam.theta = this.humanPerspectiveInfo.theta;
+        this.trajectoryFreeroam.changeFlag = this.humanPerspectiveInfo.changeFlag;
+        this.trajectoryFreeroam.atForkRoadRotateFlag = this.humanPerspectiveInfo.atForkRoadRotateFlag;
+        this.trajectoryFreeroam.moveDirection = this.humanPerspectiveInfo.moveDirection;
+        this.trajectoryFreeroam.nextCoordsCode = this.humanPerspectiveInfo.nextCoordsCode;
+        this.trajectoryFreeroam.cameraJustPassedCoord = this.humanPerspectiveInfo.cameraJustPassedCoord;
+        this.trajectoryFreeroam.oldPosition = this.humanPerspectiveInfo.oldPosition;
+        this.trajectoryFreeroam.oldTarget = this.humanPerspectiveInfo.oldTarget;
+        this.trajectoryFreeroam.oldState = this.humanPerspectiveInfo.oldState;
+        // 移除cameraControls中的监听事件
+        this.pick.getCore().removeAllListenerEventsFromCameraControls();
+        this.trajectoryFreeroam.addEvents();
+        this.roam.lookAt(this.humanPerspectiveInfo.camera.position, this.humanPerspectiveInfo.camera.target);
+    }
+
+
+    //切换全景背景
+    togglePanoramicBackground() {
+        this.bustard.core.addImgToBackground(this.bgImgUrl2)
+    }
+    //切换巡检背景
+    toggleInspectionBackground() {
+        this.bustard.core.addImgToBackground(this.bgImgUrl1)
+    }
+
+    //获取管网模板
     getPipeNetworkTemplate() {
         for (let i = 0; i < PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_NAME.length; i++) {
             this.pipeNetworkTemplate[i] = this.bustard.core.getNodeByName(PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_NAME[i])
         }
     }
+    //隐藏管网模板
     hidePipeNetworkTemplate() {
         for (let i = 0; i < PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_NAME.length; i++) {
             this.modelHide.hideById(PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_PREFIX + "|" + PipeNetworkConfig.PIPE_NETWORK_TEMPLATE_NAME[i]);
@@ -200,10 +329,11 @@ export class AutoCreatePipeLine {
 
 
 
+    //创建管井
     createWellModels() {
         this.well_all = []
         for (let i = 0; i < this.wells.length; i++) {
-            if (this.wells[i].wellX > -2050 && this.wells[i].wellX < 3400 && this.wells[i].wellZ > -2275 && this.wells[i].wellZ < 2005) {
+            if (this.wells[i].wellX > PipeNetworkConfig.PIPE_NETWORK_RANGE_X_1 && this.wells[i].wellX < PipeNetworkConfig.PIPE_NETWORK_RANGE_X_2 && this.wells[i].wellZ > PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_1 && this.wells[i].wellZ < PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_2) {
                 let cloneModel = this.pipeNetworkTemplate[0].clone();
                 cloneModel.name = this.wells[i].wellId
                 cloneModel.userData.modelName = PipeNetworkConfig.WELL_MODEL_PREFIX
@@ -219,10 +349,11 @@ export class AutoCreatePipeLine {
         }
         this.bustard.core.render();
     }
+    //创建管线
     createPipeModels() {
         this.pipeline_all = []
         for (let i = 0; i < this.pipelines.length; i++) {
-            if (this.pipelines[i].pipelineX1 > -2050 && this.pipelines[i].pipelineX1 < 3400 && this.pipelines[i].pipelineZ1 > -2275 && this.pipelines[i].pipelineZ1 < 2005 && this.pipelines[i].diameter >= 400) {
+            if (this.pipelines[i].pipelineX1 > PipeNetworkConfig.PIPE_NETWORK_RANGE_X_1 && this.pipelines[i].pipelineX1 < PipeNetworkConfig.PIPE_NETWORK_RANGE_X_2 && this.pipelines[i].pipelineZ1 > PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_1 && this.pipelines[i].pipelineZ1 < PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_2) {
                 let cloneModel;
                 if (this.pipelines[i].material === 'PE') {
                     cloneModel = this.pipeNetworkTemplate[2].clone()
@@ -249,6 +380,10 @@ export class AutoCreatePipeLine {
                 let x2 = this.pipelines[i].pipelineX2;
                 let y2 = 0;
                 let z2 = this.pipelines[i].pipelineZ2;
+                let startElevation = this.pipelines[i].startElevation;
+                let endElevation = this.pipelines[i].endElevation;
+                let elevationDifference = startElevation - endElevation
+                cloneModel.userData.elevationDifference = elevationDifference
                 let radian = Math.atan(Math.abs(z2 - z1) / Math.abs(x2 - x1));
                 let long = Math.sqrt((z2 - z1) * (z2 - z1) + (x2 - x1) * (x2 - x1));
                 cloneModel.name = this.pipelines[i].pipelineId;
@@ -291,6 +426,9 @@ export class AutoCreatePipeLine {
                     cloneModel.scale.set(long / 10, this.pipelines[i].diameter / 100, this.pipelines[i].diameter / 100);
                 }
                 cloneModel.visible = true
+                if (cloneModel.name == 395) {
+                    console.log(cloneModel)
+                }
                 this.pipeline_all.push(cloneModel)
                 this.bustard.core.getScene().add(cloneModel);
             }
@@ -298,6 +436,28 @@ export class AutoCreatePipeLine {
         this.bustard.core.render();
     }
 
+
+
+
+
+
+
+    //控制地面透明度
+    adjustRoadTransparency(transparency) {
+        if (transparent == 0) {
+            this.hideRoad.hideRoad()
+        } else {
+            this.hideRoad.restoreRoad()
+            for (let i = 0; i < PipeNetworkConfig.HIDE_ROAD_MODEL_NAME.length; i++) {
+                this.hideRoad.adjustRoadTransparency(PipeNetworkConfig.HIDE_ROAD_MODEL_NAME[i], transparency)
+            }
+        }
+    }
+
+    //添加光体
+    addGateway() {
+        this.bustard.core.addGateway({ x: -1921.6613995081066, y: 5.3663256036498399, z: 482.71654550192284 }, this.bgImgUrl, '#54C41D')
+    }
 }
 
 

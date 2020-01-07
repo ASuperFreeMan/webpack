@@ -2,10 +2,11 @@ import { PipeNetworkConfig } from "./pipeNetworkConfig";
 
 export class HideRoad {
 
-    constructor(modelHide, textureTool) {
+    constructor(modelHide, textureTool, transparent) {
 
         this.modelHide = modelHide;
         this.textureTool = textureTool;
+        this.transparent = transparent;
 
     }
 
@@ -33,7 +34,27 @@ export class HideRoad {
 
     showFlowTo(pipeline_all, urlImg) {
         for (let i = 0; i < pipeline_all.length; i++) {
-            this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg, -0.06, 20)
+            if (pipeline_all[i].userData.elevationDifference > 0) {
+                this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg, 0.04, 0.5)
+            }
+            if (pipeline_all[i].userData.elevationDifference < 0) {
+                this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg, -0.04, 0.5)
+            }
+            if (pipeline_all[i].userData.elevationDifference == 0) {
+                this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg, 0, 0.5)
+            }
+        }
+    }
+
+    //控制地面透明度
+    adjustRoadTransparency(roadId, transparency) {
+        console.log(this.transparent.getCore().getNodeByName(roadId))
+        let obj = this.transparent.getCore().getNodeByName(roadId)
+        for (let i = 0; i < obj.children.length; i++) {
+            let type = obj.children[i].type
+            if (type === "Mesh") {
+                this.transparent.setMeshOpacity(obj.children[i], transparency);
+            }
         }
     }
 }

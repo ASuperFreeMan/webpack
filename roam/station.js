@@ -1181,18 +1181,18 @@ export function addPumpCanvas(data) {
     // canvas.textAlign = 'center'
     canvas.setAttribute('cursor', 'pointer');
     let ctx = canvas.getContext("2d");
-    ctx.textAlign = 'center'
+    // ctx.textAlign = 'center'
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(25,25,112,0.7)';
-    ctx.fillStyle = 'rgba(25,25,112,0.7)';
+    ctx.strokeStyle = 'rgba(25,25,112,0.8)';
+    ctx.fillStyle = 'rgba(25,25,112,0.8)';
     ctx.beginPath();
     ctx.fillRect(0, 0, 150, 100);
     ctx.stroke();
     ctx.fill();
     ctx.fillStyle = '#FFFFFF';
     ctx.font = "40px Cambria";
-    ctx.fillText(data + "A", 15, 70);
-    // ctx.fillText("A", 85, 70);
+    ctx.fillText(data, 35, 70);
+    ctx.fillText("A", 85, 70);
     return canvas;
 }
 
@@ -1217,6 +1217,7 @@ export function addFlow() {
                 }
                 textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1], FlowImgUrl1, -0.06, 10, Math.PI / 2)
                 // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1], 0x91B5F9)
+                //给控制箱变色
                 color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index2], 0x91B5F9)
             }
         }

@@ -19,6 +19,7 @@ export class PipeNetworkConfig {
             z: 435
         },
         isCameraFix: true
+
     };
 
     //获取（管道/管井）生成数据地址192.168.80.169     192.168.16.231:8099
@@ -56,20 +57,29 @@ export class PipeNetworkConfig {
     //井前缀
     static WELL_MODEL_PREFIX = "well"
 
-    //隐藏路面时需要隐藏的构件名 
+    //隐藏/透明路面时需要隐藏的构件名 
     static HIDE_ROAD_MODEL_NAME = [
-        "boliti-CDfbx",
-        "CDfbx",
-        "标线fbx",
-        "标线贴图面fbx",
+        // "boliti-CDfbx",
+        // "CDfbx",
+        // "标线fbx",
+        // "标线贴图面fbx",
         "凤凰东路-路牌fbx",
         "青年路-路牌fbx",
         "永晖路-路牌fbx",
         "济川东路-路牌fbx",
         "boliti-CDfbx",
         "CDnewfbx",
-        "RootNode"
+        "buzhimingshufbx",
+        "treeFBX",
+        "liushufbx",
+        "banmaxian-0107fbx",
+        "boliti-cd-0102fbx"
+
     ]
 
+    static PIPE_NETWORK_RANGE_X_1 = -2050
+    static PIPE_NETWORK_RANGE_X_2 = 3400
+    static PIPE_NETWORK_RANGE_Z_1 = -2275
+    static PIPE_NETWORK_RANGE_Z_2 = 2005
 
 }
