@@ -11,6 +11,7 @@ export var datas
 export var renderInterval
 export var stationName
 export var STATION_MODEL_ALL
+export var showFlowPipe = []
 export var bengzhan = {
 
     //春兰
@@ -23,14 +24,15 @@ export var bengzhan = {
         ],
         controlBox: [
             {
-                start: 44,
-                end: 47
+                start: 23,
+                end: 26
             }
         ],
         wushuibeng: [
             {
                 name: "污水泵1",
                 index: 19
+
             },
             {
                 name: "污水泵2",
@@ -47,71 +49,71 @@ export var bengzhan = {
         ],
         pipeNodeNames: [
             {
-                index1: 23,
-                index2: 28,
-                index3: 35,
-                index4: 33,
-                index5: 43
+                index1: 53,
+                index2: 35,
+                index3: 55,
+                index4: 54,
+                index5: 56
             },
             {
-                index1: 24,
-                index2: 27,
-                index3: 34,
-                index4: 37,
-                index5: 42
+                index1: 57,
+                index2: 34,
+                index3: 58,
+                index4: 59,
+                index5: 60
             },
             {
-                index1: 25,
-                index2: 29,
-                index3: 31,
-                index4: 32,
-                index5: 41
+                index1: 61,
+                index2: 36,
+                index3: 62,
+                index4: 63,
+                index5: 64
             },
             {
-                index1: 26,
-                index2: 30,
-                index3: 36,
-                index4: 38,
-                index5: 40
+                index1: 65,
+                index2: 37,
+                index3: 66,
+                index4: 67,
+                index5: 68
             }
         ],
         mainPipelineIndex: [
-            39
+            69
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                index: 52
+                index: 31
             },
             {
-                name: "捞渣机1",
-                index: 50
+                name: "捞渣机2",
+                index: 29
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                index: 56
+                index: 39
             },
             {
                 name: "传送带2",
-                index: 55
+                index: 38
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                index: 49
+                index: 28
             },
             {
                 name: "启闭机2",
-                index: 48
+                index: 27
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                index: 51
+                index: 30
             },
         ]
     },
@@ -133,23 +135,23 @@ export var bengzhan = {
         wushuibeng: [
             {
                 name: "污水泵1",
-                index: 12
+                index: 0
             },
             {
                 name: "污水泵2",
-                index: 13
+                index: 1
             }
         ],
         pipeNodeNames: [
             {
-                index1: 14,
+                index1: 19,
                 index2: 17,
                 index3: 20,
                 index4: 18,
                 index5: 24
             },
             {
-                index1: 15,
+                index1: 19,
                 index2: 16,
                 index3: 19,
                 index4: 21,
@@ -187,34 +189,34 @@ export var bengzhan = {
         wushuibeng: [
             {
                 name: "污水泵1",
-                index: 12
+                index: 0
             },
             {
                 name: "污水泵2",
-                index: 13
+                index: 1
             },
             {
                 name: "污水泵3",
-                index: 14
+                index: 2
             }
         ],
         pipeNodeNames: [
             {
-                index1: 15,
+                index1: 20,
                 index2: 19,
                 index3: 25,
                 index4: 23,
                 index5: 30
             },
             {
-                index1: 16,
+                index1: 20,
                 index2: 18,
                 index3: 24,
                 index4: 26,
                 index5: 28
             },
             {
-                index1: 17,
+                index1: 20,
                 index2: 20,
                 index3: 21,
                 index4: 22,
@@ -245,8 +247,8 @@ export var bengzhan = {
         ],
         controlBox: [
             {
-                start: 44,
-                end: 47
+                start: 23,
+                end: 26
             }
         ],
         wushuibeng: [
@@ -270,71 +272,71 @@ export var bengzhan = {
         ],
         pipeNodeNames: [
             {
-                index1: 23,
-                index2: 28,
-                index3: 35,
-                index4: 33,
-                index5: 43
+                index1: 53,
+                index2: 35,
+                index3: 55,
+                index4: 54,
+                index5: 56
             },
             {
-                index1: 24,
-                index2: 27,
-                index3: 34,
-                index4: 37,
-                index5: 42
+                index1: 57,
+                index2: 34,
+                index3: 58,
+                index4: 59,
+                index5: 60
             },
             {
-                index1: 25,
-                index2: 29,
-                index3: 31,
-                index4: 32,
-                index5: 41
+                index1: 61,
+                index2: 36,
+                index3: 62,
+                index4: 63,
+                index5: 64
             },
             {
-                index1: 26,
-                index2: 30,
-                index3: 36,
-                index4: 38,
-                index5: 40
+                index1: 65,
+                index2: 37,
+                index3: 66,
+                index4: 67,
+                index5: 68
             }
         ],
         mainPipelineIndex: [
-            39
+            69
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                index: 52
+                index: 31
             },
             {
-                name: "捞渣机1",
-                index: 50
+                name: "捞渣机2",
+                index: 29
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                index: 56
+                index: 39
             },
             {
                 name: "传送带2",
-                index: 55
+                index: 38
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                index: 49
+                index: 28
             },
             {
                 name: "启闭机2",
-                index: 48
+                index: 27
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                index: 51
+                index: 30
             },
         ]
     },
@@ -349,104 +351,104 @@ export var bengzhan = {
         ],
         controlBox: [
             {
-                start: 53,
-                end: 56
+                start: 23,
+                end: 26
             }
         ],
         wushuibeng: [
             {
                 name: "污水泵1",
-                index: 20
+                index: 19
 
             },
             {
                 name: "污水泵2",
-                index: 21
+                index: 20
             },
             {
                 name: "污水泵3",
-                index: 22
+                index: 21
             },
             {
                 name: "污水泵4",
-                index: 23
+                index: 22
             }
         ],
         pipeNodeNames: [
             {
-                index1: 24,
-                index2: 29,
-                index3: 36,
-                index4: 34,
-                index5: 43
+                index1: 53,
+                index2: 37,
+                index3: 55,
+                index4: 54,
+                index5: 56
             },
             {
-                index1: 25,
-                index2: 28,
-                index3: 35,
-                index4: 38,
-                index5: 42
+                index1: 57,
+                index2: 36,
+                index3: 58,
+                index4: 59,
+                index5: 60
             },
             {
-                index1: 26,
-                index2: 30,
-                index3: 32,
-                index4: 33,
-                index5: 41
+                index1: 61,
+                index2: 38,
+                index3: 62,
+                index4: 63,
+                index5: 64
             },
             {
-                index1: 27,
-                index2: 31,
-                index3: 37,
-                index4: 39,
-                index5: 40
+                index1: 65,
+                index2: 39,
+                index3: 66,
+                index4: 67,
+                index5: 68
             }
         ],
         mainPipelineIndex: [
-            49
+            69
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                index: 63
+                index: 33
             },
             {
                 name: "捞渣机1",
-                index: 61
+                index: 31
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                index: 67
+                index: 41
             },
             {
                 name: "传送带2",
-                index: 66
+                index: 40
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                index: 58
+                index: 28
             },
             {
                 name: "启闭机2",
-                index: 59
+                index: 29
             },
             {
                 name: "启闭机3",
-                index: 60
+                index: 30
             },
             {
                 name: "启闭机4",
-                index: 57
+                index: 27
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                index: 62
+                index: 32
             },
         ]
     },
@@ -457,6 +459,12 @@ export var bengzhan = {
             {
                 start: 2,
                 end: 14
+            }
+        ],
+        controlBox: [
+            {
+                start: 22,
+                end: 25
             }
         ],
         wushuibeng: [
@@ -480,63 +488,63 @@ export var bengzhan = {
         ],
         pipeNodeNames: [
             {
-                index1: 22,
-                index2: 27,
-                index3: 34,
-                index4: 32,
-                index5: 39
+                index1: 50,
+                index2: 31,
+                index3: 52,
+                index4: 51,
+                index5: 53
             },
             {
-                index1: 23,
-                index2: 26,
-                index3: 33,
-                index4: 36,
-                index5: 40
+                index1: 54,
+                index2: 30,
+                index3: 55,
+                index4: 56,
+                index5: 57
             },
             {
-                index1: 24,
-                index2: 28,
-                index3: 30,
-                index4: 31,
-                index5: 41
+                index1: 58,
+                index2: 32,
+                index3: 59,
+                index4: 60,
+                index5: 61
             },
             {
-                index1: 25,
-                index2: 29,
-                index3: 35,
-                index4: 37,
-                index5: 42
+                index1: 62,
+                index2: 33,
+                index3: 63,
+                index4: 64,
+                index5: 65
             }
         ],
         mainPipelineIndex: [
-            38
+            66
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                index: 47
+                index: 26
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                index: 51
+                index: 34
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                index: 64
+                index: 47
             },
             {
                 name: "启闭机2",
-                index: 65
+                index: 48
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                index: 48
+                index: 27
             }
         ]
     },
@@ -551,8 +559,8 @@ export var bengzhan = {
         ],
         controlBox: [
             {
-                start: 44,
-                end: 47
+                start: 23,
+                end: 26
             }
         ],
         wushuibeng: [
@@ -576,71 +584,71 @@ export var bengzhan = {
         ],
         pipeNodeNames: [
             {
-                index1: 23,
-                index2: 28,
-                index3: 35,
-                index4: 33,
-                index5: 43
+                index1: 53,
+                index2: 35,
+                index3: 55,
+                index4: 54,
+                index5: 56
             },
             {
-                index1: 24,
-                index2: 27,
-                index3: 34,
-                index4: 37,
-                index5: 42
+                index1: 57,
+                index2: 34,
+                index3: 58,
+                index4: 59,
+                index5: 60
             },
             {
-                index1: 25,
-                index2: 29,
-                index3: 31,
-                index4: 32,
-                index5: 41
+                index1: 61,
+                index2: 36,
+                index3: 62,
+                index4: 63,
+                index5: 64
             },
             {
-                index1: 26,
-                index2: 30,
-                index3: 36,
-                index4: 38,
-                index5: 40
+                index1: 65,
+                index2: 37,
+                index3: 66,
+                index4: 67,
+                index5: 68
             }
         ],
         mainPipelineIndex: [
-            39
+            69
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                index: 52
+                index: 31
             },
             {
-                name: "捞渣机1",
-                index: 50
+                name: "捞渣机2",
+                index: 29
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                index: 56
+                index: 39
             },
             {
                 name: "传送带2",
-                index: 55
+                index: 38
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                index: 49
+                index: 28
             },
             {
                 name: "启闭机2",
-                index: 48
+                index: 27
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                index: 51
+                index: 30
             },
         ]
     },
@@ -662,23 +670,23 @@ export var bengzhan = {
         wushuibeng: [
             {
                 name: "污水泵1",
-                index: 12
+                index: 0
             },
             {
                 name: "污水泵2",
-                index: 13
+                index: 1
             }
         ],
         pipeNodeNames: [
             {
-                index1: 14,
+                index1: 19,
                 index2: 17,
                 index3: 20,
                 index4: 18,
                 index5: 24
             },
             {
-                index1: 15,
+                index1: 19,
                 index2: 16,
                 index3: 19,
                 index4: 21,
@@ -709,8 +717,8 @@ export var bengzhan = {
         ],
         controlBox: [
             {
-                start: 49,
-                end: 53
+                start: 23,
+                end: 27
             }
         ],
         wushuibeng: [
@@ -738,78 +746,78 @@ export var bengzhan = {
         ],
         pipeNodeNames: [
             {
-                index1: 23,
-                index2: 28,
-                index3: 35,
-                index4: 33,
-                index5: 40
+                index1: 58,
+                index2: 36,
+                index3: 60,
+                index4: 59,
+                index5: 61
             },
             {
-                index1: 24,
-                index2: 27,
-                index3: 34,
-                index4: 37,
-                index5: 41
+                index1: 62,
+                index2: 35,
+                index3: 63,
+                index4: 64,
+                index5: 65
             },
             {
-                index1: 25,
-                index2: 29,
-                index3: 31,
-                index4: 32,
-                index5: 42
+                index1: 66,
+                index2: 37,
+                index3: 67,
+                index4: 68,
+                index5: 69
             },
             {
-                index1: 26,
-                index2: 30,
-                index3: 36,
-                index4: 38,
-                index5: 43
+                index1: 70,
+                index2: 38,
+                index3: 71,
+                index4: 72,
+                index5: 73
             },
             {
-                index1: 44,
-                index2: 45,
-                index3: 46,
-                index4: 47,
-                index5: 48
+                index1: 75,
+                index2: 39,
+                index3: 76,
+                index4: 77,
+                index5: 78
             }
         ],
         mainPipelineIndex: [
-            39
+            74
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                index: 58
+                index: 32
             },
             {
                 name: "捞渣机1",
-                index: 56
+                index: 30
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                index: 62
+                index: 41
             },
             {
                 name: "传送带2",
-                index: 61
+                index: 40
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                index: 55
+                index: 29
             },
             {
                 name: "启闭机2",
-                index: 54
+                index: 28
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                index: 57
+                index: 31
             },
         ]
     },
@@ -831,23 +839,23 @@ export var bengzhan = {
         wushuibeng: [
             {
                 name: "污水泵1",
-                index: 12
+                index: 0
             },
             {
                 name: "污水泵2",
-                index: 13
+                index: 1
             }
         ],
         pipeNodeNames: [
             {
-                index1: 14,
+                index1: 19,
                 index2: 17,
                 index3: 20,
                 index4: 18,
                 index5: 24
             },
             {
-                index1: 15,
+                index1: 19,
                 index2: 16,
                 index3: 19,
                 index4: 21,
@@ -885,23 +893,23 @@ export var bengzhan = {
         wushuibeng: [
             {
                 name: "污水泵1",
-                index: 12
+                index: 0
             },
             {
                 name: "污水泵2",
-                index: 13
+                index: 1
             }
         ],
         pipeNodeNames: [
             {
-                index1: 14,
+                index1: 19,
                 index2: 17,
                 index3: 20,
                 index4: 18,
                 index5: 24
             },
             {
-                index1: 15,
+                index1: 19,
                 index2: 16,
                 index3: 19,
                 index4: 21,
@@ -932,8 +940,8 @@ export var bengzhan = {
         ],
         controlBox: [
             {
-                start: 49,
-                end: 53
+                start: 23,
+                end: 27
             }
         ],
         wushuibeng: [
@@ -961,81 +969,81 @@ export var bengzhan = {
         ],
         pipeNodeNames: [
             {
-                index1: 23,
-                index2: 28,
-                index3: 35,
-                index4: 33,
-                index5: 40
+                index1: 58,
+                index2: 36,
+                index3: 60,
+                index4: 59,
+                index5: 61
             },
             {
-                index1: 24,
-                index2: 27,
-                index3: 34,
-                index4: 37,
-                index5: 41
+                index1: 62,
+                index2: 35,
+                index3: 63,
+                index4: 64,
+                index5: 65
             },
             {
-                index1: 25,
-                index2: 29,
-                index3: 31,
-                index4: 32,
-                index5: 42
+                index1: 66,
+                index2: 37,
+                index3: 67,
+                index4: 68,
+                index5: 69
             },
             {
-                index1: 26,
-                index2: 30,
-                index3: 36,
-                index4: 38,
-                index5: 43
+                index1: 70,
+                index2: 38,
+                index3: 71,
+                index4: 72,
+                index5: 73
             },
             {
-                index1: 44,
-                index2: 45,
-                index3: 46,
-                index4: 47,
-                index5: 48
+                index1: 75,
+                index2: 39,
+                index3: 76,
+                index4: 77,
+                index5: 78
             }
         ],
         mainPipelineIndex: [
-            39
+            74
         ],
         laozhaji: [
             {
                 name: "捞渣机1",
-                index: 58
+                index: 32
             },
             {
                 name: "捞渣机1",
-                index: 56
+                index: 30
             }
         ],
         chuansongdai: [
             {
                 name: "传送带1",
-                index: 62
+                index: 41
             },
             {
                 name: "传送带2",
-                index: 61
+                index: 40
             }
         ],
         qibiji: [
             {
                 name: "启闭机1",
-                index: 55
+                index: 29
             },
             {
                 name: "启闭机2",
-                index: 54
+                index: 28
             }
         ],
         lajichuansongji: [
             {
                 name: "垃圾传送机1",
-                index: 57
+                index: 31
             },
         ]
-    },
+    }
 
 }
 
@@ -1063,24 +1071,43 @@ export function init(glburl, bgUrl, dracoUrl) {
     textureTool = bustard.use(new Bustard.Texture());
     Promise.all([
         loader.gltfLoadByUrl(glburl, 'station').then(value => {
+            // console.log(value)
             STATION_MODEL_ALL = value.children[0].children
-            roam.lookAt(
-                {
-                    x: -1.6,
-                    y: 5,
-                    z: 10.5
-                },
-                {
-                    x: -0.46,
-                    y: -0.5,
-                    z: 1.2
-                });
-            //主管线
-            textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex], FlowImgUrl1, -0.06, 10)
-            //控制箱颜色
-            for (let i = bengzhan[stationName].controlBox[0].start; i <= bengzhan[stationName].controlBox[0].end; i++) {
-                for (let j = 0; j <= 2; j++) {
-                    color.setMeshColor(STATION_MODEL_ALL[i].children[j], 0x858590)
+            // console.log(STATION_MODEL_ALL)
+            // console.log(stationName)
+            if (stationName == "districtthreeStation" || stationName == "peopleStation" || stationName == "zhaoyangriverStation" || stationName == "xihucuiyuanStation" || stationName == "eastwindStation") {
+                roam.lookAt(
+                    {
+                        x: -9,
+                        y: 6.8,
+                        z: 12.8
+                    },
+                    {
+                        x: 4.3,
+                        y: 2.6,
+                        z: 1.35
+                    });
+            } else {
+                roam.lookAt(
+                    {
+                        x: -2.9,
+                        y: 12.5,
+                        z: 25
+                    },
+                    {
+                        x: 0,
+                        y: -1.3,
+                        z: 1.7
+                    });
+            }
+            if (stationName != "districtthreeStation" && stationName != "peopleStation" && stationName != "zhaoyangriverStation" && stationName != "xihucuiyuanStation" && stationName != "eastwindStation") {
+                //主管线
+                showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex])
+                //控制箱颜色
+                for (let i = bengzhan[stationName].controlBox[0].start; i < bengzhan[stationName].controlBox[0].end; i++) {
+                    for (let j = 0; j <= 2; j++) {
+                        color.setMeshColor(STATION_MODEL_ALL[i].children[j], 0x858590)
+                    }
                 }
             }
             loadData();
@@ -1113,18 +1140,18 @@ export function loadData() {
 }
 
 export function loadEquipmentState() {
-    // let equipment = ['wushuibeng','laozhaji','qibiji','lajichuansongji']
-    // for (let i = 0;i < equipment.length;i++){
-    //     if (bengzhan[stationName][equipment[i]].length > 0){
-    //         for (let j =0;j < bengzhan[stationName][equipment[i]].length;j++){
-    //             changeEquipmentState(bengzhan[stationName][equipment[i]][j].id,datas[equipment[i]].state);
-    //         }
-    //     }
-    // }
-    // 污水泵
-    if (bengzhan[stationName].wushuibeng.length > 0) {
-        for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
-            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index], datas.wushuibeng[i].state)
+    if (stationName == "districtthreeStation" || stationName == "peopleStation" || stationName == "zhaoyangriverStation" || stationName == "xihucuiyuanStation" || stationName == "eastwindStation") {
+        if (bengzhan[stationName].wushuibeng.length > 0) {
+            for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
+                changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index], datas.wushuibeng[i].state)
+            }
+        }
+    } else {
+        // 污水泵
+        if (bengzhan[stationName].wushuibeng.length > 0) {
+            for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
+                changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index], datas.wushuibeng[i].state)
+            }
         }
     }
     if (bengzhan[stationName].laozhaji.length > 0) {
@@ -1142,6 +1169,8 @@ export function loadEquipmentState() {
             changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].lajichuansongji[i].index], datas.lajichuansongji[i].state)
         }
     }
+
+
 }
 
 export function changeEquipmentState(mesh, state) {
@@ -1162,7 +1191,7 @@ export function loadPumpDate() {
             let pum = STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index]
             if (datas.wushuibeng[i].state === 0) {
                 // sprite.addText(datas.wushuibeng[i].data, [pum.position.x, (pum.position.y + 1), pum.position.z])
-                sprite.addCanvas(addPumpCanvas(datas.wushuibeng[i].data), [pum.position.x, (pum.position.y + 1), pum.position.z], function (canvas, pos) {
+                sprite.addCanvas(addPumpCanvas(datas.wushuibeng[i].data), [pum.position.x, (pum.position.y + 2), pum.position.z], function (canvas, pos) {
                     // init();
 
 
@@ -1176,8 +1205,8 @@ export function loadPumpDate() {
 
 export function addPumpCanvas(data) {
     let canvas = document.createElement("canvas");
-    canvas.width = 150;
-    canvas.height = 400;
+    canvas.width = 200;
+    canvas.height = 300;
     // canvas.textAlign = 'center'
     canvas.setAttribute('cursor', 'pointer');
     let ctx = canvas.getContext("2d");
@@ -1186,13 +1215,13 @@ export function addPumpCanvas(data) {
     ctx.strokeStyle = 'rgba(25,25,112,0.8)';
     ctx.fillStyle = 'rgba(25,25,112,0.8)';
     ctx.beginPath();
-    ctx.fillRect(0, 0, 150, 100);
+    ctx.fillRect(0, 0, 200, 200);
     ctx.stroke();
     ctx.fill();
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = "40px Cambria";
-    ctx.fillText(data, 35, 70);
-    ctx.fillText("A", 85, 70);
+    ctx.font = "80px Cambria";
+    ctx.fillText(data, 35, 120);
+    ctx.fillText("A", 125, 120);
     return canvas;
 }
 
@@ -1205,29 +1234,47 @@ export function addFlow() {
             }
         }
     }
-    if (bengzhan[stationName].wushuibeng.length > 0) {
-        for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
-            if (datas.wushuibeng[i].state == 0) {
-                textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index3], FlowImgUrl1, -0.06, 10)
-                textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index4], FlowImgUrl1, -0.06, 2)
-                if (stationName == "xihucuiyuanStation" || stationName == "districtthreeStation" || stationName == "peopleStation" || stationName == "zhaoyangriverStation" || stationName == "eastwindStation") {
-                    textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index5], FlowImgUrl1, -0.06, 2)
+    if (stationName != "districtthreeStation" && stationName != "peopleStation" && stationName != "zhaoyangriverStation" && stationName != "xihucuiyuanStation" && stationName != "eastwindStation") {
+        if (bengzhan[stationName].wushuibeng.length > 0) {
+            for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
+                if (datas.wushuibeng[i].state == 0) {
+                    showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1])
+                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index2], 0x91B5F9)
                 } else {
-                    textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index5], FlowImgUrl1, -0.06, 10)
+                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1], 0x808080)
+                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index2], 0x808080)
+                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index3], 0x808080)
+                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index4], 0x808080)
+                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index5], 0x808080)
                 }
-                textureTool.addRepetitiveTextureOnMesh(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1], FlowImgUrl1, -0.06, 10, Math.PI / 2)
-                // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1], 0x91B5F9)
-                //给控制箱变色
-                color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index2], 0x91B5F9)
+            }
+        }
+    } else {
+        if (bengzhan[stationName].wushuibeng.length > 0) {
+            let x = 0;
+            for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
+                if (datas.wushuibeng[i].state == 0) {
+                    x += 1;
+                }
+            }
+            if (x == 0) {
+                color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[1].index1], 0x808080)
+            } else {
+                showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[1].index1])
             }
         }
     }
+
     renderInterval = setInterval(render, 20)
 }
 
 export function render() {
+    for (let i = 0; i < showFlowPipe.length; i++) {
+        showFlowPipe[i].material.map.offset.y -= 0.02
+    }
     pick.getCore().render()
 }
+
 
 //销毁
 export function destroyPumpStation() {
