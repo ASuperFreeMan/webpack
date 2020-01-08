@@ -61,7 +61,7 @@ export class AutoCreatePipeLine {
         this.trajectoryFreeroam.startByParam(x, z, id);
     }
 
-    //显示管道
+    //显示管道流向
     showFlowTo(urlImg) {
         // this.addGateway()
 
@@ -71,7 +71,7 @@ export class AutoCreatePipeLine {
             self.bustard.core.render()
         }, 20)
     }
-    //隐藏管道
+    //隐藏管道流向
     hideFlowTo() {
         for (let i = 0; i < this.pipeline_all.length; i++) {
             this.pipeline_all[i].parent.remove(this.pipeline_all[i])
@@ -200,7 +200,7 @@ export class AutoCreatePipeLine {
                     self.loader.gltfLoadByUrls(self.CDAndBXUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                         //加载玻璃体
                         self.loader.gltfLoadByUrl(self.BLTUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
-                            // console.log(value.children[0].children[0].children[2])
+                            console.log(value.children[0].children[0].children[2])
                             // value.children[0].children[0].children[2].material.transparent = true
                             // value.children[0].children[0].children[2].material.opacity = 0.9
                             // value.children[0].children[0].children[3].material.transparent = true
@@ -301,6 +301,7 @@ export class AutoCreatePipeLine {
         this.toggleInspectionCameraControl();
         this.trajectoryFreeroam.addEvents();
         this.roam.lookAt(this.humanPerspectiveInfo.camera.position, this.humanPerspectiveInfo.camera.target);
+        this.bustard.core.removeAllListenerEventsFromCameraControls();
 
     }
 
@@ -312,10 +313,12 @@ export class AutoCreatePipeLine {
     //切换成全景背景
     togglePanoramicBackground() {
         this.bustard.core.addImgToBackground(this.bgImgUrl2)
+        this.bustard.core.render();
     }
     //切换成巡检背景
     toggleInspectionBackground() {
         this.bustard.core.addImgToBackground(this.bgImgUrl1)
+        this.bustard.core.render();
     }
 
     //获取管网模板

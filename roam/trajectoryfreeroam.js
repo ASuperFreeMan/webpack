@@ -61,12 +61,12 @@ export class TrajectoryFreeroam {
     // 移除鼠标事件和键盘事件
     removeEvents() {
         document.removeEventListener("keydown", this.keyDownEventFn);
-        document.removeEventListener("mousedown", this.mouseDownEventFn);
+        // document.removeEventListener("mousedown", this.mouseDownEventFn);
     }
 
     // 配置鼠标事件和键盘事件
     addEvents() {
-        this.setClickMouseEvents();
+        // this.setClickMouseEvents();
         this.setKeyboardEvents();
     }
 
