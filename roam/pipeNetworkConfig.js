@@ -59,22 +59,12 @@ export class PipeNetworkConfig {
 
     //隐藏/透明路面时需要隐藏的构件名 
     static HIDE_ROAD_MODEL_NAME = [
-        // "boliti-CDfbx",
-        // "CDfbx",
-        // "标线fbx",
-        // "标线贴图面fbx",
-        "凤凰东路-路牌fbx",
-        "青年路-路牌fbx",
-        "永晖路-路牌fbx",
-        "济川东路-路牌fbx",
-        "boliti-CDfbx",
         "CDnewfbx",
-        "buzhimingshufbx",
-        "treeFBX",
-        "liushufbx",
+        // "buzhimingshufbx",
+        // "treeFBX",
+        // "liushufbx",
         "banmaxian-0107fbx",
-        "boliti-cd-0102fbx"
-
+        "boliti-CD-0107fbx"
     ]
 
     static PIPE_NETWORK_RANGE_X_1 = -2050
