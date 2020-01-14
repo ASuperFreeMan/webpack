@@ -200,11 +200,18 @@ export class AutoCreatePipeLine {
                     self.loader.gltfLoadByUrls(self.CDAndBXUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                         //加载玻璃体
                         self.loader.gltfLoadByUrl(self.BLTUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
-                            console.log(value.children[0].children[0].children[2])
-                            // value.children[0].children[0].children[2].material.transparent = true
-                            // value.children[0].children[0].children[2].material.opacity = 0.9
-                            // value.children[0].children[0].children[3].material.transparent = true
-                            // value.children[0].children[0].children[3].material.opacity = 0.9
+                            console.log(value)
+                            // console.log(value.children[0].children[0].children[2])
+                            value.children[0].children[0].children[2].material.transparent = true
+                            value.children[0].children[0].children[2].material.opacity = 0.9
+                            value.children[0].children[1].children[2].material.transparent = true
+                            value.children[0].children[1].children[2].material.opacity = 0.9
+                            value.children[0].children[2].children[2].material.transparent = true
+                            value.children[0].children[2].children[2].material.opacity = 0.9
+                            value.children[0].children[2].children[3].material.transparent = true
+                            value.children[0].children[2].children[3].material.opacity = 0.9
+                            value.children[0].children[3].children[2].material.transparent = true
+                            value.children[0].children[3].children[2].material.opacity = 0.9
                             // self.color.setMeshColor(value.children[0].children[0].children[2], 0xaaa7a7)
                             // self.color.setMeshColor(value.children[0].children[0].children[3], 0xaaa7a7)
                             // self.color.setMeshColor(value.children[0].children[0].children[4], 0x6e6e6e)
