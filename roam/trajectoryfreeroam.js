@@ -66,6 +66,7 @@ export class TrajectoryFreeroam {
 
     // 配置鼠标事件和键盘事件
     addEvents() {
+        this.removeEvents();
         // this.setClickMouseEvents();
         this.setKeyboardEvents();
     }

@@ -68,6 +68,9 @@ export class MapControls {
         this.viewer.scene.screenSpaceCameraController.enableZoom = false;
         // 取消双击默认效果
         this.viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+        // 不允许倾斜相机
+        this.viewer.scene.screenSpaceCameraController.enableTilt = false;
+
 
     }
 
@@ -196,13 +199,13 @@ export class MapControls {
 
     // 设置管网感知主视角
     setPipeNetworkPerceptionMainView() {
-        this.flyTo(this.startPosition.x, this.startPosition.y, this.farDistance);
+        this.flyTo(MapConfiguration.pipeNetworkPerceptionMainView.lng, MapConfiguration.pipeNetworkPerceptionMainView.lat, this.farDistance);
         this.setDefaultPosition(this.startPosition.x, this.startPosition.y);
     }
 
     // 设置泵站监控主视角
     setPumpStationMonitoringMainView() {
-        this.flyTo(this.startPosition.x, this.startPosition.y, this.farDistance);
+        this.flyTo(MapConfiguration.pumpStationMonitoringMainView.lng, MapConfiguration.pumpStationMonitoringMainView.lat, this.farDistance);
         this.setDefaultPosition(this.startPosition.x, this.startPosition.y);
     }
 
@@ -384,6 +387,7 @@ export class MapControls {
                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                 pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
                 distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfiguration.cameraTiltMaxHight),
+                eyeOffset: new Cesium.Cartesian3(0, 0, -1)
             } : {},
             billboard: billboard !== undefined ? {
                 image: billboard.uri,
@@ -428,6 +432,44 @@ export class MapControls {
             this.markEntities[i].show = false;
         }
     }
+
+    // 通过id更新图标数据
+    updateMarkDataById(id, data) {
+        for (let i = 0; i < this.markEntities.length; i++) {
+            if (this.markEntities[i].id == id) {
+                let curEntity = this.viewer.entities.getById(id);
+                if (data != this.markEntities[i].label.text._value) {
+                    this.markEntities[i].label.text._value = data;
+                    curEntity.label.text._value = data;
+                }
+                break;
+            }
+        }
+    }
+
+    // 通过id更新图标图片
+    updateMarkImgById(id, imgUrI) {
+        for (let i = 0; i < this.markEntities.length; i++) {
+            if (this.markEntities[i].id == id) {
+                let curEntity = this.viewer.entities.getById(id);
+                this.markEntities[i].billboard.image._value = imgUrI;
+                curEntity.billboard.image._value = imgUrI;
+                break;
+            }
+        }
+    }
+
+    // 通过id获取图标图片地址
+    getMarkImgById(id) {
+        for (let i = 0; i < this.markEntities.length; i++) {
+            if (this.markEntities[i].id == id) {
+                console.log(this.markEntities[i].billboard)
+                return this.markEntities[i].billboard.image._value;
+            }
+        }
+        return null;
+    }
+
 
     // 通过id移除图标
     removeMarkById(id) {
