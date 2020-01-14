@@ -8,10 +8,12 @@ export var modelHide
 export var FlowImgUrl1
 export var FlowImgUrl2
 export var datas
+export var NEW_DATA
 export var renderInterval
 export var stationName
 export var STATION_MODEL_ALL
 export var showFlowPipe = []
+export var sprites = []
 export var bengzhan = {
 
     //春兰
@@ -1139,34 +1141,40 @@ export function loadData() {
     addFlow();
 }
 
+
+
 export function loadEquipmentState() {
+    setEquipmentState(datas)
+}
+
+export function setEquipmentState(quipmentState) {
     if (stationName == "districtthreeStation" || stationName == "peopleStation" || stationName == "zhaoyangriverStation" || stationName == "xihucuiyuanStation" || stationName == "eastwindStation") {
         if (bengzhan[stationName].wushuibeng.length > 0) {
             for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
-                changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index], datas.wushuibeng[i].state)
+                changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index], quipmentState.wushuibeng[i].state)
             }
         }
     } else {
         // 污水泵
         if (bengzhan[stationName].wushuibeng.length > 0) {
             for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
-                changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index], datas.wushuibeng[i].state)
+                changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index], quipmentState.wushuibeng[i].state)
             }
         }
     }
     if (bengzhan[stationName].laozhaji.length > 0) {
         for (let i = 0; i < bengzhan[stationName].laozhaji.length; i++) {
-            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].laozhaji[i].index], datas.laozhaji[i].state)
+            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].laozhaji[i].index], quipmentState.laozhaji[i].state)
         }
     }
     if (bengzhan[stationName].qibiji.length > 0) {
         for (let i = 0; i < bengzhan[stationName].qibiji.length; i++) {
-            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].qibiji[i].index], datas.qibiji[i].state)
+            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].qibiji[i].index], quipmentState.qibiji[i].state)
         }
     }
     if (bengzhan[stationName].lajichuansongji.length > 0) {
         for (let i = 0; i < bengzhan[stationName].lajichuansongji.length; i++) {
-            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].lajichuansongji[i].index], datas.lajichuansongji[i].state)
+            changeEquipmentState(STATION_MODEL_ALL[bengzhan[stationName].lajichuansongji[i].index], quipmentState.lajichuansongji[i].state)
         }
     }
 
@@ -1185,28 +1193,34 @@ export function changeEquipmentState(mesh, state) {
     }
 }
 
+
+
+
 export function loadPumpDate() {
+    loadPump(datas);
+}
+
+export function loadPump(pumData) {
     if (bengzhan[stationName].wushuibeng.length > 0) {
         for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
             let pum = STATION_MODEL_ALL[bengzhan[stationName].wushuibeng[i].index]
-            if (datas.wushuibeng[i].state === 0) {
+            if (pumData.wushuibeng[i].state === 0) {
                 // sprite.addText(datas.wushuibeng[i].data, [pum.position.x, (pum.position.y + 1), pum.position.z])
-                sprite.addCanvas(addPumpCanvas(datas.wushuibeng[i].data), [pum.position.x, (pum.position.y + 2), pum.position.z], function (canvas, pos) {
+                var s = sprite.addCanvas(addPumpCanvas(pumData.wushuibeng[i].data), [pum.position.x, (pum.position.y + 2), pum.position.z], function (canvas, pos) {
                     // init();
-
-
                 });
-
-
+                sprites.push(s)
             }
         }
     }
 }
 
+
+
 export function addPumpCanvas(data) {
     let canvas = document.createElement("canvas");
-    canvas.width = 200;
-    canvas.height = 300;
+    canvas.width = 300;
+    canvas.height = 400
     // canvas.textAlign = 'center'
     canvas.setAttribute('cursor', 'pointer');
     let ctx = canvas.getContext("2d");
@@ -1215,37 +1229,38 @@ export function addPumpCanvas(data) {
     ctx.strokeStyle = 'rgba(25,25,112,0.8)';
     ctx.fillStyle = 'rgba(25,25,112,0.8)';
     ctx.beginPath();
-    ctx.fillRect(0, 0, 200, 200);
+    ctx.fillRect(0, 0, 300, 200);
     ctx.stroke();
     ctx.fill();
     ctx.fillStyle = '#FFFFFF';
     ctx.font = "80px Cambria";
-    ctx.fillText(data, 35, 120);
-    ctx.fillText("A", 125, 120);
+    ctx.fillText(data, 40, 125);
+    ctx.fillText("A", 200, 125);
     return canvas;
 }
 
+
+
+
 export function addFlow() {
-    if (bengzhan[stationName].laozhaji.length > 0) {
-        for (let i = 0; i < bengzhan[stationName].laozhaji.length; i++) {
-            if (datas.laozhaji[i].state == 0) {
-                let chuansongdai = STATION_MODEL_ALL[bengzhan[stationName].chuansongdai[i].index]
-                textureTool.addRepetitiveTextureOnMesh(chuansongdai, FlowImgUrl2, 0.01, -2)
-            }
-        }
-    }
+    addLZJFlowTo(datas)
+    addFlowTo(datas)
+
+}
+
+export function addFlowTo(flowData) {
     if (stationName != "districtthreeStation" && stationName != "peopleStation" && stationName != "zhaoyangriverStation" && stationName != "xihucuiyuanStation" && stationName != "eastwindStation") {
         if (bengzhan[stationName].wushuibeng.length > 0) {
             for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
-                if (datas.wushuibeng[i].state == 0) {
+                if (flowData.wushuibeng[i].state == 0) {
                     showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1])
                     color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index2], 0x91B5F9)
                 } else {
-                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1], 0x808080)
+                    // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index1], 0x808080)
                     color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index2], 0x808080)
-                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index3], 0x808080)
-                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index4], 0x808080)
-                    color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index5], 0x808080)
+                    // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index3], 0x808080)
+                    // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index4], 0x808080)
+                    // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index5], 0x808080)
                 }
             }
         }
@@ -1253,7 +1268,7 @@ export function addFlow() {
         if (bengzhan[stationName].wushuibeng.length > 0) {
             let x = 0;
             for (let i = 0; i < bengzhan[stationName].wushuibeng.length; i++) {
-                if (datas.wushuibeng[i].state == 0) {
+                if (flowData.wushuibeng[i].state == 0) {
                     x += 1;
                 }
             }
@@ -1268,11 +1283,54 @@ export function addFlow() {
     renderInterval = setInterval(render, 20)
 }
 
+
+
+export function addLZJFlowTo(flowData) {
+    if (bengzhan[stationName].laozhaji.length > 0) {
+        for (let i = 0; i < bengzhan[stationName].laozhaji.length; i++) {
+            if (flowData.laozhaji[i].state == 0) {
+                let chuansongdai = STATION_MODEL_ALL[bengzhan[stationName].chuansongdai[i].index]
+                textureTool.addRepetitiveTextureOnMesh(chuansongdai, FlowImgUrl2, 0.01, -2)
+            }
+        }
+    }
+}
+
+
 export function render() {
     for (let i = 0; i < showFlowPipe.length; i++) {
         showFlowPipe[i].material.map.offset.y -= 0.02
     }
     pick.getCore().render()
+}
+
+//更新数据
+export function upData(newdata) {
+    if (newdata == null) {
+        console.log("未传入新数据")
+    } else {
+        NEW_DATA = newdata
+        updataPumData();
+    }
+}
+
+export function updataPumData() {
+    for (let i = 0; i < sprites.length; i++) {
+        sprites[i].geometry.dispose()
+        sprites[i].material.dispose()
+        sprites[i].material.map.dispose()
+        bustard.core.getScene().remove(sprites[i])
+    }
+    sprites = []
+    loadPump(NEW_DATA)
+    setEquipmentState(NEW_DATA)
+    clearInterval(renderInterval)
+    showFlowPipe = [];
+    if (stationName != "districtthreeStation" && stationName != "peopleStation" && stationName != "zhaoyangriverStation" && stationName != "xihucuiyuanStation" && stationName != "eastwindStation") {
+        showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex])
+    }
+    addFlowTo(NEW_DATA)
+
 }
 
 

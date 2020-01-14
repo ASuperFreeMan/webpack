@@ -56,6 +56,8 @@ export class TrajectoryFreeroam {
 
         // 记录之前相机状态
         this.oldState;
+
+        this.initTheRelationOfVertexsToCoords();
     }
 
     // 移除鼠标事件和键盘事件
@@ -66,6 +68,7 @@ export class TrajectoryFreeroam {
 
     // 配置鼠标事件和键盘事件
     addEvents() {
+        this.removeEvents();
         // this.setClickMouseEvents();
         this.setKeyboardEvents();
     }
@@ -107,7 +110,6 @@ export class TrajectoryFreeroam {
         // 移除cameraControls中的监听事件
         this.pick.getCore().removeAllListenerEventsFromCameraControls();
 
-        this.initTheRelationOfVertexsToCoords();
         this.addEvents();
     }
 

@@ -32,16 +32,16 @@ export class HideRoad {
         }
     }
 
-    showFlowTo(pipeline_all, urlImg) {
+    showFlowTo(pipeline_all, urlImg1, urlImg2) {
         for (let i = 0; i < pipeline_all.length; i++) {
             if (pipeline_all[i].userData.elevationDifference > 0) {
-                this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg, 0.04, 0.5)
+                this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg2, 0.04, 0.5)
             }
             if (pipeline_all[i].userData.elevationDifference < 0) {
-                this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg, -0.04, 0.5)
+                this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg1, -0.04, 0.5)
             }
             if (pipeline_all[i].userData.elevationDifference == 0) {
-                this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg, 0, 0.5)
+                this.textureTool.addRepetitiveTexture(pipeline_all[i], urlImg1, 0, 0.5)
             }
         }
     }

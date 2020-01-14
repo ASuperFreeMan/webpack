@@ -31,6 +31,9 @@ export class AutoCreatePipeLine {
         this.bgImgUrl1 = urls.bgImgUrl1
         this.bgImgUrl2 = urls.bgImgUrl2
         this.dracoLibUrl = urls.dracoLibUrl
+        this.yuanzhutu = urls.yuanzhutu
+        this.stationNamePictureUrl = urls.stationNamePictureUrl
+
         this.renderInterval;
         this.progressBarTimer;
         const self = this;
@@ -62,10 +65,10 @@ export class AutoCreatePipeLine {
     }
 
     //显示管道流向
-    showFlowTo(urlImg) {
+    showFlowTo(urlImg1, urlImg2) {
         // this.addGateway()
 
-        this.hideRoad.showFlowTo(this.pipeline_all, urlImg)
+        this.hideRoad.showFlowTo(this.pipeline_all, urlImg1, urlImg2)
         const self = this;
         this.renderInterval = setInterval(function () {
             self.bustard.core.render()
@@ -149,8 +152,11 @@ export class AutoCreatePipeLine {
         this.renderInterval = 0
         this.transparent = this.bustard.use(new Bustard.Transparent())
         this.transparent.activeClick = false
-
-
+        this.sprite = this.bustard.use(new Bustard.Sprite({
+            fontSize: 60,
+            borderThickness: 1,
+            scale: [50, 50, 50]
+        }));
         this.pick = this.bustard.use(new Bustard.Pick());
         const self = this;
         this.pick.pick = function (node, point) {
@@ -201,17 +207,23 @@ export class AutoCreatePipeLine {
                         //加载玻璃体
                         self.loader.gltfLoadByUrl(self.BLTUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                             console.log(value)
-                            // console.log(value.children[0].children[0].children[2])
+                            // console.log(value.children[0].children[0])
                             value.children[0].children[0].children[2].material.transparent = true
                             value.children[0].children[0].children[2].material.opacity = 0.9
+                            value.children[0].children[0].children[3].material.transparent = true
+                            value.children[0].children[0].children[3].material.opacity = 0.9
+                            value.children[0].children[0].children[4].material.transparent = true
+                            value.children[0].children[0].children[4].material.opacity = 0.9
+                            value.children[0].children[0].children[5].material.transparent = true
+                            value.children[0].children[0].children[5].material.opacity = 0.9
                             value.children[0].children[1].children[2].material.transparent = true
                             value.children[0].children[1].children[2].material.opacity = 0.9
                             value.children[0].children[2].children[2].material.transparent = true
                             value.children[0].children[2].children[2].material.opacity = 0.9
-                            value.children[0].children[2].children[3].material.transparent = true
-                            value.children[0].children[2].children[3].material.opacity = 0.9
-                            value.children[0].children[3].children[2].material.transparent = true
-                            value.children[0].children[3].children[2].material.opacity = 0.9
+                            // value.children[0].children[2].children[3].material.transparent = true
+                            // value.children[0].children[2].children[3].material.opacity = 0.9
+                            // value.children[0].children[3].children[2].material.transparent = true
+                            // value.children[0].children[3].children[2].material.opacity = 0.9
                             // self.color.setMeshColor(value.children[0].children[0].children[2], 0xaaa7a7)
                             // self.color.setMeshColor(value.children[0].children[0].children[3], 0xaaa7a7)
                             // self.color.setMeshColor(value.children[0].children[0].children[4], 0x6e6e6e)
@@ -219,21 +231,24 @@ export class AutoCreatePipeLine {
                             //加载建筑
                             self.loader.gltfLoadByUrls(self.floorUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                                 //加载其他（树）
-                                // self.loader.gltfLoadByUrl(self.treeUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
-                                //创建管网
-                                self.createWellModels();
-                                self.createPipeModels();
-                                //隐藏管网模板
-                                self.hidePipeNetworkTemplate();
-                                //移动相机到巡检起始位置
-                                if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
-                                    self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
-                                }
-                                //清除进度条
-                                clearInterval(this.progressBarTimer);
-                                document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = PipeNetworkConfig.PROGRESS_BAR_WIDTH_MAX;
-                                $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeOut();
-                                // })
+                                self.loader.gltfLoadByUrls(self.otherUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                                    //创建管网
+                                    self.createWellModels();
+                                    self.createPipeModels();
+                                    //隐藏管网模板
+                                    self.hidePipeNetworkTemplate();
+                                    //移动相机到巡检起始位置
+                                    if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
+                                        self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
+                                    }
+                                    //清除进度条
+                                    clearInterval(self.progressBarTimer);
+                                    document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = PipeNetworkConfig.PROGRESS_BAR_WIDTH_MAX;
+                                    $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeOut();
+                                    self.addGateway()
+                                    self.addStationNameCanvas()
+
+                                })
 
                             })
 
@@ -255,8 +270,9 @@ export class AutoCreatePipeLine {
     }
     //切换巡检相机
     toggleInspectionCameraControl() {
+        this.bustard.core.removeAllListenerEventsFromCameraControls();
         this.bustard.core.addAllListenerEventsFromCameraControls();
-        this.bustard.core.setCameraValues(3500);
+        // this.bustard.core.setCameraValues(3500);
     }
 
 
@@ -306,9 +322,9 @@ export class AutoCreatePipeLine {
 
         this.toggleInspectionBackground();
         this.toggleInspectionCameraControl();
-        this.trajectoryFreeroam.addEvents();
         this.roam.lookAt(this.humanPerspectiveInfo.camera.position, this.humanPerspectiveInfo.camera.target);
         this.bustard.core.removeAllListenerEventsFromCameraControls();
+        this.trajectoryFreeroam.addEvents();
 
     }
 
@@ -347,19 +363,19 @@ export class AutoCreatePipeLine {
     createWellModels() {
         this.well_all = []
         for (let i = 0; i < this.wells.length; i++) {
-            if (this.wells[i].wellX > PipeNetworkConfig.PIPE_NETWORK_RANGE_X_1 && this.wells[i].wellX < PipeNetworkConfig.PIPE_NETWORK_RANGE_X_2 && this.wells[i].wellZ > PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_1 && this.wells[i].wellZ < PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_2) {
-                let cloneModel = this.pipeNetworkTemplate[0].clone();
-                cloneModel.name = this.wells[i].wellId
-                cloneModel.userData.modelName = PipeNetworkConfig.WELL_MODEL_PREFIX
-                cloneModel.userData.uniqId = this.wells[i].wellId
-                cloneModel.position.x = this.wells[i].wellX
-                cloneModel.position.y = -0.1
-                cloneModel.position.z = this.wells[i].wellZ
-                cloneModel.scale.set(1, 1, 1);
-                cloneModel.visible = true
-                this.well_all.push(cloneModel)
-                this.bustard.core.getScene().add(cloneModel)
-            }
+            // if (this.wells[i].wellX > PipeNetworkConfig.PIPE_NETWORK_RANGE_X_1 && this.wells[i].wellX < PipeNetworkConfig.PIPE_NETWORK_RANGE_X_2 && this.wells[i].wellZ > PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_1 && this.wells[i].wellZ < PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_2) {
+            let cloneModel = this.pipeNetworkTemplate[0].clone();
+            cloneModel.name = this.wells[i].wellId
+            cloneModel.userData.modelName = PipeNetworkConfig.WELL_MODEL_PREFIX
+            cloneModel.userData.uniqId = this.wells[i].wellId
+            cloneModel.position.x = this.wells[i].wellX
+            cloneModel.position.y = -0.1
+            cloneModel.position.z = this.wells[i].wellZ
+            cloneModel.scale.set(1, 1, 1);
+            cloneModel.visible = true
+            this.well_all.push(cloneModel)
+            this.bustard.core.getScene().add(cloneModel)
+            // }
         }
         this.bustard.core.render();
     }
@@ -367,82 +383,82 @@ export class AutoCreatePipeLine {
     createPipeModels() {
         this.pipeline_all = []
         for (let i = 0; i < this.pipelines.length; i++) {
-            if (this.pipelines[i].pipelineX1 > PipeNetworkConfig.PIPE_NETWORK_RANGE_X_1 && this.pipelines[i].pipelineX1 < PipeNetworkConfig.PIPE_NETWORK_RANGE_X_2 && this.pipelines[i].pipelineZ1 > PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_1 && this.pipelines[i].pipelineZ1 < PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_2) {
-                let cloneModel;
-                if (this.pipelines[i].material === 'PE') {
-                    cloneModel = this.pipeNetworkTemplate[2].clone()
-                } else if (this.pipelines[i].material === 'PVC') {
-                    cloneModel = this.pipeNetworkTemplate[3].clone()
-                } else if (this.pipelines[i].material === '塑料') {
-                    cloneModel = this.pipeNetworkTemplate[4].clone()
-                } else if (this.pipelines[i].material === '砼') {
-                    cloneModel = this.pipeNetworkTemplate[5].clone()
-                } else if (this.pipelines[i].material === "玻璃钢") {
-                    cloneModel = this.pipeNetworkTemplate[6].clone()
-                } else if (this.pipelines[i].material === '球墨铸铁') {
-                    cloneModel = this.pipeNetworkTemplate[7].clone()
-                } else if (this.pipelines[i].material === '钢') {
-                    cloneModel = this.pipeNetworkTemplate[8].clone()
-                } else if (this.pipelines[i].material === '铸铁') {
-                    cloneModel = this.pipeNetworkTemplate[9].clone()
-                } else {
-                    cloneModel = this.pipeNetworkTemplate[1].clone()
-                }
-                let x1 = this.pipelines[i].pipelineX1;
-                let y1 = 0;
-                let z1 = this.pipelines[i].pipelineZ1;
-                let x2 = this.pipelines[i].pipelineX2;
-                let y2 = 0;
-                let z2 = this.pipelines[i].pipelineZ2;
-                let startElevation = this.pipelines[i].startElevation;
-                let endElevation = this.pipelines[i].endElevation;
-                let elevationDifference = startElevation - endElevation
-                cloneModel.userData.elevationDifference = elevationDifference
-                let radian = Math.atan(Math.abs(z2 - z1) / Math.abs(x2 - x1));
-                let long = Math.sqrt((z2 - z1) * (z2 - z1) + (x2 - x1) * (x2 - x1));
-                cloneModel.name = this.pipelines[i].pipelineId;
-                cloneModel.userData.modelName = PipeNetworkConfig.PIPE_MODEL_PREFIX
-                cloneModel.userData.uniqId = this.pipelines[i].pipelineId;
-                if (z2 - z1 < 0 && x2 - x1 > 0) {
-                    cloneModel.position.x = x1 + Math.abs(x2 - x1) / 2;
-                    cloneModel.position.z = z1 - Math.abs(z2 - z1) / 2;
-                    cloneModel.rotation.set(Math.PI / 2, 0, -radian)
-                }
-                if (z2 - z1 > 0 && x2 - x1 < 0) {
-                    cloneModel.position.x = x1 - Math.abs(x2 - x1) / 2;
-                    cloneModel.position.z = z1 + Math.abs(z2 - z1) / 2;
-                    cloneModel.rotation.set(Math.PI / 2, 0, -radian);
-                }
-                if (z2 - z1 < 0 && x2 - x1 < 0) {
-                    cloneModel.position.x = x2 + Math.abs(x2 - x1) / 2;
-                    cloneModel.position.z = z2 + Math.abs(z2 - z1) / 2;
-                    cloneModel.rotation.set(Math.PI / 2, 0, radian);
-                }
-                if (z2 - z1 === 0 && x2 - x1 < 0) {
-                    cloneModel.position.x = x1 - Math.abs(x2 - x1) / 2;
-                    cloneModel.position.z = z1 + Math.abs(z2 - z1) / 2;
-                    cloneModel.rotation.set(Math.PI / 2, 0, radian);
-                }
-                if (z2 - z1 < 0 && x2 - x1 === 0) {
-                    cloneModel.position.x = x1 + Math.abs(x2 - x1) / 2;
-                    cloneModel.position.z = z1 - Math.abs(z2 - z1) / 2;
-                    cloneModel.rotation.set(Math.PI / 2, 0, radian);
-                }
-                if (z2 - z1 >= 0 && x2 - x1 >= 0) {
-                    cloneModel.position.x = x1 + Math.abs(x2 - x1) / 2;
-                    cloneModel.position.z = z1 + Math.abs(z2 - z1) / 2;
-                    cloneModel.rotation.set(Math.PI / 2, 0, radian)
-                }
-                cloneModel.position.y = -2.8 + 0.1
-                if (this.pipelines[i].diameter === 0) {
-                    cloneModel.scale.set(long / 10, 5, 5);
-                } else {
-                    cloneModel.scale.set(long / 10, this.pipelines[i].diameter / 100, this.pipelines[i].diameter / 100);
-                }
-                cloneModel.visible = true
-                this.pipeline_all.push(cloneModel)
-                this.bustard.core.getScene().add(cloneModel);
+            // if (this.pipelines[i].pipelineX1 > PipeNetworkConfig.PIPE_NETWORK_RANGE_X_1 && this.pipelines[i].pipelineX1 < PipeNetworkConfig.PIPE_NETWORK_RANGE_X_2 && this.pipelines[i].pipelineZ1 > PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_1 && this.pipelines[i].pipelineZ1 < PipeNetworkConfig.PIPE_NETWORK_RANGE_Z_2) {
+            let cloneModel;
+            if (this.pipelines[i].material === 'PE') {
+                cloneModel = this.pipeNetworkTemplate[2].clone()
+            } else if (this.pipelines[i].material === 'PVC') {
+                cloneModel = this.pipeNetworkTemplate[3].clone()
+            } else if (this.pipelines[i].material === '塑料') {
+                cloneModel = this.pipeNetworkTemplate[4].clone()
+            } else if (this.pipelines[i].material === '砼') {
+                cloneModel = this.pipeNetworkTemplate[5].clone()
+            } else if (this.pipelines[i].material === "玻璃钢") {
+                cloneModel = this.pipeNetworkTemplate[6].clone()
+            } else if (this.pipelines[i].material === '球墨铸铁') {
+                cloneModel = this.pipeNetworkTemplate[7].clone()
+            } else if (this.pipelines[i].material === '钢') {
+                cloneModel = this.pipeNetworkTemplate[8].clone()
+            } else if (this.pipelines[i].material === '铸铁') {
+                cloneModel = this.pipeNetworkTemplate[9].clone()
+            } else {
+                cloneModel = this.pipeNetworkTemplate[1].clone()
             }
+            let x1 = this.pipelines[i].pipelineX1;
+            let y1 = 0;
+            let z1 = this.pipelines[i].pipelineZ1;
+            let x2 = this.pipelines[i].pipelineX2;
+            let y2 = 0;
+            let z2 = this.pipelines[i].pipelineZ2;
+            let startElevation = this.pipelines[i].startElevation;
+            let endElevation = this.pipelines[i].endElevation;
+            let elevationDifference = startElevation - endElevation
+            cloneModel.userData.elevationDifference = elevationDifference
+            let radian = Math.atan(Math.abs(z2 - z1) / Math.abs(x2 - x1));
+            let long = Math.sqrt((z2 - z1) * (z2 - z1) + (x2 - x1) * (x2 - x1));
+            cloneModel.name = this.pipelines[i].pipelineId;
+            cloneModel.userData.modelName = PipeNetworkConfig.PIPE_MODEL_PREFIX
+            cloneModel.userData.uniqId = this.pipelines[i].pipelineId;
+            if (z2 - z1 < 0 && x2 - x1 > 0) {
+                cloneModel.position.x = x1 + Math.abs(x2 - x1) / 2;
+                cloneModel.position.z = z1 - Math.abs(z2 - z1) / 2;
+                cloneModel.rotation.set(Math.PI / 2, 0, -radian)
+            }
+            if (z2 - z1 > 0 && x2 - x1 < 0) {
+                cloneModel.position.x = x1 - Math.abs(x2 - x1) / 2;
+                cloneModel.position.z = z1 + Math.abs(z2 - z1) / 2;
+                cloneModel.rotation.set(Math.PI / 2, 0, -radian);
+            }
+            if (z2 - z1 < 0 && x2 - x1 < 0) {
+                cloneModel.position.x = x2 + Math.abs(x2 - x1) / 2;
+                cloneModel.position.z = z2 + Math.abs(z2 - z1) / 2;
+                cloneModel.rotation.set(Math.PI / 2, 0, radian);
+            }
+            if (z2 - z1 === 0 && x2 - x1 < 0) {
+                cloneModel.position.x = x1 - Math.abs(x2 - x1) / 2;
+                cloneModel.position.z = z1 + Math.abs(z2 - z1) / 2;
+                cloneModel.rotation.set(Math.PI / 2, 0, radian);
+            }
+            if (z2 - z1 < 0 && x2 - x1 === 0) {
+                cloneModel.position.x = x1 + Math.abs(x2 - x1) / 2;
+                cloneModel.position.z = z1 - Math.abs(z2 - z1) / 2;
+                cloneModel.rotation.set(Math.PI / 2, 0, radian);
+            }
+            if (z2 - z1 >= 0 && x2 - x1 >= 0) {
+                cloneModel.position.x = x1 + Math.abs(x2 - x1) / 2;
+                cloneModel.position.z = z1 + Math.abs(z2 - z1) / 2;
+                cloneModel.rotation.set(Math.PI / 2, 0, radian)
+            }
+            cloneModel.position.y = -2.8 + 0.1
+            if (this.pipelines[i].diameter === 0) {
+                cloneModel.scale.set(long / 10, 5, 5);
+            } else {
+                cloneModel.scale.set(long / 10, this.pipelines[i].diameter / 100, this.pipelines[i].diameter / 100);
+            }
+            cloneModel.visible = true
+            this.pipeline_all.push(cloneModel)
+            this.bustard.core.getScene().add(cloneModel);
+            // }
         }
         this.bustard.core.render();
     }
@@ -455,6 +471,7 @@ export class AutoCreatePipeLine {
 
     //控制地面透明度
     adjustRoadTransparency(transparency) {
+        console.log("传进来： " + transparency)
         if (transparency == 0) {
             this.hideRoad.hideRoad()
         } else {
@@ -463,13 +480,24 @@ export class AutoCreatePipeLine {
                 this.hideRoad.adjustRoadTransparency(PipeNetworkConfig.HIDE_ROAD_MODEL_NAME[i], transparency)
             }
         }
+        this.bustard.core.render()
     }
 
     //添加光体
     addGateway() {
-        this.bustard.core.addGateway({ x: -1921.6613995081066, y: 5.3663256036498399, z: 482.71654550192284 }, this.bgImgUrl, '#54C41D')
-    }
-}
+        for (let i = 0; i < PipeNetworkConfig.STATION_POSITION.length; i++) {
+            this.bustard.core.addGateway(PipeNetworkConfig.STATION_POSITION[i].stationPosition, this.yuanzhutu[PipeNetworkConfig.STATION_POSITION[i].color], PipeNetworkConfig.STATION_COLOR[PipeNetworkConfig.STATION_POSITION[i].color])
+        }
 
+    }
+
+    //添加泵站名画布
+    addStationNameCanvas() {
+        for (let i = 0; i < PipeNetworkConfig.STATION_POSITION.length; i++) {
+            this.bustard.core.addPictureSprite({ x: PipeNetworkConfig.STATION_POSITION[i].stationPosition.x, y: 200, z: PipeNetworkConfig.STATION_POSITION[i].stationPosition.z }, this.stationNamePictureUrl[PipeNetworkConfig.STATION_POSITION[i].stationName], [188, 40, 100])
+        }
+    }
+
+}
 
 
