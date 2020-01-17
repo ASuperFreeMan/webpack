@@ -74,6 +74,16 @@ export class MapControls {
 
     }
 
+    // 开启渲染循环
+    openRenderLoop() {
+        this.viewer.useDefaultRenderLoop = true;
+    }
+
+    // 关闭渲染循环
+    closeRenderLoop() {
+        this.viewer.useDefaultRenderLoop = false;
+    }
+
     // 取消拖动
     removeDrag() {
         this.viewer.scene.screenSpaceCameraController.enableRotate = false;
@@ -269,6 +279,14 @@ export class MapControls {
         }
     }
 
+    hideEarth() {
+        this.viewer.scene.globe.show = false;
+    }
+
+    showEarth() {
+        this.viewer.scene.globe.show = true;
+    }
+
     // 设置地图
     setMap(url, layers) {
         // 移除所有影像图层
@@ -380,20 +398,20 @@ export class MapControls {
                 style: Cesium.LabelStyle.FILL_AND_OUTLINE,
                 showBackground: true,
                 backgroundPadding: label.backgroundPadding !== undefined ? new Cesium.Cartesian2(label.backgroundPadding.x, label.backgroundPadding.y) : new Cesium.Cartesian2(7, 5),
-                backgroundColor: label.backgroundColor !== undefined ? Cesium.Color.fromCssColorString(label.backgroundColor.color).withAlpha(label.backgroundColor.alpha) : Cesium.Color.BLACK,
-                fillColor: label.fillColor !== undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha) : Cesium.Color.WHITE,
-                outlineColor: label.outlineColor !== undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha) : Cesium.Color.WHITE,
+                backgroundColor: label.backgroundColor !== undefined ? Cesium.Color.fromCssColorString(label.backgroundColor.color).withAlpha(label.backgroundColor.alpha != undefined ? label.backgroundColor.alpha : 1) : Cesium.Color.BLACK,
+                fillColor: label.fillColor !== undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha != undefined ? label.fillColor.alpha : 1) : Cesium.Color.WHITE,
+                outlineColor: label.outlineColor !== undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha != undefined ? label.outlineColor.alpha : 1) : Cesium.Color.WHITE,
                 outlineWidth: label.outlineWidth !== undefined ? label.outlineWidth : 0,
                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                 pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
                 distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfiguration.cameraTiltMaxHight),
-                eyeOffset: new Cesium.Cartesian3(0, 0, -1)
+                eyeOffset: new Cesium.Cartesian3(0, 0, -100)
             } : {},
             billboard: billboard !== undefined ? {
                 image: billboard.uri,
                 width: billboard.width !== undefined ? billboard.width : 700,
                 height: billboard.height !== undefined ? billboard.height : 500,
-                distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfiguration.cameraTiltMaxHight),
+                distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfiguration.cameraTiltMaxHight)
             } : {}
         });
         entity.show = false;
@@ -433,16 +451,24 @@ export class MapControls {
         }
     }
 
-    // 通过id更新图标数据
-    updateMarkDataById(id, data) {
-        for (let i = 0; i < this.markEntities.length; i++) {
-            if (this.markEntities[i].id == id) {
-                let curEntity = this.viewer.entities.getById(id);
-                if (data != this.markEntities[i].label.text._value) {
-                    this.markEntities[i].label.text._value = data;
-                    curEntity.label.text._value = data;
+    // 批量更新图标数据
+    updateMarkList(entityList) {
+        if (Object.prototype.toString.call(entityList) == '[object Array]') {
+            for (let i = 0; i < entityList.length; i++) {
+                let curEntity = entityList[i];
+                let cesiumEntity = this.viewer.entities.getById(curEntity.id);
+                if (cesiumEntity != undefined) {
+                    if (curEntity.label != undefined && curEntity.label.text != undefined && cesiumEntity.label.text._value != curEntity.label.text) {
+                        cesiumEntity.label.text._value = curEntity.label.text;
+                    }
+                    if (curEntity.label != undefined && curEntity.label.fillColor != undefined) {
+                        cesiumEntity.label.fillColor = Cesium.Color.fromCssColorString(curEntity.label.fillColor.color).withAlpha(curEntity.label.fillColor.alpha != undefined ? curEntity.label.fillColor.alpha : 1);
+                    }
+                    if (curEntity.billboard != undefined && curEntity.billboard.uri != undefined && cesiumEntity.billboard.image._value != curEntity.billboard.uri) {
+                        cesiumEntity.billboard.image._value = curEntity.billboard.uri;
+                    }
                 }
-                break;
+
             }
         }
     }
@@ -463,7 +489,6 @@ export class MapControls {
     getMarkImgById(id) {
         for (let i = 0; i < this.markEntities.length; i++) {
             if (this.markEntities[i].id == id) {
-                console.log(this.markEntities[i].billboard)
                 return this.markEntities[i].billboard.image._value;
             }
         }
