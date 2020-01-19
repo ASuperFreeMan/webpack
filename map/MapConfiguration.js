@@ -1,13 +1,17 @@
 export class MapConfiguration {
 
     // 开始位置
-    static startPosition = { x: 119.92392231992083, y: 32.38401248596911 + 0.036887233525095 };
+    static startPosition = { x: 119.92392231992083, y: 32.36901248596911 + 0.036887233525095 };
+    // 管网感知主视角
+    static pipeNetworkPerceptionMainView = { lng: 119.92392231992083, lat: 32.38401248596911 + 0.036887233525095 };
+    // 泵站监控主视角
+    static pumpStationMonitoringMainView = { lng: 119.92392231992083, lat: 32.37101248596911 + 0.036887233525095 };
     // 自由巡检主视角经纬度
     static freeRoamMainView = { lng: 119.92050928016923, lat: 32.388417918122855 + 0.036887233525095 };
     // 从地球上空飞行到指定位置的时间
     static flightTime = undefined;
     // 从地球上空飞行到指定位置后等待显示图标的时间
-    static waitTimeForShowIcon = 0;
+    static waitTimeForShowIcon = 1500;
     // 相机近地面距离
     static nearDistance = 400;
     // 相机远地面距离
@@ -26,7 +30,7 @@ export class MapConfiguration {
     static flyEndShowAllMarks = true;
 
     // 正常路线宽度
-    static normalLineWidth = 7;
+    static normalLineWidth = 3;
     // 高亮路线宽度
     static highLineWidth = 35;
     // 路线最大id
