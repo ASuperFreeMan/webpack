@@ -33,7 +33,7 @@ export class AutoCreatePipeLine {
         this.dracoLibUrl = urls.dracoLibUrl
         this.yuanzhutu = urls.yuanzhutu
         this.stationNamePictureUrl = urls.stationNamePictureUrl
-
+        this.pipeline_state = 0
         this.renderInterval;
         this.progressBarTimer;
         const self = this;
@@ -66,21 +66,54 @@ export class AutoCreatePipeLine {
 
     //显示管道流向
     showFlowTo(urlImg1, urlImg2) {
-        // this.addGateway()
+        // this.hideRoad.showFlowTo(this.pipeline_all, urlImg1, urlImg2)
+        this.pipeline_state = 1
+        for (let i = 0; i < this.pipeline_all.length; i++) {
+            if (this.pipeline_all[i].userData.elevationDifference > 0) {
+                this.textureTool.addRepetitiveTexture(this.pipeline_all[i], urlImg2, 0.04, 1)
+            }
+            if (this.pipeline_all[i].userData.elevationDifference < 0) {
+                this.textureTool.addRepetitiveTexture(this.pipeline_all[i], urlImg1, -0.04, 1)
+            }
+            if (this.pipeline_all[i].userData.elevationDifference == 0) {
+                this.textureTool.addRepetitiveTexture(this.pipeline_all[i], urlImg1, 0, 1)
+            }
+        }
 
-        this.hideRoad.showFlowTo(this.pipeline_all, urlImg1, urlImg2)
+
         const self = this;
         this.renderInterval = setInterval(function () {
+            for (let i = 0; i < self.pipeline_all.length; i++) {
+                if (self.pipeline_all[i].userData.elevationDifference > 0) {
+                    self.pipeline_all[i].children[0].material.map.offset.x += 0.04
+                }
+                if (self.pipeline_all[i].userData.elevationDifference < 0) {
+                    self.pipeline_all[i].children[0].material.map.offset.x += -0.04
+                }
+                if (self.pipeline_all[i].userData.elevationDifference == 0) {
+                    self.pipeline_all[i].children[0].material.map.offset.x += 0.04
+                }
+            }
             self.bustard.core.render()
         }, 20)
     }
     //隐藏管道流向
     hideFlowTo() {
-        for (let i = 0; i < this.pipeline_all.length; i++) {
-            this.pipeline_all[i].parent.remove(this.pipeline_all[i])
+        const self = this;
+        if (this.pipeline_state == 1) {
+            for (let i = 0; i < this.pipeline_all.length; i++) {
+                // console.log(this.pipeline_all[i])
+                this.pipeline_all[i].children[0].geometry.dispose()
+                this.pipeline_all[i].children[0].material.map.dispose()
+                this.pipeline_all[i].children[0].material.dispose()
+                this.pipeline_all[i].parent.remove(this.pipeline_all[i])
+                self.bustard.core.getScene().remove(this.pipeline_all[i].parent)
+            }
+            this.createPipeModels()
+            clearInterval(this.renderInterval)
+            this.pipeline_state = 0
         }
-        this.createPipeModels()
-        clearInterval(this.renderInterval)
+
     }
 
     //显示路面
@@ -184,7 +217,7 @@ export class AutoCreatePipeLine {
     //加载模型
     loadModels() {
         $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeIn()
-        this.addProgressBarTimer();
+        // this.addProgressBarTimer();
         const self = this;
         Promise.all([
             //加载管网模板
@@ -198,14 +231,17 @@ export class AutoCreatePipeLine {
             self.roam.lookAt(PipeNetworkConfig.TRANSITION_CAMERA.position, PipeNetworkConfig.TRANSITION_CAMERA.target);
             //加载路牌
             self.loader.gltfLoadByUrls(self.roadSignsUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = "80px";
                 //加载地面
                 self.loader.gltfLoadByUrl(self.groundUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                     //压低地面
                     value.position.set(0, -0.22, 0)
+                    document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = "160px";
                     //加载cd和标线
                     self.loader.gltfLoadByUrls(self.CDAndBXUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                         //加载玻璃体
                         self.loader.gltfLoadByUrl(self.BLTUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                            document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = "320px";
                             console.log(value)
                             // console.log(value.children[0].children[0])
                             value.children[0].children[0].children[2].material.transparent = true
@@ -230,6 +266,7 @@ export class AutoCreatePipeLine {
 
                             //加载建筑
                             self.loader.gltfLoadByUrls(self.floorUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
+                                document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = "600px";
                                 //加载其他（树）
                                 self.loader.gltfLoadByUrls(self.otherUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                                     //创建管网
@@ -242,7 +279,7 @@ export class AutoCreatePipeLine {
                                         self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
                                     }
                                     //清除进度条
-                                    clearInterval(self.progressBarTimer);
+                                    // clearInterval(self.progressBarTimer);
                                     document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = PipeNetworkConfig.PROGRESS_BAR_WIDTH_MAX;
                                     $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeOut();
                                     self.addGateway()
@@ -471,7 +508,6 @@ export class AutoCreatePipeLine {
 
     //控制地面透明度
     adjustRoadTransparency(transparency) {
-        console.log("传进来： " + transparency)
         if (transparency == 0) {
             this.hideRoad.hideRoad()
         } else {
