@@ -101,6 +101,7 @@ export class AutoCreatePipeLine {
     hideFlowTo() {
         const self = this;
         if (this.pipeline_state == 1) {
+            clearInterval(this.renderInterval)
             for (let i = 0; i < this.pipeline_all.length; i++) {
                 // console.log(this.pipeline_all[i])
                 this.pipeline_all[i].children[0].geometry.dispose()
@@ -110,7 +111,6 @@ export class AutoCreatePipeLine {
                 self.bustard.core.getScene().remove(this.pipeline_all[i].parent)
             }
             this.createPipeModels()
-            clearInterval(this.renderInterval)
             this.pipeline_state = 0
         }
 
@@ -270,10 +270,10 @@ export class AutoCreatePipeLine {
                                 //加载其他（树）
                                 self.loader.gltfLoadByUrls(self.otherUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                                     //创建管网
-                                    self.createWellModels();
-                                    self.createPipeModels();
-                                    //隐藏管网模板
-                                    self.hidePipeNetworkTemplate();
+                                    // self.createWellModels();
+                                    // self.createPipeModels();
+                                    // // //隐藏管网模板
+                                    // self.hidePipeNetworkTemplate();
                                     //移动相机到巡检起始位置
                                     if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
                                         self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);
@@ -282,8 +282,8 @@ export class AutoCreatePipeLine {
                                     // clearInterval(self.progressBarTimer);
                                     document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = PipeNetworkConfig.PROGRESS_BAR_WIDTH_MAX;
                                     $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeOut();
-                                    self.addGateway()
-                                    self.addStationNameCanvas()
+                                    // self.addGateway()
+                                    // self.addStationNameCanvas()
 
                                 })
 
