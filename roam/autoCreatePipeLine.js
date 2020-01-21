@@ -282,8 +282,8 @@ export class AutoCreatePipeLine {
                                     // clearInterval(self.progressBarTimer);
                                     document.getElementById(PipeNetworkConfig.PROGRESS_BAR_FILL_ID).style.width = PipeNetworkConfig.PROGRESS_BAR_WIDTH_MAX;
                                     $(PipeNetworkConfig.PROGRESS_BAR_CLASS_NAME).fadeOut();
-                                    // self.addGateway()
-                                    // self.addStationNameCanvas()
+                                    self.addGateway()
+                                    self.addStationNameCanvas()
 
                                 })
 
