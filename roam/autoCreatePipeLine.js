@@ -270,10 +270,10 @@ export class AutoCreatePipeLine {
                                 //加载其他（树）
                                 self.loader.gltfLoadByUrls(self.otherUrl, PipeNetworkConfig.ARCHITECTURE_MODEL_PREFIX, false).then(value => {
                                     //创建管网
-                                    // self.createWellModels();
-                                    // self.createPipeModels();
-                                    // // //隐藏管网模板
-                                    // self.hidePipeNetworkTemplate();
+                                    self.createWellModels();
+                                    self.createPipeModels();
+                                    // //隐藏管网模板
+                                    self.hidePipeNetworkTemplate();
                                     //移动相机到巡检起始位置
                                     if (self.x !== undefined && self.z !== undefined && self.id !== undefined) {
                                         self.trajectoryFreeroam.startByParam(self.x, self.z, self.id);

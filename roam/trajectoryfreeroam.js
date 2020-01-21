@@ -56,6 +56,8 @@ export class TrajectoryFreeroam {
 
         // 记录之前相机状态
         this.oldState;
+
+        this.initTheRelationOfVertexsToCoords();
     }
 
     // 移除鼠标事件和键盘事件
@@ -93,14 +95,16 @@ export class TrajectoryFreeroam {
             this.roam.lookAt(
                 curPoint, nextPoint
             );
-            this.moveDirection = [cur, next];
+            this.moveDirection.length = 0;
+            this.moveDirection.push(cur, next);
         } else {
             newCoords[0][0].y = this.positionY;
             newCoords[0][1].y = this.targetY;
             this.roam.lookAt(
                 newCoords[0][0], newCoords[0][1]
             );
-            this.moveDirection = ["0[0]", "0[1]"];
+            this.moveDirection.length = 0;
+            this.moveDirection.push("0[0]", "0[1]");
         }
 
         this.theta = Math.atan((this.roam.curTarget().z - this.roam.curPosition().z) / (this.roam.curTarget().x - this.roam.curPosition().x));
@@ -108,7 +112,7 @@ export class TrajectoryFreeroam {
         // 移除cameraControls中的监听事件
         this.pick.getCore().removeAllListenerEventsFromCameraControls();
 
-        this.initTheRelationOfVertexsToCoords();
+        // this.initTheRelationOfVertexsToCoords();
         this.addEvents();
     }
 
@@ -121,6 +125,7 @@ export class TrajectoryFreeroam {
     // 初始化顶点和坐标之间的关系
     initTheRelationOfVertexsToCoords() {
 
+        this.vertexs = null;
         this.vertexs = new Graph();
 
         for (let i in newCoords) {
@@ -129,6 +134,7 @@ export class TrajectoryFreeroam {
             }
         }
 
+        this.graph = null;
         this.graph = new Graph();
 
         let n = 1;
@@ -170,7 +176,8 @@ export class TrajectoryFreeroam {
                 if (!this.atForkRoadRotateFlag) {
                     let from = this.moveDirection[1];
                     let to = this.moveDirection[0];
-                    this.moveDirection = [from, to];
+                    this.moveDirection.length = 0;
+                    this.moveDirection.push(from, to);
                 }
                 this.changeFlag = false;
             }
@@ -183,7 +190,8 @@ export class TrajectoryFreeroam {
                 if (!this.atForkRoadRotateFlag) {
                     let from = this.moveDirection[1];
                     let to = this.moveDirection[0];
-                    this.moveDirection = [from, to];
+                    this.moveDirection.length = 0;
+                    this.moveDirection.push(from, to);
                 }
                 this.changeFlag = false;
             }
@@ -225,7 +233,7 @@ export class TrajectoryFreeroam {
 
             let relatedCoords = JSON.parse(JSON.stringify(this.graph.getItem(this.moveDirection[1])));
 
-            this.nextCoordsCode = [];
+            this.nextCoordsCode.length = 0;
 
             // 通过前进方向排除之前走过的点
             for (let i = 0; i < relatedCoords.length; i++) {
@@ -262,7 +270,8 @@ export class TrajectoryFreeroam {
 
                     let from = this.moveDirection[1];
                     let to = this.nextCoordsCode[0];
-                    this.moveDirection = [from, to];
+                    this.moveDirection.length = 0;
+                    this.moveDirection.push(from, to);
                 }
 
             } else if (this.nextCoordsCode.length === 0) { //到达终点
@@ -466,7 +475,8 @@ export class TrajectoryFreeroam {
 
             let from = this.moveDirection[1];
             let to = finalKey;
-            this.moveDirection = [from, to];
+            this.moveDirection.length = 0;
+            this.moveDirection.push(from, to);
             this.nextCoordsCode = [to];
             this.changeFlag = false;
             this.theta = Math.atan((this.roam.curTarget().z - this.roam.curPosition().z) / (this.roam.curTarget().x - this.roam.curPosition().x));
@@ -587,7 +597,8 @@ export class TrajectoryFreeroam {
                 this.nextCoordsCode = [resultLengthCode];
                 let from = this.moveDirection[1];
                 let to = this.nextCoordsCode[0];
-                this.moveDirection = [from, to];
+                this.moveDirection.length = 0;
+                this.moveDirection.push(from, to);
 
                 this.atForkRoadRotateFlag = false;
                 this.changeFlag = false;
@@ -656,7 +667,8 @@ export class TrajectoryFreeroam {
         // 逆转移动方向记录
         let from = this.moveDirection[1];
         let to = this.moveDirection[0];
-        this.moveDirection = [from, to];
+        this.moveDirection.length = 0;
+        this.moveDirection.push(from, to);
 
         // 更改前进的下一个点
         this.nextCoordsCode = [this.moveDirection[1]];
