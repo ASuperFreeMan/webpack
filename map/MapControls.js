@@ -1,0 +1,705 @@
+import { MapConfiguration } from './mapConfiguration';
+import { MarkConfig } from './MarkConfig';
+
+export class MapControls {
+
+  constructor(cesiumContainer) {
+    this.viewer = new Cesium.Viewer(cesiumContainer, {
+      geocoder: false, //是否显示地名查找控件
+      homeButton: false, //是否显示Home按钮
+      sceneModePicker: false, //是否显示投影方式控件
+      baseLayerPicker: false, //是否显示图层选择控件
+      navigationHelpButton: false, //是否显示帮助信息控件
+
+      animation: false,  // 是否创建“动画”窗口小部件
+      timeline: false, //是否显示时间线控件
+      fullscreenButton: false, //是否显示全屏按钮
+
+      scene3DOnly: true, // 每个几何实例仅以3D渲染以节省GPU内存
+      infoBox: false, //隐藏点击要素后的提示信息
+
+      selectionIndicator: false // 关闭点击绿色框
+    });
+
+    //隐藏版权信息
+    this.viewer._cesiumWidget._creditContainer.style.display = "none";
+
+    // 相机是否倾斜
+    this.tiltFlag;
+
+    if (MapConfiguration.cameraTiltDegree != 90) {
+      this.tiltFlag = true;
+    }
+
+    this.flyEndShowRoute = MapConfiguration.flyEndShowRoute;
+    this.flyEndShowAllMarks = MapConfiguration.flyEndShowAllMarks;
+
+    // 相机近地面距离
+    this.nearDistance = MapConfiguration.nearDistance;
+    // 相机远地面距离
+    this.farDistance = MapConfiguration.farDistance;
+    // 开始位置
+    this.startPosition = MapConfiguration.startPosition;
+    // 默认泰州位置
+    this.defaultPosition = { x: this.startPosition.x, y: this.startPosition.y, z: this.farDistance };
+    // 图标实体集合
+    this.markEntities = [];
+    // 高亮路线对象
+    this.polylineDataSource;
+    // 管线图标集合
+    this.pipelineMarkEntities = [];
+    // 发光图片集合
+    this.lightImgEntities = [];
+
+    // 正常路线宽度
+    this.normalLineWidth = MapConfiguration.normalLineWidth;
+    // 高亮路线宽度
+    this.highLineWidth = MapConfiguration.highLineWidth;
+    // 记录上一个nameID
+    this.oldHighLineNameID;
+
+    // 左击事件
+    this.leftClickHandler;
+
+    this.init();
+
+    // 取消拖动事件
+    this.viewer.scene.screenSpaceCameraController.enableRotate = false;
+    // 取消滚轮事件
+    this.viewer.scene.screenSpaceCameraController.enableZoom = false;
+    // 取消双击默认效果
+    this.viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+    // 不允许倾斜相机
+    this.viewer.scene.screenSpaceCameraController.enableTilt = false;
+  }
+
+
+
+  // 开启渲染循环
+  openRenderLoop() {
+    this.viewer.useDefaultRenderLoop = true;
+  }
+
+  // 关闭渲染循环
+  closeRenderLoop() {
+    this.viewer.useDefaultRenderLoop = false;
+  }
+
+  // 取消拖动
+  removeMapDrag() {
+    this.viewer.scene.screenSpaceCameraController.enableRotate = false;
+  }
+
+  // 取消滚动
+  removeMapWheel() {
+    this.viewer.scene.screenSpaceCameraController.enableZoom = false;
+  }
+
+  // 添加拖动
+  addMapDrag() {
+    this.viewer.scene.screenSpaceCameraController.enableRotate = true;
+  }
+
+  // 添加滚动
+  addMapWheel() {
+    this.viewer.scene.screenSpaceCameraController.enableZoom = true;
+  }
+
+  // 左键点击事件
+  setLeftClickAction(callback) {
+    if (this.leftClickHandler !== undefined) {
+      this.leftClickHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    }
+    this.leftClickHandler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
+    const self = this;
+    this.leftClickHandler.setInputAction(function (click) {
+      //获取地形表面的经纬度高程坐标
+      // let ray = self.viewer.camera.getPickRay(click.position);
+      // let cartesian = self.viewer.scene.globe.pick(ray, self.viewer.scene);
+      // let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+      // let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
+      // let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
+      // let cartographic = self.viewer.camera.positionCartographic;
+      // let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
+      // let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
+      // console.log(lng + "," + lat)
+
+      let position = JSON.parse(JSON.stringify(click.position));
+      // position.x = position.x * 2744 / $(window).width();
+      // position.y = position.y * 1134 / $(window).height();
+
+      // 获取模型表面的经纬度高程坐标
+      let pickedFeature = self.viewer.scene.pick(position);
+      if (pickedFeature !== undefined && pickedFeature.id._name == "mark" && !pickedFeature.id._id.startsWith(MapConfiguration.pipeLineIdStart) && !pick.id._id.startsWith(MapConfiguration.lightImgIdStart)) {
+        let cartesian = new Cesium.Cartesian3(pickedFeature.id._position._value.x, pickedFeature.id._position._value.y, pickedFeature.id._position._value.z);
+        let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+        let lng = Cesium.Math.toDegrees(cartographic.longitude);
+        let lat = Cesium.Math.toDegrees(cartographic.latitude);
+        // console.log(lng + ", " + lat)
+        self.flyTo(lng, lat, self.nearDistance, undefined, undefined, "near");
+        if (callback !== undefined) {
+          let id = pickedFeature.id._id; // 此处id为图标id
+          callback(id);
+        }
+      }
+
+      let nameId; // 此处nameId为点击获取的路线id
+      if (pickedFeature !== undefined && pickedFeature.id._id.startsWith(MapConfiguration.lightImgIdStart)) {
+        nameId = pickedFeature.id._id.substring(pickedFeature.id._id.indexOf('_') + 1);
+      } else if (pickedFeature !== undefined && pickedFeature.id.nameID !== undefined) {
+        nameId = pickedFeature.id.nameID;
+      }
+
+      if (callback !== undefined && nameId !== undefined && nameId <= MapConfiguration.lineMaxId) {
+        // 1经度对应3D模型坐标X轴的长度 => lngToObject3DX
+        // 1纬度对应3D模型坐标Z轴的长度 => latToObject3DZ
+        const lngToObject3DX = MapConfiguration.lngToObject3DX, latToObject3DZ = MapConfiguration.latToObject3DZ;
+        // 3D模型坐标系的原点对应经纬度
+        const origin = MapConfiguration.origin;
+        // 获取鼠标点击位置经纬度
+        let ray = self.viewer.camera.getPickRay(click.position);
+        let cartesian = self.viewer.scene.globe.pick(ray, self.viewer.scene);
+        let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+        let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
+        let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
+        // console.log("经度：" + lng + ", 纬度： " + lat)
+        // 将经纬度转换成3D模型坐标
+        let x = lngToObject3DX * (lng - origin.x);
+        let z = latToObject3DZ * (lat - origin.z);
+        let param = "x=" + x + "&z=" + z + "&id=" + nameId;
+        // console.log("param: ........." + param)
+        callback(param);
+      }
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+  }
+
+  // hover事件
+  setMouseHoverAction() {
+    let handler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
+    const self = this;
+    handler.setInputAction(function (movement) {
+      let position = JSON.parse(JSON.stringify(movement.endPosition));
+      // position.x = position.x * 2744 / $(window).width();
+      // position.y = position.y * 1134 / $(window).height();
+      let pickedFeature = self.viewer.scene.pick(position);
+      if (pickedFeature !== undefined) {
+        let nameId;
+        if (pickedFeature.id.nameID !== undefined) {
+          nameId = pickedFeature.id.nameID;
+        } else if (pickedFeature.id._id.startsWith(MapConfiguration.lightImgIdStart)) {
+          nameId = pickedFeature.id._id.substring(pickedFeature.id._id.indexOf('_') + 1);
+        }
+        if (nameId <= MapConfiguration.lineMaxId) {
+          self.changeHighLightLineStateByNameID(nameId);
+        }
+      } else {
+        self.changeHighLightLineStateByNameID();
+      }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+  }
+
+  // 初始化配置
+  init() {
+    this.setMouseHoverAction();
+  }
+
+  // 销毁配置
+  destroy() {
+
+  }
+
+  // 设置管网感知主视角
+  setPipeNetworkPerceptionMainView() {
+    this.flyTo(MapConfiguration.pipeNetworkPerceptionMainView.lng, MapConfiguration.pipeNetworkPerceptionMainView.lat, this.farDistance);
+    this.setDefaultPosition(this.startPosition.x, this.startPosition.y);
+  }
+
+  // 设置泵站监控主视角
+  setPumpStationMonitoringMainView() {
+    this.flyTo(MapConfiguration.pumpStationMonitoringMainView.lng, MapConfiguration.pumpStationMonitoringMainView.lat, this.farDistance);
+    this.setDefaultPosition(this.startPosition.x, this.startPosition.y);
+  }
+
+  // 设置自由巡检主视角
+  setFreeRoamMainView() {
+    this.flyTo(MapConfiguration.freeRoamMainView.lng, MapConfiguration.freeRoamMainView.lat, this.farDistance);
+    this.setDefaultPosition(MapConfiguration.freeRoamMainView.lng, MapConfiguration.freeRoamMainView.lat);
+  }
+
+  // 设置默认位置
+  setDefaultPosition(lng, lat) {
+    this.defaultPosition.x = lng;
+    this.defaultPosition.y = lat;
+  }
+
+  // 相机飞行到泰州市海陵区默认位置
+  earthRolling(isVisible) {
+    let oldTiltFlag = this.tiltFlag;
+    // 当前相机高度超过规定高度，需要垂直于地面
+    let cartographic = this.viewer.camera.positionCartographic;
+    let height = cartographic.height;
+
+    if (height > MapConfiguration.cameraTiltMaxHight) {
+      this.tiltFlag = false;
+    }
+
+    if (isVisible) {
+      const self = this;
+      this.setDefaultPosition(this.startPosition.x, this.startPosition.y);
+      this.flyTo(this.defaultPosition.x, this.defaultPosition.y, height, function () {
+        self.flyTo(self.defaultPosition.x, self.defaultPosition.y, self.defaultPosition.z, function () {
+          if (oldTiltFlag) {
+            self.tiltFlag = true;
+            self.flyTo(self.defaultPosition.x, self.defaultPosition.y, self.defaultPosition.z, function () {
+              setTimeout(function () {
+                if (self.flyEndShowRoute) {
+                  self.showRoute();
+                }
+                if (self.flyEndShowAllMarks) {
+                  self.showAllMarks();
+                }
+              }, MapConfiguration.waitTimeForShowIcon);
+            })
+          } else {
+            setTimeout(function () {
+              if (self.flyEndShowRoute) {
+                self.showRoute();
+              }
+              if (self.flyEndShowAllMarks) {
+                self.showAllMarks();
+              }
+            }, MapConfiguration.waitTimeForShowIcon);
+          }
+        }, MapConfiguration.flightTime);
+      });
+    } else {
+      if (oldTiltFlag) {
+        this.tiltFlag = true;
+      }
+      this.flyTo(this.defaultPosition.x, this.defaultPosition.y, this.defaultPosition.z);
+    }
+  }
+
+  hideEarth() {
+    this.viewer.scene.globe.show = false;
+  }
+
+  showEarth() {
+    this.viewer.scene.globe.show = true;
+  }
+
+  // 设置地图
+  setMap(url, layers) {
+    // 移除所有影像图层
+    this.viewer.imageryLayers.removeAll();
+    // let imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
+    //     url: url,
+    //     tilingScheme: new Cesium.WebMercatorTilingScheme(),
+    //     maximumLevel: 20
+    // });
+
+    // let imageryProvider = new Cesium.WebMapServiceImageryProvider({
+    //     url: url,
+    //     layers: layers,
+    //     crs: "EPSG:3785",
+    //     tilingScheme: new Cesium.WebMercatorTilingScheme(),
+    //     parameters: {
+    //         service: 'WMS',
+    //         format: 'image/jpeg',
+    //         transparent: true,
+    //     }
+    // });
+
+    // this.viewer.imageryLayers.addImageryProvider(imageryProvider);
+
+    this.viewer.imageryLayers.addImageryProvider(new Cesium.UrlTemplateImageryProvider({
+      url: url,
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 20
+    }));
+  }
+
+  // 飞行到指定位置
+  flyTo(lng, lat, height, callback, duration, distanceState) {
+    // let cartographic = this.viewer.camera.positionCartographic;
+    // 偏差值
+    let deviation;
+    if (distanceState == "near") {
+      deviation = lat - MapConfiguration.nearDistanceDeviation;
+    } else if (distanceState == "normal") {
+      deviation = lat;
+    } else {
+      deviation = lat - MapConfiguration.farDistanceDeviation;
+    }
+
+    let pitch = -90;
+    if (this.tiltFlag) {
+      pitch = MapConfiguration.cameraTiltDegree;
+    }
+    this.viewer.scene.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(lng, deviation, height), // 点的坐标
+      orientation: {
+        heading: Cesium.Math.toRadians(0.0),      // east, default value is 0.0 (north)
+        pitch: Cesium.Math.toRadians(pitch),     // default value (looking down)
+        roll: 0.0                               // default value
+      },
+      duration: duration,
+      complete: function () {
+        if (callback !== undefined) {
+          callback();
+        }
+      }
+    });
+  }
+
+  // 设置相机位置
+  setView(lng, lat, height, distance) {
+    // 偏差值
+    let deviation = lat - MapConfiguration.farDistanceDeviation;
+    const self = this;
+    this.viewer.scene.camera.setView({
+      destination: Cesium.Cartesian3.fromDegrees(lng, deviation, height), // 点的坐标
+      orientation: {
+        heading: Cesium.Math.toRadians(0.0), // east, default value is 0.0 (north)
+        pitch: Cesium.Math.toRadians(MapConfiguration.cameraTiltDegree),
+        roll: 0.0                             // default value
+      },
+      complete: function () {
+        if (distance !== undefined) {
+          this.viewer.scene.camera.moveBackward(distance);
+        }
+        self.setDefaultPosition(lng, lat);
+      }
+    });
+  }
+
+  // 添加一个图标
+  addMark(id, position, label, billboard) {
+    let entity = this.viewer.entities.add({
+      id: id,
+      name: "mark",
+      position: Cesium.Cartesian3.fromDegrees(position.lng, position.lat, 0),
+      label: label !== undefined ? {
+        text: label.text,
+        font: label.font !== undefined ? label.font : '15px monospace 黑体',
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        showBackground: true,
+        backgroundPadding: label.backgroundPadding !== undefined ? new Cesium.Cartesian2(label.backgroundPadding.x, label.backgroundPadding.y) : new Cesium.Cartesian2(7, 5),
+        backgroundColor: label.backgroundColor !== undefined ? Cesium.Color.fromCssColorString(label.backgroundColor.color).withAlpha(label.backgroundColor.alpha != undefined ? label.backgroundColor.alpha : 1) : Cesium.Color.BLACK,
+        fillColor: label.fillColor !== undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha != undefined ? label.fillColor.alpha : 1) : Cesium.Color.WHITE,
+        outlineColor: label.outlineColor !== undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha != undefined ? label.outlineColor.alpha : 1) : Cesium.Color.WHITE,
+        outlineWidth: label.outlineWidth !== undefined ? label.outlineWidth : 0,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfiguration.cameraTiltMaxHight),
+        eyeOffset: new Cesium.Cartesian3(0, 0, -100)
+      } : {},
+      billboard: billboard !== undefined ? {
+        image: billboard.uri,
+        width: billboard.width !== undefined ? billboard.width : 700,
+        height: billboard.height !== undefined ? billboard.height : 500,
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfiguration.cameraTiltMaxHight)
+      } : {}
+    });
+    entity.show = false;
+    if (id.startsWith(MapConfiguration.pipeLineIdStart)) {
+      this.pipelineMarkEntities.push(entity);
+    } else if (id.startsWith(MapConfiguration.lightImgIdStart)) {
+      this.lightImgEntities.push(entity);
+    } else {
+      this.markEntities.push(entity);
+    }
+    // console.log("图标" + id + "生成了");
+
+  }
+
+  // 通过给定配置新增一个图标
+  addSimpleMark1ByConfig(id, name, text, state) {
+    if (state == undefined) {
+      state = "normal";
+    }
+    let markConfig = new MarkConfig();
+    markConfig.simpleMark1Config.billboard.uri = markConfig.getSimpleMarK1ImgUriByState(state);
+    markConfig.simpleMark1Config.label.text = text;
+    this.addMark(id, markConfig.getPumpPositionByName(name), markConfig.simpleMark1Config.label, markConfig.simpleMark1Config.billboard);
+  }
+
+  // 通过给定配置新增一个图标
+  addSimpleMark2ByConfig(id, text, state) {
+    if (state == undefined) {
+      state = "0";
+    }
+    let markConfig = new MarkConfig();
+    markConfig.simpleMark2Config.billboard.uri = markConfig.getSimpleMarK2ImgUriByState(state);
+    markConfig.simpleMark2Config.label.text = text;
+    this.addMark(id, markConfig.getPipeNetworkPition(), markConfig.simpleMark2Config.label, markConfig.simpleMark2Config.billboard);
+  }
+
+  // 通过给定配置新增一个图标
+  addSimpleMark3ByConfig(id, name) {
+    let markConfig = new MarkConfig();
+    this.addMark(id, markConfig.sewagePlantPosition, undefined, markConfig.simpleMark3Config.billboard);
+  }
+
+  addComplexMark1ByConfig(id, name, leftText, middleTextList, rightTextList, state) {
+    if (state == undefined) {
+      state = "normal";
+    }
+    let markConfig = new MarkConfig();
+    markConfig.complexMark1Config.markMain.label.text =
+      leftText.length >= markConfig.complexMark1LeftTextLineFeedLength ? leftText.substring(0, markConfig.complexMark1LeftTextLineFeedLength) +
+        "\n" + leftText.substring(markConfig.complexMark1LeftTextLineFeedLength) : leftText;
+    markConfig.complexMark1Config.markMain.billboard.uri = markConfig.getComplexMarK1ImgUriByState(state);
+    this.addMark(id, markConfig.getPumpPositionByName(name), markConfig.complexMark1Config.markMain.label, markConfig.complexMark1Config.markMain.billboard);
+    for (let key in middleTextList) {
+      markConfig.complexMark1Config.mark1.label.text = middleTextList[middleTextList.length - 1 - key] + ":";
+      markConfig.complexMark1Config.mark1.label.pixelOffset.offSetY = -52 + key * -17;
+      markConfig.complexMark1Config.mark2.label.text = rightTextList[rightTextList.length - 1 - key]
+      markConfig.complexMark1Config.mark2.label.pixelOffset.offSetY = -52 + key * -17;
+      this.addMark(id + "markMiddle" + key, markConfig.getPumpPositionByName(name), markConfig.complexMark1Config.mark1.label, markConfig.complexMark1Config.mark1.billboard);
+      this.addMark(id + "markRight" + key, markConfig.getPumpPositionByName(name), markConfig.complexMark1Config.mark2.label, markConfig.complexMark1Config.mark2.billboard);
+    }
+
+  }
+
+
+
+  // 批量添加图标
+  addMarkList(markData) {
+    if (Object.prototype.toString.call(markData) == '[object Array]') {
+      for (let i in markData) {
+        let mark = markData[i];
+        this.addMark(mark.id, mark.position, mark.label, mark.billboard);
+      }
+    }
+  }
+
+  // 展示所有图标
+  showAllMarks() {
+    for (let i = 0; i < this.markEntities.length; i++) {
+      this.markEntities[i].show = true;
+      // console.log("图标" + i + "显示了")
+    }
+  }
+
+  // 隐藏所有图标
+  hideAllMarks() {
+    for (let i = 0; i < this.markEntities.length; i++) {
+      this.markEntities[i].show = false;
+    }
+  }
+
+  // 批量更新图标数据
+  updateMarkList(entityList) {
+    if (Object.prototype.toString.call(entityList) == '[object Array]') {
+      for (let i = 0; i < entityList.length; i++) {
+        let curEntity = entityList[i];
+        let cesiumEntity = this.viewer.entities.getById(curEntity.id);
+        if (cesiumEntity != undefined) {
+          if (curEntity.label != undefined && curEntity.label.text != undefined && cesiumEntity.label.text._value != curEntity.label.text) {
+            cesiumEntity.label.text._value = curEntity.label.text;
+          }
+          if (curEntity.label != undefined && curEntity.label.fillColor != undefined) {
+            cesiumEntity.label.fillColor = Cesium.Color.fromCssColorString(curEntity.label.fillColor.color).withAlpha(curEntity.label.fillColor.alpha != undefined ? curEntity.label.fillColor.alpha : 1);
+          }
+          if (curEntity.billboard != undefined && curEntity.billboard.uri != undefined && cesiumEntity.billboard.image._value != curEntity.billboard.uri) {
+            cesiumEntity.billboard.image._value = curEntity.billboard.uri;
+          }
+        }
+
+      }
+    }
+  }
+
+  // 通过id更新图标图片
+  updateMarkImgById(id, imgUrI) {
+    for (let i = 0; i < this.markEntities.length; i++) {
+      if (this.markEntities[i].id == id) {
+        let curEntity = this.viewer.entities.getById(id);
+        this.markEntities[i].billboard.image._value = imgUrI;
+        curEntity.billboard.image._value = imgUrI;
+        break;
+      }
+    }
+  }
+
+  // 通过id获取图标图片地址
+  getMarkImgById(id) {
+    for (let i = 0; i < this.markEntities.length; i++) {
+      if (this.markEntities[i].id == id) {
+        return this.markEntities[i].billboard.image._value;
+      }
+    }
+    return null;
+  }
+
+
+  // 通过id移除图标
+  removeMarkById(id) {
+    for (var i = 0; i < this.markEntities.length; i++) {
+      if (this.markEntities[i].id == id) {
+        this.viewer.entities.remove(this.markEntities[i]);
+        break;
+      }
+    }
+    this.markEntities.splice(i, 1);
+  }
+
+  // 移除所有图标
+  removeAllMark() {
+    for (var i = 0; i < this.markEntities.length; i++) {
+      this.viewer.entities.remove(this.markEntities[i]);
+    }
+    this.markEntities.length = 0;
+  }
+
+  // 添加高亮路线
+  addHighlightRoute(url) {
+    let geojsonOptions = {
+      clampToGround: true
+    };
+    // 从geojson文件加载管线
+    let neighborhoodsPromise = Cesium.GeoJsonDataSource.load(url, geojsonOptions);
+    const self = this;
+    neighborhoodsPromise.then(function (dataSource) {
+      self.viewer.dataSources.add(dataSource);
+      self.polylineDataSource = dataSource;
+      let entities = dataSource.entities.values;
+
+      for (let i = 0; i < entities.length; i++) {
+        let r = entities[i];
+        r.show = false;
+        r.nameID = i;   //给每条线添加一个编号，方便之后对线修改样式
+        if (i <= MapConfiguration.lineMaxId) {
+          r.polyline.width = self.normalLineWidth;
+          r.polyline.material = Cesium.Color.fromCssColorString("#FFAE00");
+        } else {
+          r.polyline.width = 0;
+          r.polyline.material = Cesium.Color.fromCssColorString("#DCDCDC");
+        }
+        r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfiguration.cameraTiltMaxHight);
+        // 设置这个属性让多边形贴地，ClassificationType.CESIUM_3D_TILE 是贴模型，ClassificationType.BOTH是贴模型和贴地
+        // entity.polygon.classificationType = Cesium.ClassificationType.TERRAIN; // 这个配置会引起不知名异常，接下来的代码不执行
+      }
+    });
+
+    if (Object.prototype.toString.call(MapConfiguration.pipeLineIconImgUris) == '[object Array]') {
+      let positions = MapConfiguration.pipeLineIconPositions;
+      for (let i = 0; i < MapConfiguration.pipeLineIconImgUris.length; i++) {
+        this.addMark(MapConfiguration.pipeLineIdStart + i, positions[i], undefined, {
+          uri: MapConfiguration.pipeLineIconImgUris[i],
+          width: MapConfiguration.pipeLineIconWidth,
+          height: MapConfiguration.pipeLineIconHeight
+        })
+      }
+    }
+
+    if (Object.prototype.toString.call(MapConfiguration.lightImgUris) == '[object Array]') {
+      let positions = MapConfiguration.lightImgPositions;
+      let lightImgSizes = MapConfiguration.lightImgSizes;
+      for (let i = 0; i < positions.length; i++) {
+        this.addMark(MapConfiguration.lightImgIdStart + i, positions[i], undefined, {
+          uri: MapConfiguration.lightImgUris[i],
+          width: lightImgSizes[i].width,
+          height: lightImgSizes[i].height
+        });
+      }
+    }
+  }
+
+  showLightImgById(id) {
+    for (let i = 0; i < this.lightImgEntities.length; i++) {
+      if (this.lightImgEntities[i].id == MapConfiguration.lightImgIdStart + id) {
+        this.lightImgEntities[i].show = true;
+        break;
+      }
+    }
+  }
+
+  hideLightImgById(id) {
+    for (let i = 0; i < this.lightImgEntities.length; i++) {
+      if (this.lightImgEntities[i].id == MapConfiguration.lightImgIdStart + id) {
+        this.lightImgEntities[i].show = false;
+        break;
+      }
+    }
+  }
+
+  // 移到管线上时管线高亮，移出时管线正常
+  changeHighLightLineStateByNameID(nameId) {
+    if (nameId !== undefined && nameId !== this.oldHighLineNameID) {
+      // this.setLineMaterial(nameId, "highlight");
+      // this.setLineMaterial(this.oldHighLineNameID, "normal");
+      if (this.oldHighLineNameID !== undefined) {
+        this.hideLightImgById(this.oldHighLineNameID);
+      }
+      this.oldHighLineNameID = nameId;
+      this.showLightImgById(nameId);
+    } else {
+      if (this.oldHighLineNameID !== undefined) {
+        // this.setLineMaterial(this.oldHighLineNameID, "normal");
+        this.hideLightImgById(this.oldHighLineNameID);
+        this.oldHighLineNameID = undefined;
+      }
+    }
+  }
+
+  // 设置路线材质
+  setLineMaterial(nameid, material) {
+    if (this.polylineDataSource !== undefined) {
+      let entities = this.polylineDataSource.entities.values;
+      if (material == "highlight") {
+        for (let o = 0; o < entities.length; o++) {
+          let m = entities[o];
+          if (nameid == o) {
+            m.polyline.width = this.highLineWidth;
+            m.polyline.material = new Cesium.PolylineGlowMaterialProperty({
+              glowPower: .1, //一个数字属性，指定发光强度，占总线宽的百分比。
+              color: Cesium.Color.fromCssColorString("#FFAE00").withAlpha(0.8)
+            })
+            break;
+          }
+        }
+      } else if (material == "normal") {
+        for (let o = 0; o < entities.length; o++) {
+          let m = entities[o];
+          if (nameid == o) {
+            m.polyline.width = this.normalLineWidth;
+            m.polyline.material = new Cesium.ColorMaterialProperty(
+              Cesium.Color.fromCssColorString("#FFAE00")
+            );
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  // 显示路线
+  showRoute() {
+    if (this.polylineDataSource !== undefined) {
+      let entities = this.polylineDataSource.entities.values;
+      for (let i = 0; i < entities.length; i++) {
+        entities[i].show = true;
+      }
+      for (let i = 0; i < this.pipelineMarkEntities.length; i++) {
+        this.pipelineMarkEntities[i].show = true;
+      }
+    }
+
+  }
+
+  // 隐藏路线
+  hideRoute() {
+    if (this.polylineDataSource !== undefined) {
+      let entities = this.polylineDataSource.entities.values;
+      for (let i = 0; i < entities.length; i++) {
+        entities[i].show = false;
+      }
+      for (let i = 0; i < this.pipelineMarkEntities.length; i++) {
+        this.pipelineMarkEntities[i].show = false;
+      }
+    }
+  }
+}
