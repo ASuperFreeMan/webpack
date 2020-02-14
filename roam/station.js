@@ -1079,7 +1079,7 @@ export function init(glburl, bgUrl, dracoUrl) {
     color.activeClick = false;
     textureTool = bustard.use(new Bustard.Texture());
     Promise.all([
-        loader.gltfLoadByUrl(glburl, 'station',true,true).then(value => {
+        loader.gltfLoadByUrl(glburl, 'station', true, true).then(value => {
             // console.log(value)
             STATION_MODEL_ALL = value.children[0].children
             // console.log(STATION_MODEL_ALL)
