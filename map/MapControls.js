@@ -17,7 +17,7 @@ export class MapControls {
 			navigationHelpButton: false, //是否显示帮助信息控件
 
 			animation: false,  // 是否创建“动画”窗口小部件
-			timeline: false, //是否显示时间线控件
+			// timeline: false, //是否显示时间线控件
 			fullscreenButton: false, //是否显示全屏按钮
 
 			scene3DOnly: true, // 每个几何实例仅以3D渲染以节省GPU内存
@@ -41,6 +41,7 @@ export class MapControls {
 		this.flyEndShowRoute = MapConfig.flyEndShowRoute;
 		this.flyEndShowAllMarks = MapConfig.flyEndShowAllMarks;
 
+		// 是否旋转过地球
 		this.isEarthRolling = false;
 		// 相机近地面距离
 		this.nearDistance = MapConfig.nearDistance;
@@ -75,7 +76,7 @@ export class MapControls {
 		this.oldHighLineNameID;
 
 		// 左击事件
-		this.leftClickHandler;
+		this.leftClickHandler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
 		// 鼠标移动事件
 		this.mouseHoverHandler;
 		// 旋转事件
@@ -84,6 +85,8 @@ export class MapControls {
 		this.arcGisMapLayer = 0;
 		// 旋转停止时间
 		this.clockStopTime = this.viewer.clock.stopTime;
+		// 默认时间
+		this.defaultTime = MapConfig.defaultTime;
 
 		// 四棱錐图标实体集合
 		this.pyramidMarkEntities = [];
@@ -148,7 +151,7 @@ export class MapControls {
 	// 左键点击事件
 	setLeftClickAction(callback) {
 		this.removeLeftClickAction();
-		this.leftClickHandler = new Cesium.ScreenSpaceEventHandler(this.viewer.canvas);
+
 		const self = this;
 		this.leftClickHandler.setInputAction(function (click) {
 			//获取地形表面的经纬度高程坐标
@@ -170,27 +173,27 @@ export class MapControls {
 
 			// 获取模型表面的经纬度高程坐标
 			let pickedFeature = self.viewer.scene.pick(position);
-			if (pickedFeature !== undefined && pickedFeature.id._name == "mark" && !pickedFeature.id._id.startsWith(MapConfig.pipeLineIdStart) && !pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
+			if (pickedFeature != undefined && pickedFeature.id._name == "mark" && !pickedFeature.id._id.startsWith(MapConfig.pipeLineIdStart) && !pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
 				let cartesian = new Cesium.Cartesian3(pickedFeature.id._position._value.x, pickedFeature.id._position._value.y, pickedFeature.id._position._value.z);
 				let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
 				let lng = Cesium.Math.toDegrees(cartographic.longitude);
 				let lat = Cesium.Math.toDegrees(cartographic.latitude);
 				// console.log(lng + ", " + lat)
 				self.flyTo(lng, lat, self.nearDistance, undefined, undefined, "near");
-				if (callback !== undefined) {
+				if (callback != undefined) {
 					let id = pickedFeature.id._id; // 此处id为图标id
 					callback(id);
 				}
 			}
 
 			let nameId; // 此处nameId为点击获取的路线id
-			if (pickedFeature !== undefined && pickedFeature.id._id && pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
+			if (pickedFeature != undefined && pickedFeature.id._id && pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
 				nameId = pickedFeature.id._id.substring(pickedFeature.id._id.indexOf('_') + 1);
-			} else if (pickedFeature !== undefined && pickedFeature.id.nameID !== undefined) {
+			} else if (pickedFeature != undefined && pickedFeature.id.nameID != undefined) {
 				nameId = pickedFeature.id.nameID;
 			}
 
-			if (callback !== undefined && nameId !== undefined && nameId <= MapConfig.lineMaxId) {
+			if (callback != undefined && nameId != undefined && nameId <= MapConfig.lineMaxId) {
 				// 1经度对应3D模型坐标X轴的长度 => lngToObject3DX
 				// 1纬度对应3D模型坐标Z轴的长度 => latToObject3DZ
 				const lngToObject3DX = MapConfig.lngToObject3DX, latToObject3DZ = MapConfig.latToObject3DZ;
@@ -214,7 +217,7 @@ export class MapControls {
 	}
 
 	removeLeftClickAction() {
-		if (this.leftClickHandler !== undefined) {
+		if (this.leftClickHandler != undefined) {
 			this.leftClickHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
 		}
 	}
@@ -229,9 +232,9 @@ export class MapControls {
 			// position.x = position.x * 2744 / $(window).width();
 			// position.y = position.y * 1134 / $(window).height();
 			let pickedFeature = self.viewer.scene.pick(position);
-			if (pickedFeature !== undefined) {
+			if (pickedFeature != undefined) {
 				let nameId;
-				if (pickedFeature.id.nameID !== undefined) {
+				if (pickedFeature.id.nameID != undefined) {
 					nameId = pickedFeature.id.nameID;
 				} else if (pickedFeature.id._id && pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
 					nameId = pickedFeature.id._id.substring(pickedFeature.id._id.indexOf('_') + 1);
@@ -254,6 +257,7 @@ export class MapControls {
 	// 初始化配置
 	init() {
 		// this.setMouseHoverAction();
+		// this.addDirectionalLight();
 	}
 
 	// 销毁配置
@@ -369,14 +373,15 @@ export class MapControls {
 		// 给定飞行一周所需时间，比如10s, 那么每秒转动度数
 		let angle = 360 / time;
 
-		let startTime = Cesium.JulianDate.fromDate(new Date());
+		let startTime = Cesium.JulianDate.fromDate(this.defaultTime);
 		// let stopTime = Cesium.JulianDate.addSeconds(startTime, time, new Cesium.JulianDate());
 
 		this.viewer.clock.startTime = startTime.clone();  // 开始时间
-		this.viewer.clock.stopTime = this.clockStopTime;     // 结速时间
+		this.viewer.clock.stopTime = this.clockStopTime;     // 结束时间
 		this.viewer.clock.currentTime = startTime.clone(); // 当前时间
 		this.viewer.clock.clockRange = Cesium.ClockRange.CLAMPED; // 行为方式
-		this.viewer.clock.clockStep = Cesium.ClockStep.SYSTEM_CLOCK; // 时钟设置为当前系统时间; 忽略所有其他设置。
+		this.viewer.clock.shouldAnimate = true;
+		// this.viewer.clock.clockStep = Cesium.ClockStep.SYSTEM_CLOCK  // 时钟设置为当前系统时间; 忽略所有其他设置。
 		// 相机的当前heading
 		let initialHeading = this.viewer.camera.heading;
 		const self = this;
@@ -548,7 +553,7 @@ export class MapControls {
 				roll: 0.0                             // default value
 			},
 			complete: function () {
-				if (distance !== undefined) {
+				if (distance != undefined) {
 					this.viewer.scene.camera.moveBackward(distance);
 				}
 				self.setDefaultPosition(lng, lat);
@@ -562,25 +567,25 @@ export class MapControls {
 			id: id,
 			name: "mark",
 			position: Cesium.Cartesian3.fromDegrees(Number(position.lng), Number(position.lat), 0),
-			label: label !== undefined ? {
+			label: label != undefined ? {
 				text: label.text,
-				font: label.font !== undefined ? label.font : '15px monospace 黑体',
+				font: label.font != undefined ? label.font : '15px monospace 黑体',
 				style: Cesium.LabelStyle.FILL_AND_OUTLINE,
 				showBackground: true,
-				backgroundPadding: label.backgroundPadding !== undefined ? new Cesium.Cartesian2(label.backgroundPadding.x, label.backgroundPadding.y) : new Cesium.Cartesian2(7, 5),
-				backgroundColor: label.backgroundColor !== undefined ? Cesium.Color.fromCssColorString(label.backgroundColor.color).withAlpha(label.backgroundColor.alpha != undefined ? Number(label.backgroundColor.alpha) : 1) : Cesium.Color.BLACK,
-				fillColor: label.fillColor !== undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha != undefined ? Number(label.fillColor.alpha) : 1) : Cesium.Color.WHITE,
-				outlineColor: label.outlineColor !== undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha != undefined ? Number(label.outlineColor.alpha) : 1) : Cesium.Color.WHITE,
-				outlineWidth: label.outlineWidth !== undefined ? label.outlineWidth : 0,
+				backgroundPadding: label.backgroundPadding != undefined ? new Cesium.Cartesian2(label.backgroundPadding.x, label.backgroundPadding.y) : new Cesium.Cartesian2(7, 5),
+				backgroundColor: label.backgroundColor != undefined ? Cesium.Color.fromCssColorString(label.backgroundColor.color).withAlpha(label.backgroundColor.alpha != undefined ? Number(label.backgroundColor.alpha) : 1) : Cesium.Color.BLACK,
+				fillColor: label.fillColor != undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha != undefined ? Number(label.fillColor.alpha) : 1) : Cesium.Color.WHITE,
+				outlineColor: label.outlineColor != undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha != undefined ? Number(label.outlineColor.alpha) : 1) : Cesium.Color.WHITE,
+				outlineWidth: label.outlineWidth != undefined ? label.outlineWidth : 0,
 				verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
 				pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
 				distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight),
 				eyeOffset: new Cesium.Cartesian3(0, 0, -100)
 			} : {},
-			billboard: billboard !== undefined ? {
+			billboard: billboard != undefined ? {
 				image: billboard.uri,
-				width: billboard.width !== undefined ? billboard.width : 700,
-				height: billboard.height !== undefined ? billboard.height : 500,
+				width: billboard.width != undefined ? billboard.width : 700,
+				height: billboard.height != undefined ? billboard.height : 500,
 				distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight)
 			} : {}
 		});
@@ -833,16 +838,16 @@ export class MapControls {
 
 	// 移到管线上时管线高亮，移出时管线正常
 	changeHighLightLineStateByNameID(nameId) {
-		if (nameId !== undefined && nameId !== this.oldHighLineNameID) {
+		if (nameId != undefined && nameId != this.oldHighLineNameID) {
 			// this.setLineMaterial(nameId, "highlight");
 			// this.setLineMaterial(this.oldHighLineNameID, "normal");
-			if (this.oldHighLineNameID !== undefined) {
+			if (this.oldHighLineNameID != undefined) {
 				this.hideLightImgById(this.oldHighLineNameID);
 			}
 			this.oldHighLineNameID = nameId;
 			this.showLightImgById(nameId);
 		} else {
-			if (this.oldHighLineNameID !== undefined) {
+			if (this.oldHighLineNameID != undefined) {
 				// this.setLineMaterial(this.oldHighLineNameID, "normal");
 				this.hideLightImgById(this.oldHighLineNameID);
 				this.oldHighLineNameID = undefined;
@@ -852,7 +857,7 @@ export class MapControls {
 
 	// 设置路线材质
 	setLineMaterial(nameid, material) {
-		if (this.polylineDataSource !== undefined) {
+		if (this.polylineDataSource != undefined) {
 			let entities = this.polylineDataSource.entities.values;
 			if (material == "highlight") {
 				for (let o = 0; o < entities.length; o++) {
@@ -883,7 +888,7 @@ export class MapControls {
 
 	// 显示路线
 	showRoute() {
-		if (this.polylineDataSource !== undefined) {
+		if (this.polylineDataSource != undefined) {
 			let entities = this.polylineDataSource.entities.values;
 			for (let i = 0; i < entities.length; i++) {
 				entities[i].show = true;
@@ -897,7 +902,7 @@ export class MapControls {
 
 	// 隐藏路线
 	hideRoute() {
-		if (this.polylineDataSource !== undefined) {
+		if (this.polylineDataSource != undefined) {
 			let entities = this.polylineDataSource.entities.values;
 			for (let i = 0; i < entities.length; i++) {
 				entities[i].show = false;
@@ -910,7 +915,7 @@ export class MapControls {
 
 	// 显示流动路线
 	showFLowLine() {
-		if (this.flowLineDataSource !== undefined) {
+		if (this.flowLineDataSource != undefined) {
 			let entities = this.flowLineDataSource.entities.values;
 			for (let i = 0; i < entities.length; i++) {
 				entities[i].show = true;
@@ -920,7 +925,7 @@ export class MapControls {
 
 	// 隐藏流动路线
 	hideFlowLine() {
-		if (this.flowLineDataSource !== undefined) {
+		if (this.flowLineDataSource != undefined) {
 			let entities = this.flowLineDataSource.entities.values;
 			for (let i = 0; i < entities.length; i++) {
 				entities[i].show = false;
@@ -948,26 +953,26 @@ export class MapControls {
 		let entity1 = this.viewer.entities.add({
 			show: true,
 			position: Cesium.Cartesian3.fromDegrees(lng, lat, height + 30),
-			label: label !== undefined ? {
+			label: label != undefined ? {
 				text: label.text,
-				font: label.font !== undefined ? label.font : '18px Microsoft YaHei',
+				font: label.font != undefined ? label.font : '18px Microsoft YaHei',
 				style: Cesium.LabelStyle.FILL_AND_OUTLINE,
 				showBackground: true,
-				backgroundPadding: label.backgroundPadding !== undefined ? new Cesium.Cartesian2(label.backgroundPadding.x, label.backgroundPadding.y) : new Cesium.Cartesian2(7, 5),
-				backgroundColor: label.backgroundColor !== undefined ? Cesium.Color.fromCssColorString(label.backgroundColor.color).withAlpha(label.backgroundColor.alpha != undefined ? Number(label.backgroundColor.alpha) : 1) : Cesium.Color.BLACK,
-				fillColor: label.fillColor !== undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha != undefined ? Number(label.fillColor.alpha) : 1) : Cesium.Color.WHITE,
-				outlineColor: label.outlineColor !== undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha != undefined ? Number(label.outlineColor.alpha) : 1) : Cesium.Color.WHITE,
-				outlineWidth: label.outlineWidth !== undefined ? label.outlineWidth : 0,
+				backgroundPadding: label.backgroundPadding != undefined ? new Cesium.Cartesian2(label.backgroundPadding.x, label.backgroundPadding.y) : new Cesium.Cartesian2(7, 5),
+				backgroundColor: label.backgroundColor != undefined ? Cesium.Color.fromCssColorString(label.backgroundColor.color).withAlpha(label.backgroundColor.alpha != undefined ? Number(label.backgroundColor.alpha) : 1) : Cesium.Color.BLACK,
+				fillColor: label.fillColor != undefined ? Cesium.Color.fromCssColorString(label.fillColor.color).withAlpha(label.fillColor.alpha != undefined ? Number(label.fillColor.alpha) : 1) : Cesium.Color.WHITE,
+				outlineColor: label.outlineColor != undefined ? Cesium.Color.fromCssColorString(label.outlineColor.color).withAlpha(label.outlineColor.alpha != undefined ? Number(label.outlineColor.alpha) : 1) : Cesium.Color.WHITE,
+				outlineWidth: label.outlineWidth != undefined ? label.outlineWidth : 0,
 				verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
 				pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
 				distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight),
 				eyeOffset: new Cesium.Cartesian3(0, 0, -1)
 			} : {},
-			billboard: billboard !== undefined ? {
+			billboard: billboard != undefined ? {
 				image: billboard.uri,
 				pixelOffset: new Cesium.Cartesian2(0, -100),
-				width: billboard.width !== undefined ? billboard.width : 100,
-				height: billboard.height !== undefined ? billboard.height : 21.25
+				width: billboard.width != undefined ? billboard.width : 100,
+				height: billboard.height != undefined ? billboard.height : 21.25
 			} : {}
 		});
 
@@ -1045,16 +1050,24 @@ export class MapControls {
 
 	}
 
-	addDirectionalLight() {
-		var flashlight = new Cesium.DirectionalLight({
-			direction: this.viewer.scene.camera.directionWC // Updated every frame
-		});
-		this.viewer.scene.light = flashlight;
-		this.viewer.scene.globe.dynamicAtmosphereLighting = false;
+	setTime(date) {
+		let currentTime = Cesium.JulianDate.fromDate(date);
+		let endTime = Cesium.JulianDate.addHours(currentTime, 2, new Cesium.JulianDate());
 
-		this.viewer.scene.preRender.addEventListener(function (scene, time) {
-			scene.light.direction = Cesium.Cartesian3.clone(scene.camera.directionWC, scene.light.direction);
-		});
+		this.viewer.clock.currentTime = currentTime;
+		this.viewer.timeline.zoomTo(currentTime, endTime);
+	}
+
+	addDirectionalLight() {
+		let scene = this.viewer.scene;
+		scene.globe.enableLighting = true;
+		scene.globe.dynamicAtmosphereLighting = true;
+		scene.globe.dynamicAtmosphereLightingFromSun = false;
+
+		let sunLight = new Cesium.SunLight()
+		scene.light = sunLight;
+
+		this.setTime(this.defaultTime);
 	}
 
 }

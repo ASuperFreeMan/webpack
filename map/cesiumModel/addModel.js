@@ -13,7 +13,7 @@ export class AddModel {
 
         this.models = [];
 
-        this.addCityModels();
+        // this.addCityModels();
         // this.addWellModels();
         // this.addPipelineModels();
     }
@@ -62,23 +62,24 @@ export class AddModel {
             self.models.push(model);
         });
 
-        Model.readyPromise.then(function (model) {
-            var imagePath = "/static/map/imgs/test.png";
-            var textures = model._rendererResources.textures;
-            for (let k in textures) {
-                let texture = textures[k];
+        // Model.readyPromise.then(function (model) {
+        //     var imagePath = "/static/map/imgs/test.png";
+        //     var textures = model._rendererResources.textures;
+        //     // for (let k in textures) {
+        //     let texture = textures[0];
+        //     console.log(texture)
 
-                Cesium.Resource.fetchImage({
-                    url: imagePath
-                }).then(function (image) {
-                    texture.copyFrom(image);
-                    texture.generateMipmap(); // Also replaces textures in mipmap
-                }).otherwise(function (error) {
-                    console.log("Error finding livery!  Error = " + error);
-                });
-            }
+        //     Cesium.Resource.fetchImage({
+        //         url: imagePath
+        //     }).then(function (image) {
+        //         texture.copyFrom(image);
+        //         texture.generateMipmap(); // Also replaces textures in mipmap
+        //     }).otherwise(function (error) {
+        //         console.log("Error finding livery!  Error = " + error);
+        //     });
+        //     // }
 
-        })
+        // })
 
     }
 

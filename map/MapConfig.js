@@ -106,4 +106,7 @@ export class MapConfig {
     // 管线图标id开始部分
     static pipeLineIdStart = "pipe_line"
 
+    // 默认时间
+    static defaultTime = new Date('2019/04/01 10:00:00');
+
 }

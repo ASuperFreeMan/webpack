@@ -33,6 +33,7 @@ export class AutoCreatePipeLine {
         this.dracoLibUrl = urls.dracoLibUrl
         this.yuanzhutu = urls.yuanzhutu
         this.stationNamePictureUrl = urls.stationNamePictureUrl
+        this.flowImgUrl = urls.flowImgUrl;
         this.pipeline_state = 0
         this.renderInterval;
         this.progressBarTimer;
@@ -65,52 +66,78 @@ export class AutoCreatePipeLine {
     }
 
     //显示管道流向
-    showFlowTo(urlImg1, urlImg2) {
+    showFlowTo() {
         // this.hideRoad.showFlowTo(this.pipeline_all, urlImg1, urlImg2)
         this.pipeline_state = 1
         for (let i = 0; i < this.pipeline_all.length; i++) {
             if (this.pipeline_all[i].userData.elevationDifference > 0) {
-                this.textureTool.addRepetitiveTexture(this.pipeline_all[i], urlImg2, 0.04, 1)
+                this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'right')
             }
             if (this.pipeline_all[i].userData.elevationDifference < 0) {
-                this.textureTool.addRepetitiveTexture(this.pipeline_all[i], urlImg1, -0.04, 1)
+                this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'left')
             }
             if (this.pipeline_all[i].userData.elevationDifference == 0) {
-                this.textureTool.addRepetitiveTexture(this.pipeline_all[i], urlImg1, 0, 1)
+                this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'right')
             }
         }
 
 
         const self = this;
         this.renderInterval = setInterval(function () {
-            for (let i = 0; i < self.pipeline_all.length; i++) {
-                if (self.pipeline_all[i].userData.elevationDifference > 0) {
-                    self.pipeline_all[i].children[0].material.map.offset.x += 0.04
-                }
-                if (self.pipeline_all[i].userData.elevationDifference < 0) {
-                    self.pipeline_all[i].children[0].material.map.offset.x += -0.04
-                }
-                if (self.pipeline_all[i].userData.elevationDifference == 0) {
-                    self.pipeline_all[i].children[0].material.map.offset.x += 0.04
-                }
-            }
+            // for (let i = 0; i < self.pipeline_all.length; i++) {
+            //     if (self.pipeline_all[i].userData.elevationDifference > 0) {
+            //         self.pipeline_all[i].children[0].material.map.offset.x += 0.04
+            //     }
+            //     if (self.pipeline_all[i].userData.elevationDifference < 0) {
+            //         self.pipeline_all[i].children[0].material.map.offset.x += -0.04
+            //     }
+            //     if (self.pipeline_all[i].userData.elevationDifference == 0) {
+            //         self.pipeline_all[i].children[0].material.map.offset.x += 0.04
+            //     }
+            // }
+            self.textureTool.leftTexture.offset.x -= 0.04;
+            self.textureTool.rightTexture.offset.x += 0.04;
+
             self.bustard.core.render()
         }, 20)
     }
+
     //隐藏管道流向
     hideFlowTo() {
-        const self = this;
         if (this.pipeline_state == 1) {
             clearInterval(this.renderInterval)
             for (let i = 0; i < this.pipeline_all.length; i++) {
                 // console.log(this.pipeline_all[i])
-                this.pipeline_all[i].children[0].geometry.dispose()
+                // this.pipeline_all[i].children[0].geometry.dispose()
+                let material;
+                if (this.pipeline_all[i].userData.uniqName === 'PE') {
+                    material = this.pipeNetworkTemplate[2].children[0].material.clone();
+                } else if (this.pipeline_all[i].userData.uniqName === 'PVC') {
+                    material = this.pipeNetworkTemplate[3].children[0].material.clone();
+                } else if (this.pipeline_all[i].userData.uniqName === '塑料') {
+                    material = this.pipeNetworkTemplate[4].children[0].material.clone();
+                } else if (this.pipeline_all[i].userData.uniqName === '砼') {
+                    material = this.pipeNetworkTemplate[5].children[0].material.clone();
+                } else if (this.pipeline_all[i].userData.uniqName === "玻璃钢") {
+                    material = this.pipeNetworkTemplate[6].children[0].material.clone();
+                } else if (this.pipeline_all[i].userData.uniqName === '球墨铸铁') {
+                    material = this.pipeNetworkTemplate[7].children[0].material.clone();
+                } else if (this.pipeline_all[i].userData.uniqName === '钢') {
+                    material = this.pipeNetworkTemplate[8].children[0].material.clone();
+                } else if (this.pipeline_all[i].userData.uniqName === '铸铁') {
+                    material = this.pipeNetworkTemplate[9].children[0].material.clone();
+                } else {
+                    material = this.pipeNetworkTemplate[1].children[0].material.clone();
+                }
                 this.pipeline_all[i].children[0].material.map.dispose()
-                this.pipeline_all[i].children[0].material.dispose()
-                this.pipeline_all[i].parent.remove(this.pipeline_all[i])
-                self.bustard.core.getScene().remove(this.pipeline_all[i].parent)
+                this.pipeline_all[i].children[0].material.dispose();
+                this.pipeline_all[i].children[0].material = material;
+                // this.pipeline_all[i].children[0].material.dispose()
+                // this.pipeline_all[i].parent.remove(this.pipeline_all[i])
+                // self.bustard.core.getScene().remove(this.pipeline_all[i].parent)
             }
-            this.createPipeModels()
+            // this.createPipeModels()
+            this.bustard.core.render();
             this.pipeline_state = 0
         }
 
@@ -176,6 +203,7 @@ export class AutoCreatePipeLine {
         this.color = this.bustard.use(new Bustard.Color({ isMutex: true }));
         this.color.activeClick = false;
         this.textureTool = this.bustard.use(new Bustard.Texture());
+        this.textureTool.addFirstRepetitiveTexture(this.flowImgUrl[0], this.flowImgUrl[1])
         this.bustard.core.getScene().add(this.bustard.core.getaxesHelper());
         this.roam = this.bustard.use(new Bustard.Roam())
         this.modelHide = this.bustard.use(new Bustard.Hide());
@@ -428,22 +456,40 @@ export class AutoCreatePipeLine {
             let cloneModel;
             if (this.pipelines[i].material === 'PE') {
                 cloneModel = this.pipeNetworkTemplate[2].clone()
+                cloneModel.userData.uniqName = 'PE';
+                cloneModel.children[0].material = this.pipeNetworkTemplate[2].children[0].material.clone();
             } else if (this.pipelines[i].material === 'PVC') {
                 cloneModel = this.pipeNetworkTemplate[3].clone()
+                cloneModel.userData.uniqName = 'PVC';
+                cloneModel.children[0].material = this.pipeNetworkTemplate[3].children[0].material.clone();
             } else if (this.pipelines[i].material === '塑料') {
                 cloneModel = this.pipeNetworkTemplate[4].clone()
+                cloneModel.userData.uniqName = '塑料';
+                cloneModel.children[0].material = this.pipeNetworkTemplate[4].children[0].material.clone();
             } else if (this.pipelines[i].material === '砼') {
                 cloneModel = this.pipeNetworkTemplate[5].clone()
+                cloneModel.userData.uniqName = '砼';
+                cloneModel.children[0].material = this.pipeNetworkTemplate[5].children[0].material.clone();
             } else if (this.pipelines[i].material === "玻璃钢") {
                 cloneModel = this.pipeNetworkTemplate[6].clone()
+                cloneModel.userData.uniqName = '玻璃钢';
+                cloneModel.children[0].material = this.pipeNetworkTemplate[6].children[0].material.clone();
             } else if (this.pipelines[i].material === '球墨铸铁') {
                 cloneModel = this.pipeNetworkTemplate[7].clone()
+                cloneModel.userData.uniqName = '球墨铸铁';
+                cloneModel.children[0].material = this.pipeNetworkTemplate[7].children[0].material.clone();
             } else if (this.pipelines[i].material === '钢') {
                 cloneModel = this.pipeNetworkTemplate[8].clone()
+                cloneModel.userData.uniqName = '钢';
+                cloneModel.children[0].material = this.pipeNetworkTemplate[8].children[0].material.clone();
             } else if (this.pipelines[i].material === '铸铁') {
                 cloneModel = this.pipeNetworkTemplate[9].clone()
+                cloneModel.userData.uniqName = '铸铁';
+                cloneModel.children[0].material = this.pipeNetworkTemplate[9].children[0].material.clone();
             } else {
                 cloneModel = this.pipeNetworkTemplate[1].clone()
+                cloneModel.userData.uniqName = 'other';
+                cloneModel.children[0].material = this.pipeNetworkTemplate[1].children[0].material.clone();
             }
             let x1 = this.pipelines[i].pipelineX1;
             let y1 = 0;
@@ -503,12 +549,6 @@ export class AutoCreatePipeLine {
         }
         this.bustard.core.render();
     }
-
-
-
-
-
-
 
     //控制地面透明度
     adjustRoadTransparency(transparency) {
