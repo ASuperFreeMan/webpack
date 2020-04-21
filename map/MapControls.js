@@ -34,7 +34,7 @@ export class MapControls {
 		// 相机是否倾斜
 		this.tiltFlag;
 
-		if (MapConfig.cameraTiltDegree != 90) {
+		if (MapConfig.cameraTiltDegree != -90) {
 			this.tiltFlag = true;
 		}
 
@@ -217,7 +217,7 @@ export class MapControls {
 	}
 
 	removeLeftClickAction() {
-		if (this.leftClickHandler != undefined) {
+		if (this.leftClickHandler) {
 			this.leftClickHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
 		}
 	}
@@ -232,18 +232,20 @@ export class MapControls {
 			// position.x = position.x * 2744 / $(window).width();
 			// position.y = position.y * 1134 / $(window).height();
 			let pickedFeature = self.viewer.scene.pick(position);
-			if (pickedFeature != undefined) {
-				let nameId;
-				if (pickedFeature.id.nameID != undefined) {
-					nameId = pickedFeature.id.nameID;
-				} else if (pickedFeature.id._id && pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
-					nameId = pickedFeature.id._id.substring(pickedFeature.id._id.indexOf('_') + 1);
-				}
-				if (nameId <= MapConfig.lineMaxId) {
-					self.changeHighLightLineStateByNameID(nameId);
-				}
+			if (pickedFeature != undefined && pickedFeature.id.name == "mark") {
+				// let nameId;
+				// if (pickedFeature.id.nameID != undefined) {
+				// 	nameId = pickedFeature.id.nameID;
+				// } else if (pickedFeature.id._id && pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
+				// 	nameId = pickedFeature.id._id.substring(pickedFeature.id._id.indexOf('_') + 1);
+				// }
+				// if (nameId <= MapConfig.lineMaxId) {
+				// 	self.changeHighLightLineStateByNameID(nameId);
+				// }
+				document.body.style.cursor = 'pointer';
 			} else {
-				self.changeHighLightLineStateByNameID();
+				// self.changeHighLightLineStateByNameID();
+				document.body.style.cursor = 'default';
 			}
 		}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 	}
@@ -251,6 +253,7 @@ export class MapControls {
 	removeMouseHoverAction() {
 		if (this.mouseHoverHandler) {
 			this.mouseHoverHandler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+			document.body.style.cursor = 'default';
 		}
 	}
 
@@ -274,12 +277,14 @@ export class MapControls {
 	setPipeNetworkPerceptionMainView() {
 		this.flyTo(MapConfig.pipeNetworkPerceptionMainView.lng, MapConfig.pipeNetworkPerceptionMainView.lat, this.pipeNetworkPerceptionFarDistance);
 		this.setDefaultPosition(this.startPosition.x, this.startPosition.y, this.pipeNetworkPerceptionFarDistance);
+		this.isEarthRolling = true;
 	}
 
 	// 设置泵站监控主视角
 	setPumpStationMonitoringMainView() {
 		this.flyTo(MapConfig.pumpStationMonitoringMainView.lng, MapConfig.pumpStationMonitoringMainView.lat, this.farDistance);
 		this.setDefaultPosition(this.startPosition.x, this.startPosition.y, this.farDistance);
+		this.isEarthRolling = true;
 	}
 
 	// 设置自由巡检主视角
@@ -287,6 +292,7 @@ export class MapControls {
 		let height = this.freeRoamFarDistance * Math.sin(35 * Math.PI / 180) + 15.8;
 		this.flyTo(MapConfig.freeRoamMainView.lng, MapConfig.freeRoamMainView.lat, height, undefined, undefined, undefined, -35);
 		this.setDefaultPosition(MapConfig.freeRoamMainView.lng, MapConfig.freeRoamMainView.lat, height);
+		this.isEarthRolling = true;
 	}
 
 	// 设置默认位置
@@ -463,7 +469,8 @@ export class MapControls {
 
 		let imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
 			url: url,
-			tilingScheme: new Cesium.WebMercatorTilingScheme(),
+			// tilingScheme: new Cesium.WebMercatorTilingScheme(),
+			// tileDiscardPolicy: new Cesium.NeverTileDiscardPolicy(),
 			layers: layers
 		});
 
@@ -498,10 +505,11 @@ export class MapControls {
 	}
 
 	// 飞行到指定位置
-	flyTo(lng, lat, height, callback, duration, distanceState, newPitch) {
+	flyTo(lng, lat, height, callback, duration, distanceState, newPitch, newHeading) {
 		// let cartographic = this.viewer.camera.positionCartographic;
 		lng = Number(lng);
 		lat = Number(lat);
+		let heading = newHeading ? Number(newHeading) : 0;
 		// 偏差值
 		let deviation;
 		if (distanceState == "near") {
@@ -522,7 +530,7 @@ export class MapControls {
 		this.viewer.scene.camera.flyTo({
 			destination: Cesium.Cartesian3.fromDegrees(lng, deviation, height), // 点的坐标
 			orientation: {
-				heading: Cesium.Math.toRadians(0.0),      // east, default value is 0.0 (north)
+				heading: Cesium.Math.toRadians(heading),      // east, default value is 0.0 (north)
 				pitch: Cesium.Math.toRadians(pitch),     // default value (looking down)
 				roll: 0.0                               // default value
 			},
@@ -533,11 +541,6 @@ export class MapControls {
 				}
 			}
 		});
-	}
-
-	flyToPump(lng, lat, height, callback, duration, distanceState, newPitch) {
-		const self = this;
-		this.flyTo(lng, lat, height + 1000, self.flyTo(lng, lat, height, callback, undefined, 'near', newPitch), undefined, 'near', newPitch);
 	}
 
 	// 设置相机位置
@@ -740,7 +743,8 @@ export class MapControls {
 	}
 
 	// 添加流动路线
-	addFlowLine(url) {
+	addFlowLine(url, time) {
+		time = time ? time : 2000;
 
 		let geojsonOptions = {
 			clampToGround: true
@@ -756,12 +760,24 @@ export class MapControls {
 			for (let i = 0; i < entities.length; i++) {
 				let r = entities[i];
 				r.show = false;
-				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, 2000)
+				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, time)
 				r.polyline.width = self.flowLineWidth;
 				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
 			}
 		});
 
+	}
+
+	// 设置流动时间
+	setFlowLineTime(time) {
+		if (this.flowLineDataSource) {
+			let entities = this.flowLineDataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.polyline.material.duration = time;
+			}
+		}
 	}
 
 	// 添加高亮路线
@@ -943,9 +959,10 @@ export class MapControls {
 
 
 	// 添加四棱锥图标
-	addPyramidMark(position, label, billboard, color) {
+	addPyramidMark(position, label, billboard, color, alpha) {
 
 		color = color ? color : '#0028a9';
+		alpha = alpha ? alpha : 0.6;
 
 		let lng = Number(position.lng);
 		let lat = Number(position.lat);
@@ -984,7 +1001,7 @@ export class MapControls {
 				length: 45,
 				topRadius: 30,
 				bottomRadius: 0,
-				material: Cesium.Color.fromCssColorString(color).withAlpha(.6),
+				material: Cesium.Color.fromCssColorString(color).withAlpha(alpha),
 				slices: 4,
 				outline: true,
 				outlineColor: Cesium.Color.fromCssColorString('#11b3ff')
@@ -1009,7 +1026,7 @@ export class MapControls {
 				length: 45,
 				topRadius: 0,
 				bottomRadius: 30,
-				material: Cesium.Color.fromCssColorString(color).withAlpha(.6),
+				material: Cesium.Color.fromCssColorString(color).withAlpha(alpha),
 				slices: 4,
 				outline: true,
 				outlineColor: Cesium.Color.fromCssColorString('#11b3ff')

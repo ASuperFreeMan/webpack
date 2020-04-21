@@ -39,9 +39,10 @@ export class FlowLine {
             return result;
         }
         PolylineTrailLinkMaterialProperty.prototype.equals = function (other) {
-            return this === other ||
-                (other instanceof PolylineTrailLinkMaterialProperty &&
-                    Cesium.Property.equals(this._color, other._color))
+            return this === other
+            // this === other ||
+            //     (other instanceof PolylineTrailLinkMaterialProperty &&
+            //         Cesium.Property.equals(this._color, other._color))
         }
         Cesium.PolylineTrailLinkMaterialProperty = PolylineTrailLinkMaterialProperty;
         Cesium.Material.PolylineTrailLinkType = 'PolylineTrailLink';

@@ -137,20 +137,16 @@ export class TrajectoryFreeroam {
         this.graph = null;
         this.graph = new Graph();
 
-        let n = 1;
-        for (let i = 0; i + n + 1 <= FreeRoamConfiguration.lineMaxId;) {
+
+        for (let i = 0; i <= FreeRoamConfiguration.lineMaxId; i++) {
             this.addEdge(i, 0, newCoords[i].length - 1);
-            this.addEdge(i + n, 0, newCoords[i + n].length - 1);
-            this.addEdge(i + n + 1, 0, newCoords[i + n + 1].length - 1);
-            this.graph.addEdge(i + "[" + (newCoords[i].length - 1) + "]", (i + n) + "[0]");
-            this.graph.addEdge(i + "[" + (newCoords[i].length - 1) + "]", (i + n + 1) + "[0]");
-            if (i == 0) {
-                i++;
-                n = 2;
-            } else {
-                i += 2;
-            }
         }
+        this.graph.addEdge(0 + "[" + (newCoords[0].length - 1) + "]", "1[0]");
+        this.graph.addEdge(0 + "[" + (newCoords[0].length - 1) + "]", "2[0]");
+        this.graph.addEdge(1 + "[" + (newCoords[1].length - 1) + "]", "3[0]");
+        this.graph.addEdge(1 + "[" + (newCoords[1].length - 1) + "]", "4[0]");
+        this.graph.addEdge(3 + "[" + (newCoords[3].length - 1) + "]", "5[0]");
+        this.graph.addEdge(3 + "[" + (newCoords[3].length - 1) + "]", "6[0]");
     }
 
     addEdge(prefix, start, end) {

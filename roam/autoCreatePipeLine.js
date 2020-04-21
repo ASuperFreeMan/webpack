@@ -71,13 +71,13 @@ export class AutoCreatePipeLine {
         this.pipeline_state = 1
         for (let i = 0; i < this.pipeline_all.length; i++) {
             if (this.pipeline_all[i].userData.elevationDifference > 0) {
-                this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'right')
-            }
-            if (this.pipeline_all[i].userData.elevationDifference < 0) {
                 this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'left')
             }
-            if (this.pipeline_all[i].userData.elevationDifference == 0) {
+            if (this.pipeline_all[i].userData.elevationDifference < 0) {
                 this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'right')
+            }
+            if (this.pipeline_all[i].userData.elevationDifference == 0) {
+                this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'left')
             }
         }
 
