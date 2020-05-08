@@ -1,6 +1,7 @@
 import { MapConfig } from './MapConfig';
 import { MarkConfig } from './MarkConfig';
 import { FlowLine } from './flowLine';
+import { FlowLine2 } from './flowLine2'
 import { AddModel } from './cesiumModel/addModel'
 
 export class MapControls {
@@ -28,8 +29,9 @@ export class MapControls {
 		console.log(Cesium.VERSION)
 
 		new FlowLine();
+		new FlowLine2();
 
-		this.models = new AddModel(this.viewer, urls);
+		this.models;
 
 		// 相机是否倾斜
 		this.tiltFlag;
@@ -107,6 +109,10 @@ export class MapControls {
 		this.viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 		// 不允许倾斜相机
 		this.viewer.scene.screenSpaceCameraController.enableTilt = false;
+		// 将原来鼠标中键倾斜视图修改为鼠标右键拖动
+		this.viewer.scene.screenSpaceCameraController.tiltEventTypes = [Cesium.CameraEventType.RIGHT_DRAG];
+		// 将原来鼠标右键拖动缩放修改为鼠标滚轮滚动
+		this.viewer.scene.screenSpaceCameraController.zoomEventTypes = [Cesium.CameraEventType.WHEEL];
 
 	}
 
@@ -120,15 +126,6 @@ export class MapControls {
 		this.viewer.useDefaultRenderLoop = false;
 	}
 
-	// 取消拖动
-	removeMapDrag() {
-		this.viewer.scene.screenSpaceCameraController.enableRotate = false;
-	}
-
-	// 取消滚动
-	removeMapWheel() {
-		this.viewer.scene.screenSpaceCameraController.enableZoom = false;
-	}
 
 	setMinimumZoomDistance(amount) {
 		this.viewer.scene.screenSpaceCameraController.minimumZoomDistance = amount;
@@ -143,13 +140,33 @@ export class MapControls {
 		this.viewer.scene.screenSpaceCameraController.enableRotate = true;
 	}
 
+	// 取消拖动
+	removeMapDrag() {
+		this.viewer.scene.screenSpaceCameraController.enableRotate = false;
+	}
+
 	// 添加滚动
 	addMapWheel() {
 		this.viewer.scene.screenSpaceCameraController.enableZoom = true;
 	}
 
+	// 取消滚动
+	removeMapWheel() {
+		this.viewer.scene.screenSpaceCameraController.enableZoom = false;
+	}
+
+	// 添加倾斜
+	addMapEnableTilt() {
+		this.viewer.scene.screenSpaceCameraController.enableTilt = true;
+	}
+
+	// 取消倾斜
+	removeEnableTilt() {
+		this.viewer.scene.screenSpaceCameraController.enableTilt = false;
+	}
+
 	// 左键点击事件
-	setLeftClickAction(callback) {
+	setLeftClickAction(callback, isNotFly) {
 		this.removeLeftClickAction();
 
 		const self = this;
@@ -165,7 +182,7 @@ export class MapControls {
 			// let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
 			// let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
 			// let height = cartographic.height
-			// console.log(lng + "," + lat + "," + height)
+			// console.log(lng + "," + lat)
 
 			let position = JSON.parse(JSON.stringify(click.position));
 			// position.x = position.x * 2744 / $(window).width();
@@ -173,13 +190,15 @@ export class MapControls {
 
 			// 获取模型表面的经纬度高程坐标
 			let pickedFeature = self.viewer.scene.pick(position);
-			if (pickedFeature != undefined && pickedFeature.id._name == "mark" && !pickedFeature.id._id.startsWith(MapConfig.pipeLineIdStart) && !pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
+			if (pickedFeature != undefined && pickedFeature.id && pickedFeature.id._name == "mark" && !pickedFeature.id._id.startsWith(MapConfig.pipeLineIdStart) && !pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
 				let cartesian = new Cesium.Cartesian3(pickedFeature.id._position._value.x, pickedFeature.id._position._value.y, pickedFeature.id._position._value.z);
 				let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
 				let lng = Cesium.Math.toDegrees(cartographic.longitude);
 				let lat = Cesium.Math.toDegrees(cartographic.latitude);
 				// console.log(lng + ", " + lat)
-				self.flyTo(lng, lat, self.nearDistance, undefined, undefined, "near");
+				if (!isNotFly) {
+					self.flyTo(lng, lat, self.nearDistance, undefined, undefined, "near");
+				}
 				if (callback != undefined) {
 					let id = pickedFeature.id._id; // 此处id为图标id
 					callback(id);
@@ -187,7 +206,7 @@ export class MapControls {
 			}
 
 			let nameId; // 此处nameId为点击获取的路线id
-			if (pickedFeature != undefined && pickedFeature.id._id && pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
+			if (pickedFeature != undefined && pickedFeature.id && pickedFeature.id._id && pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
 				nameId = pickedFeature.id._id.substring(pickedFeature.id._id.indexOf('_') + 1);
 			} else if (pickedFeature != undefined && pickedFeature.id.nameID != undefined) {
 				nameId = pickedFeature.id.nameID;
@@ -232,7 +251,7 @@ export class MapControls {
 			// position.x = position.x * 2744 / $(window).width();
 			// position.y = position.y * 1134 / $(window).height();
 			let pickedFeature = self.viewer.scene.pick(position);
-			if (pickedFeature != undefined && pickedFeature.id.name == "mark") {
+			if (pickedFeature != undefined && pickedFeature.id && pickedFeature.id.name == "mark") {
 				// let nameId;
 				// if (pickedFeature.id.nameID != undefined) {
 				// 	nameId = pickedFeature.id.nameID;
@@ -242,10 +261,14 @@ export class MapControls {
 				// if (nameId <= MapConfig.lineMaxId) {
 				// 	self.changeHighLightLineStateByNameID(nameId);
 				// }
-				document.body.style.cursor = 'pointer';
+				if (document.body.style.cursor != 'pointer') {
+					document.body.style.cursor = 'pointer';
+				}
 			} else {
 				// self.changeHighLightLineStateByNameID();
-				document.body.style.cursor = 'default';
+				if (document.body.style.cursor != 'default') {
+					document.body.style.cursor = 'default';
+				}
 			}
 		}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 	}
@@ -373,7 +396,7 @@ export class MapControls {
 			options.lng = Number(point.lng);
 			options.lat = Number(point.lat);
 			pitch = Cesium.Math.toRadians(-40);
-			distance = 1000;
+			distance = 1219.9986250239356;
 		}
 		let position = Cesium.Cartesian3.fromDegrees(options.lng, options.lat, options.height);
 		// 给定飞行一周所需时间，比如10s, 那么每秒转动度数
@@ -470,7 +493,7 @@ export class MapControls {
 		let imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
 			url: url,
 			// tilingScheme: new Cesium.WebMercatorTilingScheme(),
-			// tileDiscardPolicy: new Cesium.NeverTileDiscardPolicy(),
+			tileDiscardPolicy: new Cesium.NeverTileDiscardPolicy(),
 			layers: layers
 		});
 
@@ -653,6 +676,10 @@ export class MapControls {
 
 	}
 
+	addMonitorMark(id, position, label, billboard, name) {
+
+	}
+
 	// 批量添加图标
 	addMarkList(markData) {
 		if (Object.prototype.toString.call(markData) == '[object Array]') {
@@ -757,12 +784,22 @@ export class MapControls {
 			self.flowLineDataSource = dataSource;
 			let entities = dataSource.entities.values;
 
-			for (let i = 0; i < entities.length; i++) {
+			for (let i = 0; i < entities.length - 7; i++) {
 				let r = entities[i];
 				r.show = false;
 				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, time)
 				r.polyline.width = self.flowLineWidth;
 				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
+				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
+			}
+
+			for (let j = entities.length - 7; j < entities.length; j++) {
+				let r = entities[j];
+				r.show = false;
+				r.polyline.material = new Cesium.PolylineTrailLink2MaterialProperty(Cesium.Color.fromCssColorString("#e60012"), time)
+				r.polyline.width = self.flowLineWidth;
+				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
+				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
 			}
 		});
 
@@ -949,18 +986,28 @@ export class MapControls {
 		}
 	}
 
+	// 添加模型
+	addModel(urls, callback, postions) {
+		this.models = new AddModel(this.viewer, urls, callback, postions);
+	}
+
 	showAllModel() {
-		this.models.showAllModel();
+		if (this.models) {
+			this.models.showAllModel();
+		}
 	}
 
 	hideAllModel() {
-		this.models.hideAllModel();
+		if (this.models) {
+			this.models.hideAllModel();
+		}
 	}
 
 
 	// 添加四棱锥图标
-	addPyramidMark(position, label, billboard, color, alpha) {
+	addPyramidMark(id, position, label, billboard, color, alpha) {
 
+		id = id ? id : Math.random() + '';
 		color = color ? color : '#0028a9';
 		alpha = alpha ? alpha : 0.6;
 
@@ -968,6 +1015,8 @@ export class MapControls {
 		let lat = Number(position.lat);
 		let height = Number(position.height);
 		let entity1 = this.viewer.entities.add({
+			id: id,
+			name: 'mark',
 			show: true,
 			position: Cesium.Cartesian3.fromDegrees(lng, lat, height + 30),
 			label: label != undefined ? {

@@ -1,7 +1,7 @@
 import { DataRequest } from './dataRequest'
 
 export class AddModel {
-    constructor(viewer, urls) {
+    constructor(viewer, urls, callback, postions) {
         this.viewer = viewer;
 
         this.wellUrl = urls.wellUrl
@@ -10,10 +10,16 @@ export class AddModel {
         this.boliti = urls.boliti
         this.floorUrl = urls.floorUrl
         this.otherUrl = urls.otherUrl[1]
+        this.wushuichangUrl = urls.wushuichangUrl
+        this.arrowheadUrl = urls.arrowheadUrl
+
+        this.postions = postions
 
         this.models = [];
 
-        // this.addCityModels();
+        this.callback = callback;
+
+        this.addCityModels();
         // this.addWellModels();
         // this.addPipelineModels();
     }
@@ -21,7 +27,7 @@ export class AddModel {
     //外部建筑模型加载
     createModel(id, url, isScale) {
         // 获取一个WGS84点的坐标点对应的世界坐标
-        let origin = Cesium.Cartesian3.fromDegrees(119.92672212218824, 32.46281482545325, -10);
+        let origin = Cesium.Cartesian3.fromDegrees(119.92672212218824, 32.46281482545325, 0);
         let baseModelMatrix = Cesium.Transforms.headingPitchRollToFixedFrame(origin, new Cesium.HeadingPitchRoll(0.0, 0.0, 0.0));
 
         let Model = this.viewer.scene.primitives.add(Cesium.Model.fromGltf({
@@ -42,9 +48,7 @@ export class AddModel {
 
         Model.readyPromise.then(function (model) {
             // 进行90度旋转
-            model.id = id;
-            model.show = false;
-            let position = Cesium.Cartesian3.fromDegrees(119.92672212218824, 32.46281482545325, -10);
+            let position = Cesium.Cartesian3.fromDegrees(119.92677790917063, 32.46318663013395, 0); // 119.92677790917063, 32.46318663013395
             let mat = Cesium.Transforms.eastNorthUpToFixedFrame(position);
             let rotation = Cesium.Matrix4.fromRotationTranslation(Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(-90)));
             Cesium.Matrix4.multiply(mat, rotation, mat);
@@ -60,6 +64,10 @@ export class AddModel {
 
             //保存模型
             self.models.push(model);
+
+            if (self.callback) {
+                self.callback();
+            }
         });
 
         // Model.readyPromise.then(function (model) {
@@ -81,6 +89,17 @@ export class AddModel {
 
         // })
 
+    }
+
+    createModelWithEntity(lng, lat, url) {
+        let entity = this.viewer.entities.add({
+            name: '',
+            position: Cesium.Cartesian3.fromDegrees(lng, lat, 0),
+            model: {
+                uri: url
+            }
+        })
+        this.models.push(entity);
     }
 
     showAllModel() {
@@ -223,11 +242,18 @@ export class AddModel {
     }
 
     addCityModels() {
-        this.createModel('boliti', this.boliti, true);
-        for (let key in this.floorUrl) {
-            this.createModel('floor', this.floorUrl[key]);
+        // this.createModel('boliti', this.boliti, true);
+        // for (let key in this.floorUrl) {
+        //     this.createModel('floor', this.floorUrl[key]);
+        // }
+        // this.createModel('other', this.otherUrl);
+        for (let i = 0; i < this.postions.length; i++) {
+            let position = this.postions[i];
+            let url = this.arrowheadUrl[i];
+            this.createModelWithEntity(position.lng, position.lat, url);
         }
-        this.createModel('other', this.otherUrl);
+
+        this.createModel('wushuichang', this.wushuichangUrl);
     }
 
 }

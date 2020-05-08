@@ -7,6 +7,7 @@ const config = {
         map: ['./map/mapControls.js']
         // autoCreatePipeLine: ['./roam/autoCreatePipeLine.js']
         // quarters: ['./quarters/freeRoam.js']
+        // station: ['./roam/station.js']
     },
     // 选择一种调试方式
     devtool: 'eval-source-map', // eval-source-map
@@ -16,6 +17,7 @@ const config = {
         filename: 'MapControls.min.js',
         // filename: 'AutoCreatePipeLine.min.js',
         // filename: 'FreeRoam.min.js',
+        // filename: 'station.min.js',
         path: path.resolve(__dirname, 'dist'), // 把一个路径或路径片段的序列解析为一个绝对路径
         libraryTarget: 'this' // 将导出的模块直接绑定到具体对象this
     },

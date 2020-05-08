@@ -1293,7 +1293,7 @@ export function addCSDTexture() {
     if (bengzhan[stationName].laozhaji.length > 0) {
         for (let i = 0; i < bengzhan[stationName].laozhaji.length; i++) {
             let chuansongdai = STATION_MODEL_ALL[bengzhan[stationName].chuansongdai[i].index]
-            textureTool.addRepetitiveTextureToMesh(chuansongdai, FlowImgUrl2, -2)
+            textureTool.addRepetitiveTextureOnMesh(chuansongdai, FlowImgUrl2)
         }
     }
 }
@@ -1331,7 +1331,6 @@ export function upData(newdata) {
     } else {
         // console.log(newdata)
         NEW_DATA = newdata
-        console.log(NEW_DATA)
         updataPumData();
     }
 }

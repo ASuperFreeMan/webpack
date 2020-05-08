@@ -28,6 +28,8 @@ export class TrajectoryFreeroam {
         this.changeFlag = false;
         // 记录有没有在岔路口旋转
         this.atForkRoadRotateFlag = false;
+        // 记录是不是按下左右键
+        this.isLeftOrRightKeyDown = false;
         // 记录顶点编号对应坐标
         this.vertexs;
         // 记录点与点之间的关系
@@ -52,6 +54,7 @@ export class TrajectoryFreeroam {
 
         // 键盘事件、鼠标点击事件对象
         this.keyDownEventFn;
+        this.keyUpEventFn;
         this.mouseDownEventFn;
 
         // 记录之前相机状态
@@ -63,6 +66,7 @@ export class TrajectoryFreeroam {
     // 移除鼠标事件和键盘事件
     removeEvents() {
         document.removeEventListener("keydown", this.keyDownEventFn);
+        document.removeEventListener("keyup", this.keyUpEventFn);
         // document.removeEventListener("mousedown", this.mouseDownEventFn);
     }
 
@@ -193,14 +197,14 @@ export class TrajectoryFreeroam {
             }
         }
 
-        // 处理不在岔路口时的镜头旋转
+        // 处理不在岔路口时的镜头旋转后按前进或后退键后的场景
         if (this.oldPosition !== undefined && this.oldTarget !== undefined
             &&
             (
                 judgeMent(e, "key", "up") || judgeMent(e, "key", "down")
                 || judgeMent(e, "mouse", "up") || judgeMent(e, "mouse", "down")
             )
-
+            && !this.isLeftOrRightKeyDown
         ) {
             if (!this.atForkRoadRotateFlag) {
                 let r = Math.pow(this.oldTarget.z - this.oldPosition.z, 2) + Math.pow(this.oldTarget.x - this.oldPosition.x, 2);
@@ -508,14 +512,14 @@ export class TrajectoryFreeroam {
             self.eventStartConfiguration(range, e);
 
             // ascll码 87：W  119：w  38：up
-            if (judgeMent(e, "key", "up")) {
+            if (judgeMent(e, "key", "up") && !self.isLeftOrRightKeyDown) {
                 self.keyboardChangeLine(e);
                 if (!self.changeFlag) {
                     self.cameraForward(n);
                 }
             }
             // ascll码 115：S  119：s  38：down
-            else if (judgeMent(e, "key", "down")) {
+            else if (judgeMent(e, "key", "down") && !self.isLeftOrRightKeyDown) {
                 self.keyboardChangeLine(e);
                 if (!self.changeFlag) {
                     self.cameraBackward();
@@ -531,6 +535,14 @@ export class TrajectoryFreeroam {
             }
 
         });
+
+
+        document.addEventListener('keyup', this.keyUpEventFn = function (e) {
+            // if (judgeMent(e, "key", "left") || judgeMent(e, "key", "right")) {
+
+            // }
+            self.isLeftOrRightKeyDown = false;
+        })
 
     }
 
@@ -686,6 +698,8 @@ export class TrajectoryFreeroam {
     }
 
     cameraRotation(direction) {
+        this.isLeftOrRightKeyDown = true;
+
         let curPosition = this.roam.curPosition();
         let curTarget = this.roam.curTarget();
         let rotationTheta = Math.atan((this.roam.curTarget().z - this.roam.curPosition().z) / (this.roam.curTarget().x - this.roam.curPosition().x));

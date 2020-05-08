@@ -21,7 +21,7 @@ export class MapConfig {
     // 管网感知相机远地面距离
     static pipeNetworkPerceptionFarDistance = 6000;
     // 自由巡检远地面距离
-    static freeRoamFarDistance = 5000;
+    static freeRoamFarDistance = 7000;
     // 相机近地面纬度偏差值
     static nearDistanceDeviation = 0.00386176411506;
     // 相机远地面偏差值

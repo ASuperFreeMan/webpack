@@ -22,13 +22,14 @@ export class PipeNetworkConfig {
 
     };
 
+    static url = 'http://192.168.0.100:8099';
     //获取（管道/管井）生成数据地址192.168.80.169     192.168.16.231:8099
-    static GET_PIPES_DATA_URL = "http://192.168.0.100:8099/api/v1/article/monitor/pipelineModeling";
-    static GET_WELLS_DATA_URL = "http://192.168.0.100:8099/api/v1/article/monitor/wellPointModeling";
+    static GET_PIPES_DATA_URL = this.url + "/api/v1/article/monitor/pipelineModeling";
+    static GET_WELLS_DATA_URL = this.url + "/api/v1/article/monitor/wellPointModeling";
 
     //获取（管道/管井）展示数据地址
-    static GET_PIPE_PRESENT_DATA_URL = "http://192.168.0.100:8099/api/v1/article/monitor/pipelineId";
-    static GET_WELL_PRESENT_DATA_URL = "http://192.168.0.100:8099/api/v1/article/monitor/wellPointId";
+    static GET_PIPE_PRESENT_DATA_URL = this.url + "/api/v1/article/monitor/pipelineId";
+    static GET_WELL_PRESENT_DATA_URL = this.url + "/api/v1/article/monitor/wellPointId";
 
     static PROGRESS_BAR_CLASS_NAME = ".loading";
     static PROGRESS_BAR_WIDTH_MAX = '800px'
