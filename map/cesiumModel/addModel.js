@@ -1,25 +1,20 @@
 import { DataRequest } from './dataRequest'
 
 export class AddModel {
-    constructor(viewer, urls, callback, postions) {
+    constructor(viewer, urls) {
         this.viewer = viewer;
 
-        this.wellUrl = urls.wellUrl
-        this.singlePipeTemplateUrl = urls.singlePipeTemplateUrl
+        this.pumpModelUrl = urls.mapModelUrl.pump;
 
-        this.boliti = urls.boliti
-        this.floorUrl = urls.floorUrl
-        this.otherUrl = urls.otherUrl[1]
-        this.wushuichangUrl = urls.wushuichangUrl
-        this.arrowheadUrl = urls.arrowheadUrl
+        this.monitorModelUrl = urls.mapModelUrl.monitor;
 
-        this.postions = postions
+        this.plantModelUrl = urls.mapModelUrl.plant;
+
+        this.architectureModelUrl = urls.mapModelUrl.architecture;
 
         this.models = [];
 
-        this.callback = callback;
-
-        this.addCityModels();
+        // this.addCityModels();
         // this.addWellModels();
         // this.addPipelineModels();
     }
@@ -47,9 +42,11 @@ export class AddModel {
         const self = this;
 
         Model.readyPromise.then(function (model) {
-            // 进行90度旋转
+
             let position = Cesium.Cartesian3.fromDegrees(119.92677790917063, 32.46318663013395, 0); // 119.92677790917063, 32.46318663013395
             let mat = Cesium.Transforms.eastNorthUpToFixedFrame(position);
+
+            // 进行90度旋转
             let rotation = Cesium.Matrix4.fromRotationTranslation(Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(-90)));
             Cesium.Matrix4.multiply(mat, rotation, mat);
 
@@ -64,10 +61,6 @@ export class AddModel {
 
             //保存模型
             self.models.push(model);
-
-            if (self.callback) {
-                self.callback();
-            }
         });
 
         // Model.readyPromise.then(function (model) {
@@ -91,15 +84,31 @@ export class AddModel {
 
     }
 
-    createModelWithEntity(lng, lat, url) {
+    createModelWithEntity(lng, lat, url, scale, color) {
         let entity = this.viewer.entities.add({
-            name: '',
-            position: Cesium.Cartesian3.fromDegrees(lng, lat, 0),
+            name: color ? lng : '',
+            position: Cesium.Cartesian3.fromDegrees(Number(lng), Number(lat), 0),
             model: {
-                uri: url
+                uri: url,
+                scale: scale,
+                color: color,
+                colorBlendAmount: color ? 0.5 : 0,
+                colorBlendMode: color ? Cesium.ColorBlendMode.REPLACE : Cesium.ColorBlendMode.MIX,
+                // lightColor: new Cesium.Cartesian3(0, 1, 168 / 255)
             }
         })
         this.models.push(entity);
+    }
+
+    // 更新模型属性
+    updateModel(lng, color) {
+        for (let key in this.models) {
+            let entity = this.models[key];
+            if (lng == entity.name) {
+                entity.model.color = Cesium.Color.fromCssColorString(color).withAlpha(.6);
+                break;
+            }
+        }
     }
 
     showAllModel() {
@@ -241,19 +250,56 @@ export class AddModel {
 
     }
 
-    addCityModels() {
+
+    addPumpModels(positions) {
+        for (let key in positions) {
+            let curUrl1 = this.pumpModelUrl[key][0];
+            let curUrl2 = this.pumpModelUrl[key][1];
+
+            for (let i = 0; i < positions[key].length; i++) {
+                let curPosition = positions[key][i];
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2, curPosition.color.line ? Cesium.Color.fromCssColorString(curPosition.color.line) : undefined);
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color.body ? Cesium.Color.fromCssColorString(curPosition.color.body) : undefined);
+            }
+        }
+    }
+
+    addMonitorModels(positions) {
+        for (let key in positions) {
+            let curUrl1 = this.monitorModelUrl[key][0];
+            let curUrl2 = this.monitorModelUrl[key][1];
+
+            for (let i = 0; i < positions[key].length; i++) {
+                let curPosition = positions[key][i];
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2);
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color ? Cesium.Color.fromCssColorString(curPosition.color) : undefined);
+            }
+        }
+    }
+
+    addPlantModel(position) {
+        let curUrl1 = this.plantModelUrl[0];
+        let curUrl2 = this.plantModelUrl[1];
+
+        this.createModelWithEntity(position.lng, position.lat, curUrl1, 2, position.color.line ? Cesium.Color.fromCssColorString(position.color.line) : undefined);
+        this.createModelWithEntity(position.lng, position.lat, curUrl2, 2, position.color.body ? Cesium.Color.fromCssColorString(position.color.body) : undefined);
+    }
+
+    addCityModels(positions) {
         // this.createModel('boliti', this.boliti, true);
         // for (let key in this.floorUrl) {
         //     this.createModel('floor', this.floorUrl[key]);
         // }
         // this.createModel('other', this.otherUrl);
-        for (let i = 0; i < this.postions.length; i++) {
-            let position = this.postions[i];
-            let url = this.arrowheadUrl[i];
-            this.createModelWithEntity(position.lng, position.lat, url);
+
+        let architectureListPositions = positions;
+
+        for (let key in architectureListPositions) {
+            let curPosition = architectureListPositions[key]
+            this.createModelWithEntity(curPosition.lng, curPosition.lat, this.architectureModelUrl[0]);
         }
 
-        this.createModel('wushuichang', this.wushuichangUrl);
     }
+
 
 }

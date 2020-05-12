@@ -1,8 +1,9 @@
 import { MapConfig } from './MapConfig';
 import { MarkConfig } from './MarkConfig';
 import { FlowLine } from './flowLine';
-import { FlowLine2 } from './flowLine2'
-import { AddModel } from './cesiumModel/addModel'
+import { FlowLine2 } from './flowLine2';
+import { AddModel } from './cesiumModel/addModel';
+import { BaiduImageryProvider } from './BaiduImageryProvider';
 
 export class MapControls {
 
@@ -30,8 +31,9 @@ export class MapControls {
 
 		new FlowLine();
 		new FlowLine2();
+		new BaiduImageryProvider();
 
-		this.models;
+		this.model = new AddModel(this.viewer, urls);;
 
 		// 相机是否倾斜
 		this.tiltFlag;
@@ -94,6 +96,9 @@ export class MapControls {
 		this.pyramidMarkEntities = [];
 
 		this.init();
+
+		this.viewer.scene.fxaa = false;
+		this.viewer.scene.globe.maximumScreenSpaceError = 1.2;//这个越小，越早切换高图层
 
 		//隐藏版权信息
 		this.viewer._cesiumWidget._creditContainer.style.display = "none";
@@ -453,6 +458,60 @@ export class MapControls {
 		this.viewer.scene.globe.show = true;
 	}
 
+	setBaiduMap() {
+		// 移除所有影像图层
+		this.viewer.imageryLayers.removeAll();
+
+		let imageryLayer = this.viewer.imageryLayers.addImageryProvider(new Cesium.BaiduImageryProvider({
+			// url: "http://online{s}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}",//&styles=pl&scaler=1&p=1
+			url: "http://api{s}.map.bdimg.com/customimage/tile?&x={x}&y={y}&z={z}&udt=20200429&scale=1&ak=8d6c8b8f3749aed6b1aff3aad6f40e37&styles=t%3Aland%7Ce%3Ag%7Cc%3A%23e7f7fc%2Ct%3Awater%7Ce%3Aall%7Cc%3A%2396b5d6%2Ct%3Agreen%7Ce%3Aall%7Cc%3A%23b0d3dd%2Ct%3Ahighway%7Ce%3Ag.f%7Cc%3A%23a6cfcf%2Ct%3Ahighway%7Ce%3Ag.s%7Cc%3A%237dabb3%2Ct%3Aarterial%7Ce%3Ag.f%7Cc%3A%23e7f7fc%2Ct%3Aarterial%7Ce%3Ag.s%7Cc%3A%23b0d5d4%2Ct%3Alocal%7Ce%3Al.t.f%7Cc%3A%237a959a%2Ct%3Alocal%7Ce%3Al.t.s%7Cc%3A%23d6e4e5%2Ct%3Aarterial%7Ce%3Al.t.f%7Cc%3A%23374a46%2Ct%3Ahighway%7Ce%3Al.t.f%7Cc%3A%23374a46%2Ct%3Ahighway%7Ce%3Al.t.s%7Cc%3A%23e9eeed",
+			// maximumLevel: 8,
+			credit: 'baidu map of street'
+		}));
+
+		imageryLayer.gamma = 0.8;
+	}
+
+	setTiandiMap() {
+		// 移除所有影像图层
+		this.viewer.imageryLayers.removeAll();
+
+		let TDU_Key = "a89df02c93e5474e9ebeb81a32fcb487"//天地图申请的密钥
+
+		let TDT_VEC_W = "http://{s}.tianditu.gov.cn/vec_w/wmts?service=wmts&request=GetTile&version=1.0.0" +
+			"&LAYER=vec&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}" +
+			"&style=default&format=tiles&tk=" + TDU_Key;
+
+
+		var imageryProvider = new Cesium.WebMapTileServiceImageryProvider({   //调用影响中文服务
+			url: TDT_VEC_W,//url地址
+			layer: "img_w",	//WMTS请求的层名称
+			style: "default",//WMTS请求的样式名称
+			format: "tiles",//MIME类型，用于从服务器检索图像
+			tileMatrixSetID: "GoogleMapsCompatible",//	用于WMTS请求的TileMatrixSet的标识符
+			subdomains: ["t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7"],//天地图8个服务器
+			minimumLevel: 0,//最小层级
+			maximumLevel: 18,//最大层级
+		})
+
+		let cia = new Cesium.WebMapTileServiceImageryProvider({   //调用影响中文注记服务
+			url: "http://{s}.tianditu.gov.cn/cva_w/wmts?service=wmts&request=GetTile&version=1.0.0" +
+				"&LAYER=cva&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}" +
+				"&style=default.jpg&tk=" + TDU_Key,
+			layer: "cia_w",
+			style: "default",
+			format: "tiles",
+			tileMatrixSetID: "GoogleMapsCompatible",
+			subdomains: ["t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7"],//天地图8个服务器
+			minimumLevel: 0,
+			maximumLevel: 18,
+		})
+
+		this.viewer.imageryLayers.addImageryProvider(imageryProvider);
+		this.viewer.imageryLayers.addImageryProvider(cia)//添加到cesium图层上
+
+	}
+
 	// 设置地图
 	setMap(url, layers) {
 		// 移除所有影像图层
@@ -592,7 +651,7 @@ export class MapControls {
 		let entity = this.viewer.entities.add({
 			id: id,
 			name: "mark",
-			position: Cesium.Cartesian3.fromDegrees(Number(position.lng), Number(position.lat), 0),
+			position: Cesium.Cartesian3.fromDegrees(Number(position.lng), Number(position.lat), position.height ? Number(position.height) : 0),
 			label: label != undefined ? {
 				text: label.text,
 				font: label.font != undefined ? label.font : '15px monospace 黑体',
@@ -801,6 +860,21 @@ export class MapControls {
 				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
 				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
 			}
+
+			let ellipsoid = self.viewer.scene.globe.ellipsoid;
+			for (let i in entities) {
+				let positions = entities[i].polyline.positions._value;
+				for (let k = 0; k < positions.length; k++) {
+					let cartographic = ellipsoid.cartesianToCartographic(positions[k]);
+					let lat = Cesium.Math.toDegrees(Number(cartographic.latitude));
+					let lng = Cesium.Math.toDegrees(Number(cartographic.longitude));
+					let height = cartographic.height;
+					let cartographic2 = Cesium.Cartographic.fromDegrees(lng + 0.0113, lat - 0.0066, height);
+					let cartesian3 = ellipsoid.cartographicToCartesian(cartographic2);
+					positions[k] = cartesian3;
+				}
+			}
+
 		});
 
 	}
@@ -987,20 +1061,44 @@ export class MapControls {
 	}
 
 	// 添加模型
-	addModel(urls, callback, postions) {
-		this.models = new AddModel(this.viewer, urls, callback, postions);
+	addPumpModel(positions) {
+		if (this.model) {
+			this.model.addPumpModels(positions);
+		}
+	}
+
+	addMonitorModel(positions) {
+		if (this.model) {
+			this.model.addMonitorModels(positions);
+		}
+	}
+
+	addPlantModel(position) {
+		if (this.model) {
+			this.model.addPlantModel(position);
+		}
+	}
+
+	addCityModel(positions) {
+		if (this.model) {
+			this.model.addCityModels(positions);
+		}
 	}
 
 	showAllModel() {
-		if (this.models) {
-			this.models.showAllModel();
+		if (this.model) {
+			this.model.showAllModel();
 		}
 	}
 
 	hideAllModel() {
-		if (this.models) {
-			this.models.hideAllModel();
+		if (this.model) {
+			this.model.hideAllModel();
 		}
+	}
+
+	updateModel(lng, color) {
+		this.model.updateModel(lng, color);
 	}
 
 
@@ -1042,47 +1140,47 @@ export class MapControls {
 			} : {}
 		});
 
-		let entity2 = this.viewer.entities.add({
-			position: Cesium.Cartesian3.fromDegrees(lng, lat, height),
-			show: true,
-			cylinder: {
-				//圆锥
-				length: 45,
-				topRadius: 30,
-				bottomRadius: 0,
-				material: Cesium.Color.fromCssColorString(color).withAlpha(alpha),
-				slices: 4,
-				outline: true,
-				outlineColor: Cesium.Color.fromCssColorString('#11b3ff')
-			}
-		});
-		let entity3 = this.viewer.entities.add({
-			position: Cesium.Cartesian3.fromDegrees(lng, lat, height + 45),
-			show: true,
-			// label: {
-			// 	//文字标签
-			// 	text: name,
-			// 	font: "normal 20px MicroSoft YaHei", // 15pt monospace
-			// 	style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-			// 	fillColor: Cesium.Color.WHITE,
-			// 	verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-			// 	pixelOffset: new Cesium.Cartesian2(0, -80),   //偏移量
-			// 	showBackground: true,
-			// 	backgroundColor: new Cesium.Color(0.5, 0.6, 1, 1.0)
-			// },
-			cylinder: {
-				//圆锥
-				length: 45,
-				topRadius: 0,
-				bottomRadius: 30,
-				material: Cesium.Color.fromCssColorString(color).withAlpha(alpha),
-				slices: 4,
-				outline: true,
-				outlineColor: Cesium.Color.fromCssColorString('#11b3ff')
-			}
-		});
+		// let entity2 = this.viewer.entities.add({
+		// 	position: Cesium.Cartesian3.fromDegrees(lng, lat, height),
+		// 	show: true,
+		// 	cylinder: {
+		// 		//圆锥
+		// 		length: 45,
+		// 		topRadius: 30,
+		// 		bottomRadius: 0,
+		// 		material: Cesium.Color.fromCssColorString(color).withAlpha(alpha),
+		// 		slices: 4,
+		// 		outline: true,
+		// 		outlineColor: Cesium.Color.fromCssColorString('#11b3ff')
+		// 	}
+		// });
+		// let entity3 = this.viewer.entities.add({
+		// 	position: Cesium.Cartesian3.fromDegrees(lng, lat, height + 45),
+		// 	show: true,
+		// 	// label: {
+		// 	// 	//文字标签
+		// 	// 	text: name,
+		// 	// 	font: "normal 20px MicroSoft YaHei", // 15pt monospace
+		// 	// 	style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+		// 	// 	fillColor: Cesium.Color.WHITE,
+		// 	// 	verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+		// 	// 	pixelOffset: new Cesium.Cartesian2(0, -80),   //偏移量
+		// 	// 	showBackground: true,
+		// 	// 	backgroundColor: new Cesium.Color(0.5, 0.6, 1, 1.0)
+		// 	// },
+		// 	cylinder: {
+		// 		//圆锥
+		// 		length: 45,
+		// 		topRadius: 0,
+		// 		bottomRadius: 30,
+		// 		material: Cesium.Color.fromCssColorString(color).withAlpha(alpha),
+		// 		slices: 4,
+		// 		outline: true,
+		// 		outlineColor: Cesium.Color.fromCssColorString('#11b3ff')
+		// 	}
+		// });
 
-		this.pyramidMarkEntities.push(entity1, entity2, entity3);
+		this.pyramidMarkEntities.push(entity1);
 	}
 
 	// 显示四棱锥图标
