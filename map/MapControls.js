@@ -69,6 +69,8 @@ export class MapControls {
 		this.pipelineMarkEntities = [];
 		// 发光图片集合
 		this.lightImgEntities = [];
+		// 波纹扩散实体集合
+		this.circleRippleEntities = [];
 
 		// 正常路线宽度
 		this.normalLineWidth = MapConfig.normalLineWidth;
@@ -1233,6 +1235,57 @@ export class MapControls {
 		scene.light = sunLight;
 
 		this.setTime(this.defaultTime);
+	}
+
+	// 添加波纹效果
+	addCircleRipple(data) {
+		let curR = data.minR;
+
+		function changeR() { //这是callback，参数不能内传
+			curR = curR + data.deviationR;
+			if (curR >= data.maxR) {
+				curR = data.minR;
+			}
+			return curR;
+		}
+
+		function getR() {
+			return curR;
+		}
+
+		let entity = this.viewer.entities.add({
+			id: data.id ? data.id : Math.random(),
+			name: "",
+			position: Cesium.Cartesian3.fromDegrees(Number(data.lng), Number(data.lat), data.height ? Number(data.height) : 0),
+			show: true,
+			ellipse: {
+				semiMajorAxis: new Cesium.CallbackProperty(changeR, false),
+				semiMinorAxis: new Cesium.CallbackProperty(getR, false),
+				height: data.height ? Number(data.height) : 0,
+				material: new Cesium.ImageMaterialProperty({
+					image: data.imageUrl,
+					repeat: new Cesium.Cartesian2(1.0, 1.0),
+					transparent: true,
+					color: new Cesium.CallbackProperty(function () {
+						let alp = 1 - curR / data.maxR;
+						return Cesium.Color.WHITE.withAlpha(alp)  //entity的颜色透明 并不影响材质，并且 entity也会透明哦
+					}, false)
+				})
+			}
+		});
+		this.circleRippleEntities.push(entity);
+	}
+
+	hideAllCircleRipple() {
+		for (let key in this.circleRippleEntities) {
+			this.circleRippleEntities[key].show = false;
+		}
+	}
+
+	showAllCircleRipple() {
+		for (let key in this.circleRippleEntities) {
+			this.circleRippleEntities[key].show = true;
+		}
 	}
 
 }
