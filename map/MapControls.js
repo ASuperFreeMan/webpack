@@ -213,7 +213,7 @@ export class MapControls {
 			let nameId; // 此处nameId为点击获取的路线id
 			if (pickedFeature != undefined && pickedFeature.id && pickedFeature.id._id && pickedFeature.id._id.startsWith(MapConfig.lightImgIdStart)) {
 				nameId = pickedFeature.id._id.substring(pickedFeature.id._id.indexOf('_') + 1);
-			} else if (pickedFeature != undefined && pickedFeature.id.nameID != undefined) {
+			} else if (pickedFeature != undefined && pickedFeature.id && pickedFeature.id.nameID != undefined) {
 				nameId = pickedFeature.id.nameID;
 			}
 
@@ -458,13 +458,14 @@ export class MapControls {
 		this.viewer.scene.globe.show = true;
 	}
 
-	setBaiduMap() {
+	setBaiduMap(proxy) {
 		// 移除所有影像图层
 		this.viewer.imageryLayers.removeAll();
 
+		let url = "http://api{s}.map.bdimg.com/customimage/tile?&x={x}&y={y}&z={z}&udt=20200429&scale=1&ak=8d6c8b8f3749aed6b1aff3aad6f40e37&styles=t%3Aland%7Ce%3Ag%7Cc%3A%23e7f7fc%2Ct%3Awater%7Ce%3Aall%7Cc%3A%2396b5d6%2Ct%3Agreen%7Ce%3Aall%7Cc%3A%23b0d3dd%2Ct%3Ahighway%7Ce%3Ag.f%7Cc%3A%23a6cfcf%2Ct%3Ahighway%7Ce%3Ag.s%7Cc%3A%237dabb3%2Ct%3Aarterial%7Ce%3Ag.f%7Cc%3A%23e7f7fc%2Ct%3Aarterial%7Ce%3Ag.s%7Cc%3A%23b0d5d4%2Ct%3Alocal%7Ce%3Al.t.f%7Cc%3A%237a959a%2Ct%3Alocal%7Ce%3Al.t.s%7Cc%3A%23d6e4e5%2Ct%3Aarterial%7Ce%3Al.t.f%7Cc%3A%23374a46%2Ct%3Ahighway%7Ce%3Al.t.f%7Cc%3A%23374a46%2Ct%3Ahighway%7Ce%3Al.t.s%7Cc%3A%23e9eeed";
 		let imageryLayer = this.viewer.imageryLayers.addImageryProvider(new Cesium.BaiduImageryProvider({
 			// url: "http://online{s}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}",//&styles=pl&scaler=1&p=1
-			url: "http://api{s}.map.bdimg.com/customimage/tile?&x={x}&y={y}&z={z}&udt=20200429&scale=1&ak=8d6c8b8f3749aed6b1aff3aad6f40e37&styles=t%3Aland%7Ce%3Ag%7Cc%3A%23e7f7fc%2Ct%3Awater%7Ce%3Aall%7Cc%3A%2396b5d6%2Ct%3Agreen%7Ce%3Aall%7Cc%3A%23b0d3dd%2Ct%3Ahighway%7Ce%3Ag.f%7Cc%3A%23a6cfcf%2Ct%3Ahighway%7Ce%3Ag.s%7Cc%3A%237dabb3%2Ct%3Aarterial%7Ce%3Ag.f%7Cc%3A%23e7f7fc%2Ct%3Aarterial%7Ce%3Ag.s%7Cc%3A%23b0d5d4%2Ct%3Alocal%7Ce%3Al.t.f%7Cc%3A%237a959a%2Ct%3Alocal%7Ce%3Al.t.s%7Cc%3A%23d6e4e5%2Ct%3Aarterial%7Ce%3Al.t.f%7Cc%3A%23374a46%2Ct%3Ahighway%7Ce%3Al.t.f%7Cc%3A%23374a46%2Ct%3Ahighway%7Ce%3Al.t.s%7Cc%3A%23e9eeed",
+			url: proxy ? proxy : url,
 			// maximumLevel: 8,
 			credit: 'baidu map of street'
 		}));

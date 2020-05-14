@@ -84,9 +84,9 @@ export class AddModel {
 
     }
 
-    createModelWithEntity(lng, lat, url, scale, color) {
+    createModelWithEntity(lng, lat, url, scale, color, isNeedUpdateColor) {
         let entity = this.viewer.entities.add({
-            name: color ? lng : '',
+            name: isNeedUpdateColor ? lng : '',
             position: Cesium.Cartesian3.fromDegrees(Number(lng), Number(lat), 0),
             model: {
                 uri: url,
@@ -259,7 +259,7 @@ export class AddModel {
             for (let i = 0; i < positions[key].length; i++) {
                 let curPosition = positions[key][i];
                 this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2, curPosition.color.line ? Cesium.Color.fromCssColorString(curPosition.color.line) : undefined);
-                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color.body ? Cesium.Color.fromCssColorString(curPosition.color.body) : undefined);
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color.body ? Cesium.Color.fromCssColorString(curPosition.color.body) : undefined, true);
             }
         }
     }
@@ -272,7 +272,7 @@ export class AddModel {
             for (let i = 0; i < positions[key].length; i++) {
                 let curPosition = positions[key][i];
                 this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2);
-                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color ? Cesium.Color.fromCssColorString(curPosition.color) : undefined);
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color ? Cesium.Color.fromCssColorString(curPosition.color) : undefined, true);
             }
         }
     }
@@ -282,7 +282,7 @@ export class AddModel {
         let curUrl2 = this.plantModelUrl[1];
 
         this.createModelWithEntity(position.lng, position.lat, curUrl1, 2, position.color.line ? Cesium.Color.fromCssColorString(position.color.line) : undefined);
-        this.createModelWithEntity(position.lng, position.lat, curUrl2, 2, position.color.body ? Cesium.Color.fromCssColorString(position.color.body) : undefined);
+        this.createModelWithEntity(position.lng, position.lat, curUrl2, 2, position.color.body ? Cesium.Color.fromCssColorString(position.color.body) : undefined, true);
     }
 
     addCityModels(positions) {
@@ -296,7 +296,7 @@ export class AddModel {
 
         for (let key in architectureListPositions) {
             let curPosition = architectureListPositions[key]
-            this.createModelWithEntity(curPosition.lng, curPosition.lat, this.architectureModelUrl[0]);
+            this.createModelWithEntity(curPosition.lng, curPosition.lat, this.architectureModelUrl[key], 3);
         }
 
     }
