@@ -34,9 +34,8 @@ export class ShowInformationBox {
                     let content = "pipeLineInformationBox"
                     let closeContent = "pipeClose"
                     self.showInformationBox(light, content, closeContent, "45%", "300%")//300
-                    $("#pipingType").text(d.data.type)
-                    $("#startNumber").text(d.data.startElevation)
-                    $("#endNumber").text(d.data.endElevation)
+                    $("#whereRoad").text(d.data.whereRoad)
+                    $("#length").text(d.data.length)
                     $("#sectionSize").text(d.data.diameter)
                     $("#material").text(d.data.material)
                 },
@@ -58,6 +57,7 @@ export class ShowInformationBox {
                     self.showInformationBox(light, content, closeContent, "46%", "315%")//315
                     $("#depth").text(d.data.depth)
                     $("#elevation").text(d.data.elevation)
+                    $("#wellWhereRoad").text(d.data.whereRoad)
                 },
                 error: function () {
                     alert("获取管井展示信息失败!")

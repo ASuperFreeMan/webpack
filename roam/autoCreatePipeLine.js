@@ -71,13 +71,13 @@ export class AutoCreatePipeLine {
         this.pipeline_state = 1
         for (let i = 0; i < this.pipeline_all.length; i++) {
             if (this.pipeline_all[i].userData.elevationDifference > 0) {
-                this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'left')
-            }
-            if (this.pipeline_all[i].userData.elevationDifference < 0) {
                 this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'right')
             }
-            if (this.pipeline_all[i].userData.elevationDifference == 0) {
+            if (this.pipeline_all[i].userData.elevationDifference < 0) {
                 this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'left')
+            }
+            if (this.pipeline_all[i].userData.elevationDifference == 0) {
+                this.textureTool.addRepetitiveTextureFromFirstAdd(this.pipeline_all[i], 1, 'right')
             }
         }
 
@@ -497,8 +497,8 @@ export class AutoCreatePipeLine {
             let x2 = this.pipelines[i].pipelineX2;
             let y2 = 0;
             let z2 = this.pipelines[i].pipelineZ2;
-            let startElevation = this.pipelines[i].startElevation;
-            let endElevation = this.pipelines[i].endElevation;
+            let startElevation = this.pipelines[i].pipelineY1;
+            let endElevation = this.pipelines[i].pipelineY2;
             let elevationDifference = startElevation - endElevation
             cloneModel.userData.elevationDifference = elevationDifference
             let radian = Math.atan(Math.abs(z2 - z1) / Math.abs(x2 - x1));

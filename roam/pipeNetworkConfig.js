@@ -22,7 +22,7 @@ export class PipeNetworkConfig {
 
     };
 
-    static url = 'http://192.168.0.100:8099';
+    static url = 'http://192.168.0.99:8099';
     //获取（管道/管井）生成数据地址192.168.80.169     192.168.16.231:8099
     static GET_PIPES_DATA_URL = this.url + "/api/v1/article/monitor/pipelineModeling";
     static GET_WELLS_DATA_URL = this.url + "/api/v1/article/monitor/wellPointModeling";

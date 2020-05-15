@@ -179,17 +179,17 @@ export class MapControls {
 		const self = this;
 		this.leftClickHandler.setInputAction(function (click) {
 			//获取地形表面的经纬度高程坐标
-			// let ray = self.viewer.camera.getPickRay(click.position);
-			// let cartesian = self.viewer.scene.globe.pick(ray, self.viewer.scene);
-			// let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-			// let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
-			// let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
+			let ray = self.viewer.camera.getPickRay(click.position);
+			let cartesian = self.viewer.scene.globe.pick(ray, self.viewer.scene);
+			let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+			let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
+			let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
 
 			// let cartographic = self.viewer.camera.positionCartographic;
 			// let lng = Cesium.Math.toDegrees(cartographic.longitude);//经度值
 			// let lat = Cesium.Math.toDegrees(cartographic.latitude);//纬度值
 			// let height = cartographic.height
-			// console.log(lng + "," + lat)
+			console.log(lng + "," + lat)
 
 			let position = JSON.parse(JSON.stringify(click.position));
 			// position.x = position.x * 2744 / $(window).width();
@@ -1133,13 +1133,14 @@ export class MapControls {
 				verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
 				pixelOffset: new Cesium.Cartesian2(label.pixelOffset.offSetX, label.pixelOffset.offSetY),
 				distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight),
-				eyeOffset: new Cesium.Cartesian3(0, 0, -1)
+				eyeOffset: new Cesium.Cartesian3(0, 0, -100)
 			} : {},
 			billboard: billboard != undefined ? {
 				image: billboard.uri,
-				pixelOffset: new Cesium.Cartesian2(0, -100),
+				pixelOffset: new Cesium.Cartesian2(0, -50),
 				width: billboard.width != undefined ? billboard.width : 100,
-				height: billboard.height != undefined ? billboard.height : 21.25
+				height: billboard.height != undefined ? billboard.height : 21.25,
+				distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight)
 			} : {}
 		});
 

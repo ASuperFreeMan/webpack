@@ -19,6 +19,7 @@ export var bengzhan = {
 
     //春兰
     chunlanStation: {
+        shuimian: 33,
         qiang: [
             {
                 start: 2,
@@ -123,6 +124,7 @@ export var bengzhan = {
 
     //三号小区
     districtthreeStation: {
+        shuimian: 18,
         qiang: [
             {
                 start: 1,
@@ -177,6 +179,7 @@ export var bengzhan = {
 
     //东风
     eastwindStation: {
+        shuimian: 18,
         qiang: [
             {
                 start: 1,
@@ -231,6 +234,7 @@ export var bengzhan = {
 
     //鼓楼
     gulouStation: {
+        shuimian: 33,
         qiang: [
             {
                 start: 2,
@@ -335,6 +339,7 @@ export var bengzhan = {
 
     //济川
     jichuanStation: {
+        shuimian: 35,
         qiang: [
             {
                 start: 2,
@@ -447,6 +452,7 @@ export var bengzhan = {
 
     //新区
     newdistrictStation: {
+        shuimian: 30,
         qiang: [
             {
                 start: 2,
@@ -547,6 +553,7 @@ export var bengzhan = {
 
     //泰山公园
     parkStation: {
+        shuimian: 33,
         qiang: [
             {
                 start: 2,
@@ -651,6 +658,7 @@ export var bengzhan = {
 
     //人民路三栋
     peopleStation: {
+        shuimian: 19,
         qiang: [
             {
                 start: 1,
@@ -716,6 +724,7 @@ export var bengzhan = {
 
     //凤凰河
     pheonixStation: {
+        shuimian: 34,
         qiang: [
             {
                 start: 2,
@@ -831,6 +840,7 @@ export var bengzhan = {
 
     //西湖翠苑
     xihucuiyuanStation: {
+        shuimian: 18,
         qiang: [
             {
                 start: 1,
@@ -885,6 +895,7 @@ export var bengzhan = {
 
     //朝阳河
     zhaoyangriverStation: {
+        shuimian: 18,
         qiang: [
             {
                 start: 1,
@@ -939,6 +950,7 @@ export var bengzhan = {
 
     //周山
     zhoushanriverStation: {
+        shuimian: 34,
         qiang: [
             {
                 start: 2,
@@ -1111,7 +1123,7 @@ export function init(glburl, bgUrl, dracoUrl) {
             }
             if (stationName != "districtthreeStation" && stationName != "peopleStation" && stationName != "zhaoyangriverStation" && stationName != "xihucuiyuanStation" && stationName != "eastwindStation") {
                 //主管线
-                showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex])
+                // showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex])
                 //控制箱颜色
                 for (let i = bengzhan[stationName].controlBox[0].start; i <= bengzhan[stationName].controlBox[0].end; i++) {
                     for (let j = 0; j <= 2; j++) {
@@ -1227,6 +1239,9 @@ export function loadPump(pumData) {
 
 
 export function addPumpCanvas(data) {
+    console.log(data)
+    if (data == undefined || data.length == 0) data = Number("0.0")
+    console.log(data)
     let canvas = document.createElement("canvas");
     let value = data.toFixed(1)
     canvas.width = 300;
@@ -1272,6 +1287,18 @@ export function addFlowTo(flowData) {
                     // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index4], 0x808080)
                     // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].pipeNodeNames[i].index5], 0x808080)
                 }
+            }
+            if (showFlowPipe.length > 0) {
+                //主管线
+                showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex])
+                STATION_MODEL_ALL[bengzhan[stationName].shuimian].material.transparent = true
+                STATION_MODEL_ALL[bengzhan[stationName].shuimian].material.opacity = 0.5
+                STATION_MODEL_ALL[bengzhan[stationName].shuimian].scale.set(74.4, 77.4, 180)
+            } else {
+                STATION_MODEL_ALL[bengzhan[stationName].shuimian].material.transparent = true
+                STATION_MODEL_ALL[bengzhan[stationName].shuimian].material.opacity = 0.5
+                STATION_MODEL_ALL[bengzhan[stationName].shuimian].scale.set(74.4, 77.4, 77.4)
+                // color.setMeshColor(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex], 0x808080)
             }
         }
     } else {
@@ -1347,9 +1374,9 @@ export function updataPumData() {
     setEquipmentState(NEW_DATA)
     showFlowPipe = [];
     showFlowCTD = [];
-    if (stationName != "districtthreeStation" && stationName != "peopleStation" && stationName != "zhaoyangriverStation" && stationName != "xihucuiyuanStation" && stationName != "eastwindStation") {
-        showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex])
-    }
+    // if (stationName != "districtthreeStation" && stationName != "peopleStation" && stationName != "zhaoyangriverStation" && stationName != "xihucuiyuanStation" && stationName != "eastwindStation") {
+    //     showFlowPipe.push(STATION_MODEL_ALL[bengzhan[stationName].mainPipelineIndex])
+    // }
     addFlowTo(NEW_DATA)
     addLZJFlowTo(NEW_DATA)
 }
