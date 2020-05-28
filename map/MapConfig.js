@@ -9,7 +9,7 @@ export class MapConfig {
     // 泵站监控主视角
     static pumpStationMonitoringMainView = { lng: 119.92392231992083, lat: 32.37101248596911 + 0.036887233525095 };
     // 自由巡检主视角经纬度
-    static freeRoamMainView = { lng: 119.92050928016923, lat: 32.388417918122855 + 0.076887233525095 };
+    static freeRoamMainView = { lng: 119.92050928016923 + 0.015, lat: 32.388417918122855 + 0.015 };
     // 从地球上空飞行到指定位置的时间
     static flightTime = undefined;
     // 从地球上空飞行到指定位置后等待显示图标的时间

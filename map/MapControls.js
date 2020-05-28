@@ -320,7 +320,7 @@ export class MapControls {
 	// 设置自由巡检主视角
 	setFreeRoamMainView() {
 		let height = this.freeRoamFarDistance * Math.sin(35 * Math.PI / 180) + 15.8;
-		this.flyTo(MapConfig.freeRoamMainView.lng, MapConfig.freeRoamMainView.lat, height, undefined, undefined, undefined, -35);
+		this.flyTo(MapConfig.freeRoamMainView.lng, MapConfig.freeRoamMainView.lat, height + 1500, undefined, undefined, undefined, -35);
 		this.setDefaultPosition(MapConfig.freeRoamMainView.lng, MapConfig.freeRoamMainView.lat, height);
 		this.isEarthRolling = true;
 	}
@@ -1231,6 +1231,11 @@ export class MapControls {
 		scene.globe.enableLighting = true;
 		scene.globe.dynamicAtmosphereLighting = true;
 		scene.globe.dynamicAtmosphereLightingFromSun = false;
+
+		// this.viewer.shadows = true;
+		// let shadowMap = this.viewer.shadowMap;
+		// shadowMap.maximumDistance = 10000.0;
+		// shadowMap.size = 4096;
 
 		let sunLight = new Cesium.SunLight()
 		scene.light = sunLight;

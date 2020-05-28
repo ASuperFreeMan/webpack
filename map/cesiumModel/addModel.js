@@ -268,11 +268,13 @@ export class AddModel {
         for (let key in positions) {
             let curUrl1 = this.monitorModelUrl[key][0];
             let curUrl2 = this.monitorModelUrl[key][1];
+            let curUrl3 = this.monitorModelUrl[key][2];
 
             for (let i = 0; i < positions[key].length; i++) {
                 let curPosition = positions[key][i];
                 this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2);
                 this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color ? Cesium.Color.fromCssColorString(curPosition.color) : undefined, true);
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl3, 2);
             }
         }
     }
@@ -296,7 +298,7 @@ export class AddModel {
 
         for (let key in architectureListPositions) {
             let curPosition = architectureListPositions[key]
-            this.createModelWithEntity(curPosition.lng, curPosition.lat, this.architectureModelUrl[key], 3);
+            this.createModelWithEntity(curPosition.lng, curPosition.lat, this.architectureModelUrl[key], 2);
         }
 
     }
