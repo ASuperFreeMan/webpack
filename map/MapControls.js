@@ -403,7 +403,7 @@ export class MapControls {
 			options.lng = Number(point.lng);
 			options.lat = Number(point.lat);
 			pitch = Cesium.Math.toRadians(-40);
-			distance = 1219.9986250239356;
+			distance = 1686.7157730820593;  // 移动后处于高度1100 公式：(1100 - 15.8) / Math.sin(40 * Math.PI / 180)//1219.9986250239356;
 		}
 		let position = Cesium.Cartesian3.fromDegrees(options.lng, options.lat, options.height);
 		// 给定飞行一周所需时间，比如10s, 那么每秒转动度数
@@ -1100,10 +1100,21 @@ export class MapControls {
 		}
 	}
 
-	updateModel(lng, color) {
-		this.model.updateModel(lng, color);
+	showMonitorModel() {
+		this.model.showMonitorModel();
 	}
 
+	hideMonitorModel() {
+		this.model.hideMonitorModel();
+	}
+
+	updateModel(name, bodyColor, lineColor) {
+		this.model.updateModel(name, bodyColor, lineColor);
+	}
+
+	updateMonitorModel(name, color) {
+		this.model.updateMonitorModel(name, color);
+	}
 
 	// 添加四棱锥图标
 	addPyramidMark(id, position, label, billboard, color, alpha) {
@@ -1137,7 +1148,7 @@ export class MapControls {
 			} : {},
 			billboard: billboard != undefined ? {
 				image: billboard.uri,
-				pixelOffset: new Cesium.Cartesian2(0, -50),
+				pixelOffset: new Cesium.Cartesian2(0, -10),
 				width: billboard.width != undefined ? billboard.width : 100,
 				height: billboard.height != undefined ? billboard.height : 21.25,
 				distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight)
@@ -1185,6 +1196,16 @@ export class MapControls {
 		// });
 
 		this.pyramidMarkEntities.push(entity1);
+	}
+
+	// 更新图标
+	updatePyramidMark(id, imageUri) {
+		for (let key in this.pyramidMarkEntities) {
+			if (id == this.pyramidMarkEntities[key].id) {
+				this.pyramidMarkEntities[key].billboard.image = imageUri;
+				break;
+			}
+		}
 	}
 
 	// 显示四棱锥图标

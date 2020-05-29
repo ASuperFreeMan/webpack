@@ -14,6 +14,8 @@ export class AddModel {
 
         this.models = [];
 
+        this.monitorModels = [];
+
         // this.addCityModels();
         // this.addWellModels();
         // this.addPipelineModels();
@@ -84,9 +86,9 @@ export class AddModel {
 
     }
 
-    createModelWithEntity(lng, lat, url, scale, color, isNeedUpdateColor) {
+    createModelWithEntity(lng, lat, url, scale, color, modelName) {
         let entity = this.viewer.entities.add({
-            name: isNeedUpdateColor ? lng : '',
+            name: modelName ? modelName : '',
             position: Cesium.Cartesian3.fromDegrees(Number(lng), Number(lat), 0),
             model: {
                 uri: url,
@@ -101,13 +103,39 @@ export class AddModel {
     }
 
     // 更新模型属性
-    updateModel(lng, color) {
+    updateModel(name, bodyColor, lineColor) {
         for (let key in this.models) {
             let entity = this.models[key];
-            if (lng == entity.name) {
-                entity.model.color = Cesium.Color.fromCssColorString(color).withAlpha(.6);
-                break;
+            let entityName = entity.name;
+            if (entityName && entityName.startsWith(name)) {
+                if (entityName.endsWith("body")) {
+                    entity.model.color = Cesium.Color.fromCssColorString(bodyColor);
+                } else if (entityName.endsWith("line")) {
+                    entity.model.color = Cesium.Color.fromCssColorString(lineColor);
+                }
             }
+        }
+    }
+
+    updateMonitorModel(name, color) {
+        for (let i = 0; i < this.monitorModels.length; i++) {
+            let entity = this.monitorModels[i];
+            if (entity.name == name && entity.ellipsoid) {
+                entity.ellipsoid.outlineColor = Cesium.Color.fromCssColorString(color.line);
+                entity.ellipsoid.material = Cesium.Color.fromCssColorString(color.body);
+            }
+        }
+    }
+
+    showMonitorModel() {
+        for (let i = 0; i < this.monitorModels.length; i++) {
+            this.monitorModels[i].show = true;
+        }
+    }
+
+    hideMonitorModel() {
+        for (let i = 0; i < this.monitorModels.length; i++) {
+            this.monitorModels[i].show = false;
         }
     }
 
@@ -258,23 +286,66 @@ export class AddModel {
 
             for (let i = 0; i < positions[key].length; i++) {
                 let curPosition = positions[key][i];
-                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2, curPosition.color.line ? Cesium.Color.fromCssColorString(curPosition.color.line) : undefined);
-                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color.body ? Cesium.Color.fromCssColorString(curPosition.color.body) : undefined, true);
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2, curPosition.color.line ? Cesium.Color.fromCssColorString(curPosition.color.line) : undefined, curPosition.name + "line");
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color.body ? Cesium.Color.fromCssColorString(curPosition.color.body) : undefined, curPosition.name + "body");
             }
         }
     }
 
     addMonitorModels(positions) {
         for (let key in positions) {
-            let curUrl1 = this.monitorModelUrl[key][0];
-            let curUrl2 = this.monitorModelUrl[key][1];
-            let curUrl3 = this.monitorModelUrl[key][2];
+            // let curUrl1 = this.monitorModelUrl[key][0];
+            // let curUrl2 = this.monitorModelUrl[key][1];
+            // let curUrl3 = this.monitorModelUrl[key][2];
 
+            // for (let i = 0; i < positions[key].length; i++) {
+            //     let curPosition = positions[key][i];
+            //     this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2);
+            //     this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color ? Cesium.Color.fromCssColorString(curPosition.color) : undefined, curPosition.name + "body");
+            //     this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl3, 2);
+            // }
+
+            // for (let i = 0; i < positions[key].length; i++) {
+            //     let curPosition = positions[key][i];
+            //     let lng = Number(curPosition.lng);
+            //     let lat = Number(curPosition.lat);
+            //     this.viewer.entities.add({
+            //         position: Cesium.Cartesian3.fromDegrees(lng, lat, 100),
+            //         show: true,
+            //         cylinder: {
+            //             length: 200,
+            //             topRadius: 8,
+            //             bottomRadius: 8,
+            //             material: new Cesium.ImageMaterialProperty({
+            //                 image: 'static/map/imgs/1.png',
+            //                 color: Cesium.Color.WHITE,
+            //                 repeat: new Cesium.Cartesian2(1, 1),
+            //                 transparent: true
+            //             })
+            //         }
+            //     });
+            // }
             for (let i = 0; i < positions[key].length; i++) {
                 let curPosition = positions[key][i];
-                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2);
-                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color ? Cesium.Color.fromCssColorString(curPosition.color) : undefined, true);
-                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl3, 2);
+                for (let j = 0; j < 5; j++) {
+                    let height = 50 * j;
+                    let lng = Number(curPosition.lng);
+                    let lat = Number(curPosition.lat);
+                    let color = curPosition.color;
+                    let name = curPosition.name;
+                    let entity = this.viewer.entities.add({
+                        name: name,
+                        position: Cesium.Cartesian3.fromDegrees(lng, lat, height),
+                        ellipsoid: {
+                            radii: new Cesium.Cartesian3(10, 10, 10),
+                            outline: true,
+                            outlineColor: Cesium.Color.fromCssColorString(color.line),
+                            outlineWidth: 2,
+                            material: Cesium.Color.fromCssColorString(color.body),
+                        },
+                    });
+                    this.monitorModels.push(entity);
+                }
             }
         }
     }
@@ -284,7 +355,7 @@ export class AddModel {
         let curUrl2 = this.plantModelUrl[1];
 
         this.createModelWithEntity(position.lng, position.lat, curUrl1, 2, position.color.line ? Cesium.Color.fromCssColorString(position.color.line) : undefined);
-        this.createModelWithEntity(position.lng, position.lat, curUrl2, 2, position.color.body ? Cesium.Color.fromCssColorString(position.color.body) : undefined, true);
+        this.createModelWithEntity(position.lng, position.lat, curUrl2, 2, position.color.body ? Cesium.Color.fromCssColorString(position.color.body) : undefined);
     }
 
     addCityModels(positions) {
