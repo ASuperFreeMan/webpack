@@ -127,6 +127,16 @@ export class AddModel {
         }
     }
 
+    changePumpModelScale(name, scale) {
+        for (let key in this.models) {
+            let entity = this.models[key];
+            let entityName = entity.name;
+            if (entityName && entityName.startsWith(name)) {
+                entity.model.scale = scale;
+            }
+        }
+    }
+
     showMonitorModel() {
         for (let i = 0; i < this.monitorModels.length; i++) {
             this.monitorModels[i].show = true;

@@ -846,23 +846,33 @@ export class MapControls {
 			self.flowLineDataSource = dataSource;
 			let entities = dataSource.entities.values;
 
-			for (let i = 0; i < entities.length - 7; i++) {
+			for (let i = 0; i < entities.length - 13; i++) {
 				let r = entities[i];
 				r.show = false;
-				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, time)
+				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, time);
 				r.polyline.width = self.flowLineWidth;
 				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
 				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
 			}
 
-			for (let j = entities.length - 7; j < entities.length; j++) {
+			for (let j = entities.length - 13; j < entities.length - 7; j++) {
 				let r = entities[j];
+				r.show = false;
+				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, time);
+				r.polyline.width = self.flowLineWidth + 5;
+				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
+				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
+			}
+
+			for (let k = entities.length - 7; k < entities.length; k++) {
+				let r = entities[k];
 				r.show = false;
 				r.polyline.material = new Cesium.PolylineTrailLink2MaterialProperty(Cesium.Color.fromCssColorString("#e60012"), time)
 				r.polyline.width = self.flowLineWidth;
 				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
 				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
 			}
+
 
 			let ellipsoid = self.viewer.scene.globe.ellipsoid;
 			for (let i in entities) {
@@ -1114,6 +1124,10 @@ export class MapControls {
 
 	updateMonitorModel(name, color) {
 		this.model.updateMonitorModel(name, color);
+	}
+
+	changePumpModelScale(name, scale) {
+		this.model.changePumpModelScale(name, scale);
 	}
 
 	// 添加四棱锥图标
