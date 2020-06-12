@@ -12,6 +12,10 @@ export class AddModel {
 
         this.architectureModelUrl = urls.mapModelUrl.architecture;
 
+        this.floorUrl = urls.floorUrlToCesium;
+
+
+
         this.models = [];
 
         this.monitorModels = [];
@@ -22,7 +26,7 @@ export class AddModel {
     }
 
     //外部建筑模型加载
-    createModel(id, url, isScale) {
+    createModelWithPrimitive(id, url, isScale) {
         // 获取一个WGS84点的坐标点对应的世界坐标
         let origin = Cesium.Cartesian3.fromDegrees(119.92672212218824, 32.46281482545325, 0);
         let baseModelMatrix = Cesium.Transforms.headingPitchRollToFixedFrame(origin, new Cesium.HeadingPitchRoll(0.0, 0.0, 0.0));
@@ -45,7 +49,7 @@ export class AddModel {
 
         Model.readyPromise.then(function (model) {
 
-            let position = Cesium.Cartesian3.fromDegrees(119.92677790917063, 32.46318663013395, 0); // 119.92677790917063, 32.46318663013395
+            let position = Cesium.Cartesian3.fromDegrees(119.92672212218824 + 0.0113, 32.46281482545325 - 0.0066 - 0.000005, 0); // 119.92677790917063, 32.46318663013395
             let mat = Cesium.Transforms.eastNorthUpToFixedFrame(position);
 
             // 进行90度旋转
@@ -86,13 +90,31 @@ export class AddModel {
 
     }
 
-    createModelWithEntity(lng, lat, url, scale, color, modelName) {
+    createModelWithEntity(lng, lat, height, url, scale, color, modelName, isNeedUpdateScale) {
+
+        const self = this;
+
+        function computeScale() {
+            let cameraPosition = self.viewer.camera.positionWC;
+            let entityPosition = Cesium.Cartesian3.fromDegrees(Number(lng), Number(lat), 0);
+            let distance = Cesium.Cartesian3.distance(cameraPosition, entityPosition);
+            if (distance >= 8000) {
+                return scale;
+            } else {
+                let result = distance * (scale / 8000);
+                if (result <= 0.2) {
+                    result = 0.2;
+                }
+                return result;
+            }
+        }
+
         let entity = this.viewer.entities.add({
             name: modelName ? modelName : '',
-            position: Cesium.Cartesian3.fromDegrees(Number(lng), Number(lat), 0),
+            position: Cesium.Cartesian3.fromDegrees(Number(lng), Number(lat), height ? Number(height) : 0),
             model: {
                 uri: url,
-                scale: scale,
+                scale: isNeedUpdateScale ? new Cesium.CallbackProperty(computeScale, false) : scale,
                 color: color,
                 colorBlendAmount: color ? 0.5 : 0,
                 colorBlendMode: color ? Cesium.ColorBlendMode.REPLACE : Cesium.ColorBlendMode.MIX,
@@ -296,8 +318,8 @@ export class AddModel {
 
             for (let i = 0; i < positions[key].length; i++) {
                 let curPosition = positions[key][i];
-                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2, curPosition.color.line ? Cesium.Color.fromCssColorString(curPosition.color.line) : undefined, curPosition.name + "line");
-                this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color.body ? Cesium.Color.fromCssColorString(curPosition.color.body) : undefined, curPosition.name + "body");
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curPosition.height ? curPosition.height : 0, curUrl1, 2, curPosition.color.line ? Cesium.Color.fromCssColorString(curPosition.color.line) : undefined, curPosition.name + "line", true);
+                this.createModelWithEntity(curPosition.lng, curPosition.lat, curPosition.height ? curPosition.height : 0, curUrl2, 2, curPosition.color.body ? Cesium.Color.fromCssColorString(curPosition.color.body) : undefined, curPosition.name + "body", true);
             }
         }
     }
@@ -310,9 +332,9 @@ export class AddModel {
 
             // for (let i = 0; i < positions[key].length; i++) {
             //     let curPosition = positions[key][i];
-            //     this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl1, 2);
-            //     this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl2, 2, curPosition.color ? Cesium.Color.fromCssColorString(curPosition.color) : undefined, curPosition.name + "body");
-            //     this.createModelWithEntity(curPosition.lng, curPosition.lat, curUrl3, 2);
+            //     this.createModelWithEntity(curPosition.lng, curPosition.lat, 0, curUrl1, 2);
+            //     this.createModelWithEntity(curPosition.lng, curPosition.lat, 0, curUrl2, 2, curPosition.color ? Cesium.Color.fromCssColorString(curPosition.color) : undefined, curPosition.name + "body");
+            //     this.createModelWithEntity(curPosition.lng, curPosition.lat, 0, curUrl3, 2);
             // }
 
             // for (let i = 0; i < positions[key].length; i++) {
@@ -338,16 +360,17 @@ export class AddModel {
             for (let i = 0; i < positions[key].length; i++) {
                 let curPosition = positions[key][i];
                 for (let j = 0; j < 5; j++) {
-                    let height = 50 * j;
+                    let height = 15 * j;
                     let lng = Number(curPosition.lng);
                     let lat = Number(curPosition.lat);
                     let color = curPosition.color;
                     let name = curPosition.name;
                     let entity = this.viewer.entities.add({
                         name: name,
+                        show: false,
                         position: Cesium.Cartesian3.fromDegrees(lng, lat, height),
                         ellipsoid: {
-                            radii: new Cesium.Cartesian3(10, 10, 10),
+                            radii: new Cesium.Cartesian3(5, 5, 5),
                             outline: true,
                             outlineColor: Cesium.Color.fromCssColorString(color.line),
                             outlineWidth: 2,
@@ -364,22 +387,22 @@ export class AddModel {
         let curUrl1 = this.plantModelUrl[0];
         let curUrl2 = this.plantModelUrl[1];
 
-        this.createModelWithEntity(position.lng, position.lat, curUrl1, 2, position.color.line ? Cesium.Color.fromCssColorString(position.color.line) : undefined);
-        this.createModelWithEntity(position.lng, position.lat, curUrl2, 2, position.color.body ? Cesium.Color.fromCssColorString(position.color.body) : undefined);
+        this.createModelWithEntity(position.lng, position.lat, position.height ? position.height : 0, curUrl1, 2, position.color.line ? Cesium.Color.fromCssColorString(position.color.line) : undefined, undefined, true);
+        this.createModelWithEntity(position.lng, position.lat, position.height ? position.height : 0, curUrl2, 2, position.color.body ? Cesium.Color.fromCssColorString(position.color.body) : undefined, undefined, true);
     }
 
     addCityModels(positions) {
-        // this.createModel('boliti', this.boliti, true);
-        // for (let key in this.floorUrl) {
-        //     this.createModel('floor', this.floorUrl[key]);
-        // }
-        // this.createModel('other', this.otherUrl);
+        // this.createModelWithPrimitive('boliti', this.boliti, true);
+        for (let key in this.floorUrl) {
+            this.createModelWithPrimitive('floor', this.floorUrl[key]);
+        }
+        // this.createModelWithPrimitive('other', this.otherUrl);
 
         let architectureListPositions = positions;
 
         for (let key in architectureListPositions) {
             let curPosition = architectureListPositions[key]
-            this.createModelWithEntity(curPosition.lng, curPosition.lat, this.architectureModelUrl[key], 2);
+            this.createModelWithEntity(curPosition.lng, curPosition.lat, 0, this.architectureModelUrl[key], curPosition.scale ? Number(curPosition.scale) : 1);
         }
 
     }

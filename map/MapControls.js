@@ -65,6 +65,14 @@ export class MapControls {
 		this.polylineDataSource;
 		// 流动路线对象
 		this.flowLineDataSource;
+		// 凤凰路流动路线对象
+		this.fengHuangFlowLineDataSource;
+		// 济川路流动路线对象
+		this.jiChuanFlowLineDataSource;
+		// 污水厂尾水流动路线对象
+		this.outWuShuiIndustryFlowLineDataSource;
+		// 泵站尾水流动路线对象
+		this.outPumpFlowLineDataSource;
 		// 管线图标集合
 		this.pipelineMarkEntities = [];
 		// 发光图片集合
@@ -96,6 +104,10 @@ export class MapControls {
 
 		// 四棱錐图标实体集合
 		this.pyramidMarkEntities = [];
+
+		// 偏差的经纬度
+		this.deviationLng = 0.0113;
+		this.deviationLat = - 0.0065;
 
 		this.init();
 
@@ -239,7 +251,14 @@ export class MapControls {
 				// console.log("param: ........." + param)
 				callback(param);
 			}
+
+			if (pickedFeature != undefined && pickedFeature.id && pickedFeature.id._name == "fenghuang") {
+				let param = "fenghuang";
+				callback(param);
+			}
 		}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+
 	}
 
 	removeLeftClickAction() {
@@ -403,7 +422,7 @@ export class MapControls {
 			options.lng = Number(point.lng);
 			options.lat = Number(point.lat);
 			pitch = Cesium.Math.toRadians(-40);
-			distance = 1686.7157730820593;  // 移动后处于高度1100 公式：(1100 - 15.8) / Math.sin(40 * Math.PI / 180)//1219.9986250239356;
+			distance = 286.564328907688;  // 移动后处于高度200 公式：(height - 15.8) / Math.sin(40 * Math.PI / 180)
 		}
 		let position = Cesium.Cartesian3.fromDegrees(options.lng, options.lat, options.height);
 		// 给定飞行一周所需时间，比如10s, 那么每秒转动度数
@@ -628,6 +647,14 @@ export class MapControls {
 		});
 	}
 
+	// 取消飞行
+	cancelFly() {
+		let scene = this.viewer.scene;
+		if (scene && (scene.tweens.length > 0)) {
+			scene.tweens.removeAll();
+		}
+	}
+
 	// 设置相机位置
 	setView(lng, lat, height, distance) {
 		// 偏差值
@@ -659,6 +686,7 @@ export class MapControls {
 				text: label.text,
 				font: label.font != undefined ? label.font : '15px monospace 黑体',
 				style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+				scale: label.scale ? Number(label.scale) : 1,
 				showBackground: true,
 				backgroundPadding: label.backgroundPadding != undefined ? new Cesium.Cartesian2(label.backgroundPadding.x, label.backgroundPadding.y) : new Cesium.Cartesian2(7, 5),
 				backgroundColor: label.backgroundColor != undefined ? Cesium.Color.fromCssColorString(label.backgroundColor.color).withAlpha(label.backgroundColor.alpha != undefined ? Number(label.backgroundColor.alpha) : 1) : Cesium.Color.BLACK,
@@ -846,7 +874,7 @@ export class MapControls {
 			self.flowLineDataSource = dataSource;
 			let entities = dataSource.entities.values;
 
-			for (let i = 0; i < entities.length - 13; i++) {
+			for (let i = 0; i < entities.length; i++) {
 				let r = entities[i];
 				r.show = false;
 				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, time);
@@ -854,25 +882,6 @@ export class MapControls {
 				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
 				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
 			}
-
-			for (let j = entities.length - 13; j < entities.length - 7; j++) {
-				let r = entities[j];
-				r.show = false;
-				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, time);
-				r.polyline.width = self.flowLineWidth + 5;
-				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
-				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
-			}
-
-			for (let k = entities.length - 7; k < entities.length; k++) {
-				let r = entities[k];
-				r.show = false;
-				r.polyline.material = new Cesium.PolylineTrailLink2MaterialProperty(Cesium.Color.fromCssColorString("#e60012"), time)
-				r.polyline.width = self.flowLineWidth;
-				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
-				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
-			}
-
 
 			let ellipsoid = self.viewer.scene.globe.ellipsoid;
 			for (let i in entities) {
@@ -882,7 +891,7 @@ export class MapControls {
 					let lat = Cesium.Math.toDegrees(Number(cartographic.latitude));
 					let lng = Cesium.Math.toDegrees(Number(cartographic.longitude));
 					let height = cartographic.height;
-					let cartographic2 = Cesium.Cartographic.fromDegrees(lng + 0.0113, lat - 0.0066, height);
+					let cartographic2 = Cesium.Cartographic.fromDegrees(lng + self.deviationLng, lat + self.deviationLat, height);
 					let cartesian3 = ellipsoid.cartographicToCartesian(cartographic2);
 					positions[k] = cartesian3;
 				}
@@ -892,10 +901,214 @@ export class MapControls {
 
 	}
 
+	// 添加凤凰路流动路线
+	addFengHuangFowLine(url, time) {
+		time = time ? time : 2000;
+
+		let geojsonOptions = {
+			clampToGround: true
+		};
+		// 从geojson文件加载管线
+		let neighborhoodsPromise = Cesium.GeoJsonDataSource.load(url, geojsonOptions);
+		const self = this;
+		neighborhoodsPromise.then(function (dataSource) {
+			self.viewer.dataSources.add(dataSource);
+			self.fengHuangFlowLineDataSource = dataSource;
+			let entities = dataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.name = "fenghuang";
+				r.show = false;
+				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, time);
+				r.polyline.width = self.flowLineWidth;
+				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
+				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
+			}
+
+			let ellipsoid = self.viewer.scene.globe.ellipsoid;
+			for (let i in entities) {
+				let positions = entities[i].polyline.positions._value;
+				for (let k = 0; k < positions.length; k++) {
+					let cartographic = ellipsoid.cartesianToCartographic(positions[k]);
+					let lat = Cesium.Math.toDegrees(Number(cartographic.latitude));
+					let lng = Cesium.Math.toDegrees(Number(cartographic.longitude));
+					let height = cartographic.height;
+					let cartographic2 = Cesium.Cartographic.fromDegrees(lng + self.deviationLng, lat + self.deviationLat, height);
+					let cartesian3 = ellipsoid.cartographicToCartesian(cartographic2);
+					positions[k] = cartesian3;
+				}
+			}
+
+		});
+	}
+
+	// 添加济川路流动路线
+	addJiChuanFowLine(url, time) {
+		time = time ? time : 2000;
+
+		let geojsonOptions = {
+			clampToGround: true
+		};
+		// 从geojson文件加载管线
+		let neighborhoodsPromise = Cesium.GeoJsonDataSource.load(url, geojsonOptions);
+		const self = this;
+		neighborhoodsPromise.then(function (dataSource) {
+			self.viewer.dataSources.add(dataSource);
+			self.jiChuanFlowLineDataSource = dataSource;
+			let entities = dataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.name = "jichuan";
+				r.show = false;
+				r.polyline.material = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.DEEPSKYBLUE, time);
+				r.polyline.width = self.flowLineWidth + 5;
+				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
+				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
+			}
+
+			let ellipsoid = self.viewer.scene.globe.ellipsoid;
+			for (let i in entities) {
+				let positions = entities[i].polyline.positions._value;
+				for (let k = 0; k < positions.length; k++) {
+					let cartographic = ellipsoid.cartesianToCartographic(positions[k]);
+					let lat = Cesium.Math.toDegrees(Number(cartographic.latitude));
+					let lng = Cesium.Math.toDegrees(Number(cartographic.longitude));
+					let height = cartographic.height;
+					let cartographic2 = Cesium.Cartographic.fromDegrees(lng + self.deviationLng, lat + self.deviationLat, height);
+					let cartesian3 = ellipsoid.cartographicToCartesian(cartographic2);
+					positions[k] = cartesian3;
+				}
+			}
+
+		});
+	}
+
+	// 添加污水厂尾水流动路线
+	addOutWuShuiIndustryFowLine(url, time) {
+		time = time ? time : 2000;
+
+		let geojsonOptions = {
+			clampToGround: true
+		};
+		// 从geojson文件加载管线
+		let neighborhoodsPromise = Cesium.GeoJsonDataSource.load(url, geojsonOptions);
+		const self = this;
+		neighborhoodsPromise.then(function (dataSource) {
+			self.viewer.dataSources.add(dataSource);
+			self.outWuShuiIndustryFlowLineDataSource = dataSource;
+			let entities = dataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.name = "wushui";
+				r.show = false;
+				r.polyline.material = new Cesium.PolylineTrailLink2MaterialProperty(Cesium.Color.fromCssColorString("#e60012"), time)
+				r.polyline.width = self.flowLineWidth;
+				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
+				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
+			}
+
+			let ellipsoid = self.viewer.scene.globe.ellipsoid;
+			for (let i in entities) {
+				let positions = entities[i].polyline.positions._value;
+				for (let k = 0; k < positions.length; k++) {
+					let cartographic = ellipsoid.cartesianToCartographic(positions[k]);
+					let lat = Cesium.Math.toDegrees(Number(cartographic.latitude));
+					let lng = Cesium.Math.toDegrees(Number(cartographic.longitude));
+					let height = cartographic.height;
+					let cartographic2 = Cesium.Cartographic.fromDegrees(lng + self.deviationLng, lat + self.deviationLat, height);
+					let cartesian3 = ellipsoid.cartographicToCartesian(cartographic2);
+					positions[k] = cartesian3;
+				}
+			}
+
+		});
+	}
+
+	addOutPumpFlowLine(url, time) {
+		time = time ? time : 2000;
+
+		let geojsonOptions = {
+			clampToGround: true
+		};
+		// 从geojson文件加载管线
+		let neighborhoodsPromise = Cesium.GeoJsonDataSource.load(url, geojsonOptions);
+		const self = this;
+		neighborhoodsPromise.then(function (dataSource) {
+			self.viewer.dataSources.add(dataSource);
+			self.outPumpFlowLineDataSource = dataSource;
+			let entities = dataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.name = "outPump";
+				r.show = false;
+				r.polyline.material = new Cesium.PolylineTrailLink2MaterialProperty(Cesium.Color.fromCssColorString("#e60012"), time)
+				r.polyline.width = self.flowLineWidth;
+				r.polyline.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight);
+				r.polyline.classificationType = Cesium.ClassificationType.TERRAIN;
+			}
+
+			let ellipsoid = self.viewer.scene.globe.ellipsoid;
+			for (let i in entities) {
+				let positions = entities[i].polyline.positions._value;
+				for (let k = 0; k < positions.length; k++) {
+					let cartographic = ellipsoid.cartesianToCartographic(positions[k]);
+					let lat = Cesium.Math.toDegrees(Number(cartographic.latitude));
+					let lng = Cesium.Math.toDegrees(Number(cartographic.longitude));
+					let height = cartographic.height;
+					let cartographic2 = Cesium.Cartographic.fromDegrees(lng + self.deviationLng, lat + self.deviationLat, height);
+					let cartesian3 = ellipsoid.cartographicToCartesian(cartographic2);
+					positions[k] = cartesian3;
+				}
+			}
+
+		});
+	}
+
+
 	// 设置流动时间
 	setFlowLineTime(time) {
 		if (this.flowLineDataSource) {
 			let entities = this.flowLineDataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.polyline.material.duration = time;
+			}
+		}
+
+		if (this.fengHuangFlowLineDataSource) {
+			let entities = this.fengHuangFlowLineDataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.polyline.material.duration = time;
+			}
+		}
+
+		if (this.jiChuanFlowLineDataSource) {
+			let entities = this.jiChuanFlowLineDataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.polyline.material.duration = time;
+			}
+		}
+
+		if (this.outWuShuiIndustryFlowLineDataSource) {
+			let entities = this.outWuShuiIndustryFlowLineDataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.polyline.material.duration = time;
+			}
+		}
+
+		if (this.outPumpFlowLineDataSource) {
+			let entities = this.outPumpFlowLineDataSource.entities.values;
 
 			for (let i = 0; i < entities.length; i++) {
 				let r = entities[i];
@@ -1061,12 +1274,68 @@ export class MapControls {
 				entities[i].show = true;
 			}
 		}
+
+		if (this.fengHuangFlowLineDataSource != undefined) {
+			let entities = this.fengHuangFlowLineDataSource.entities.values;
+			for (let i = 0; i < entities.length; i++) {
+				entities[i].show = true;
+			}
+		}
+
+		if (this.jiChuanFlowLineDataSource != undefined) {
+			let entities = this.jiChuanFlowLineDataSource.entities.values;
+			for (let i = 0; i < entities.length; i++) {
+				entities[i].show = true;
+			}
+		}
+
+		if (this.outWuShuiIndustryFlowLineDataSource != undefined) {
+			let entities = this.outWuShuiIndustryFlowLineDataSource.entities.values;
+			for (let i = 0; i < entities.length; i++) {
+				entities[i].show = true;
+			}
+		}
+
+		if (this.outPumpFlowLineDataSource != undefined) {
+			let entities = this.outPumpFlowLineDataSource.entities.values;
+			for (let i = 0; i < entities.length; i++) {
+				entities[i].show = true;
+			}
+		}
 	}
 
 	// 隐藏流动路线
 	hideFlowLine() {
 		if (this.flowLineDataSource != undefined) {
 			let entities = this.flowLineDataSource.entities.values;
+			for (let i = 0; i < entities.length; i++) {
+				entities[i].show = false;
+			}
+		}
+
+		if (this.fengHuangFlowLineDataSource != undefined) {
+			let entities = this.fengHuangFlowLineDataSource.entities.values;
+			for (let i = 0; i < entities.length; i++) {
+				entities[i].show = false;
+			}
+		}
+
+		if (this.jiChuanFlowLineDataSource != undefined) {
+			let entities = this.jiChuanFlowLineDataSource.entities.values;
+			for (let i = 0; i < entities.length; i++) {
+				entities[i].show = false;
+			}
+		}
+
+		if (this.outWuShuiIndustryFlowLineDataSource != undefined) {
+			let entities = this.outWuShuiIndustryFlowLineDataSource.entities.values;
+			for (let i = 0; i < entities.length; i++) {
+				entities[i].show = false;
+			}
+		}
+
+		if (this.outPumpFlowLineDataSource != undefined) {
+			let entities = this.outPumpFlowLineDataSource.entities.values;
 			for (let i = 0; i < entities.length; i++) {
 				entities[i].show = false;
 			}
@@ -1162,7 +1431,7 @@ export class MapControls {
 			} : {},
 			billboard: billboard != undefined ? {
 				image: billboard.uri,
-				pixelOffset: new Cesium.Cartesian2(0, -10),
+				pixelOffset: new Cesium.Cartesian2(0, -100),
 				width: billboard.width != undefined ? billboard.width : 100,
 				height: billboard.height != undefined ? billboard.height : 21.25,
 				distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, MapConfig.cameraTiltMaxHight)
