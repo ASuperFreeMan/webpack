@@ -1027,7 +1027,7 @@ export class MapControls {
 		});
 	}
 
-	addOutPumpFlowLine(url, time) {
+	addOutPumpFlowLine(url, time, names) {
 		time = time ? time : 2000;
 
 		let geojsonOptions = {
@@ -1043,7 +1043,9 @@ export class MapControls {
 
 			for (let i = 0; i < entities.length; i++) {
 				let r = entities[i];
-				r.name = "outPump";
+				if (names) {
+					r.name = names[i];
+				}
 				r.show = false;
 				r.polyline.material = new Cesium.PolylineTrailLink2MaterialProperty(Cesium.Color.fromCssColorString("#e60012"), time)
 				r.polyline.width = self.flowLineWidth;
@@ -1067,7 +1069,6 @@ export class MapControls {
 
 		});
 	}
-
 
 	// 设置流动时间
 	setFlowLineTime(time) {
@@ -1113,6 +1114,30 @@ export class MapControls {
 			for (let i = 0; i < entities.length; i++) {
 				let r = entities[i];
 				r.polyline.material.duration = time;
+			}
+		}
+	}
+
+	setOutPumpFlowLineTime(time) {
+		if (this.outPumpFlowLineDataSource) {
+			let entities = this.outPumpFlowLineDataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				r.polyline.material.duration = time;
+			}
+		}
+	}
+
+	setOutPumpFlowLineTimeByName(name, time) {
+		if (this.outPumpFlowLineDataSource) {
+			let entities = this.outPumpFlowLineDataSource.entities.values;
+
+			for (let i = 0; i < entities.length; i++) {
+				let r = entities[i];
+				if (r.name == name) {
+					r.polyline.material.duration = time;
+				}
 			}
 		}
 	}

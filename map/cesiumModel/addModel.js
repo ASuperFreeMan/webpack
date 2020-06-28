@@ -357,29 +357,52 @@ export class AddModel {
             //         }
             //     });
             // }
+
             for (let i = 0; i < positions[key].length; i++) {
                 let curPosition = positions[key][i];
-                for (let j = 0; j < 5; j++) {
-                    let height = 15 * j;
-                    let lng = Number(curPosition.lng);
-                    let lat = Number(curPosition.lat);
-                    let color = curPosition.color;
-                    let name = curPosition.name;
-                    let entity = this.viewer.entities.add({
-                        name: name,
-                        show: false,
-                        position: Cesium.Cartesian3.fromDegrees(lng, lat, height),
-                        ellipsoid: {
-                            radii: new Cesium.Cartesian3(5, 5, 5),
-                            outline: true,
-                            outlineColor: Cesium.Color.fromCssColorString(color.line),
-                            outlineWidth: 2,
-                            material: Cesium.Color.fromCssColorString(color.body),
-                        },
-                    });
-                    this.monitorModels.push(entity);
-                }
+                let lng = curPosition.lng;
+                let lat = curPosition.lat;
+                let name = curPosition.name;
+                let color = curPosition.color;
+                this.createBallModel(lng, lat, name, color);
             }
+        }
+    }
+
+    createBallModel(lng, lat, name, color) {
+
+        const self = this;
+
+        function computeRadius() {
+            let cameraPosition = self.viewer.camera.positionWC;
+            let entityPosition = Cesium.Cartesian3.fromDegrees(Number(lng), Number(lat), 0);
+            let distance = Cesium.Cartesian3.distance(cameraPosition, entityPosition);
+            if (distance >= 5000) {
+                return new Cesium.Cartesian3(5, 5, 5);
+            } else {
+                let result = distance * (5 / 5000);
+                if (result <= 2) {
+                    result = 2;
+                }
+                return new Cesium.Cartesian3(result, result, result);
+            }
+        }
+
+        for (let j = 0; j < 5; j++) {
+            let height = 12 * j;
+            let entity = this.viewer.entities.add({
+                name: name,
+                show: false,
+                position: Cesium.Cartesian3.fromDegrees(Number(lng), Number(lat), height),
+                ellipsoid: {
+                    radii: new Cesium.CallbackProperty(computeRadius, false),
+                    outline: true,
+                    outlineColor: Cesium.Color.fromCssColorString(color.line),
+                    outlineWidth: 2,
+                    material: Cesium.Color.fromCssColorString(color.body),
+                },
+            });
+            this.monitorModels.push(entity);
         }
     }
 
