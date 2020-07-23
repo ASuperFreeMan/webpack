@@ -111,7 +111,10 @@ export class MapControls {
 
 		this.init();
 
+		// 关闭抗锯齿
 		this.viewer.scene.fxaa = false;
+		this.viewer.scene.postProcessStages.fxaa.enabled = false;
+
 		this.viewer.scene.globe.maximumScreenSpaceError = 1.2;//这个越小，越早切换高图层
 
 		//隐藏版权信息
@@ -312,6 +315,86 @@ export class MapControls {
 		// this.addDirectionalLight();
 	}
 
+	updateBloom() {
+		var viewModel = {
+			show: true,
+			glowOnly: false,
+			contrast: 128,
+			brightness: -0.3,
+			delta: 1.0,
+			sigma: 3.78,
+			stepSize: 5.0,
+		};
+
+		Cesium.knockout.track(viewModel);
+		var toolbar = document.getElementById("toolbar");
+		Cesium.knockout.applyBindings(viewModel, toolbar);
+		for (var name in viewModel) {
+			if (viewModel.hasOwnProperty(name)) {
+				Cesium.knockout
+					.getObservable(viewModel, name)
+					.subscribe(updatePostProcess);
+			}
+		}
+
+
+		const self = this;
+		function updatePostProcess() {
+			var bloom = self.viewer.scene.postProcessStages.bloom;
+			bloom.enabled = Boolean(viewModel.show);
+			bloom.uniforms.glowOnly = Boolean(viewModel.glowOnly);
+			bloom.uniforms.contrast = Number(viewModel.contrast);
+			bloom.uniforms.brightness = Number(viewModel.brightness);
+			bloom.uniforms.delta = Number(viewModel.delta);
+			bloom.uniforms.sigma = Number(viewModel.sigma);
+			bloom.uniforms.stepSize = Number(viewModel.stepSize);
+		}
+
+		updatePostProcess();
+	}
+
+	updateAmbient() {
+		var viewModel = {
+			show: true,
+			ambientOcclusionOnly: false,
+			intensity: 3.0,
+			bias: 0.1,
+			lengthCap: 0.03,
+			stepSize: 1.0,
+			blurStepSize: 0.86,
+		};
+
+		Cesium.knockout.track(viewModel);
+		var toolbar = document.getElementById("toolbar");
+		Cesium.knockout.applyBindings(viewModel, toolbar);
+		for (var name in viewModel) {
+			if (viewModel.hasOwnProperty(name)) {
+				Cesium.knockout
+					.getObservable(viewModel, name)
+					.subscribe(updatePostProcess);
+			}
+		}
+
+		const self = this;
+		function updatePostProcess() {
+			var ambientOcclusion =
+				self.viewer.scene.postProcessStages.ambientOcclusion;
+			ambientOcclusion.enabled =
+				Boolean(viewModel.show) || Boolean(viewModel.ambientOcclusionOnly);
+			ambientOcclusion.uniforms.ambientOcclusionOnly = Boolean(
+				viewModel.ambientOcclusionOnly
+			);
+			ambientOcclusion.uniforms.intensity = Number(viewModel.intensity);
+			ambientOcclusion.uniforms.bias = Number(viewModel.bias);
+			ambientOcclusion.uniforms.lengthCap = Number(viewModel.lengthCap);
+			ambientOcclusion.uniforms.stepSize = Number(viewModel.stepSize);
+			ambientOcclusion.uniforms.blurStepSize = Number(
+				viewModel.blurStepSize
+			);
+		}
+		updatePostProcess();
+	}
+
 	// 销毁配置
 	destroy() {
 
@@ -418,7 +501,7 @@ export class MapControls {
 		// 相机看点的角度，如果大于0那么则是从地底往上看，所以要为负值
 		let pitch = Cesium.Math.toRadians(-35);
 		// 给定飞行一周所需时间，比如10s, 那么每秒转动度数
-		if (point) {
+		if (point && point.lng && point.lat) {
 			options.lng = Number(point.lng);
 			options.lat = Number(point.lat);
 			pitch = Cesium.Math.toRadians(-40);

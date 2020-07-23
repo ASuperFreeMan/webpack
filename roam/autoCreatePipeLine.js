@@ -41,10 +41,13 @@ export class AutoCreatePipeLine {
         this.x = x;
         this.z = z;
         this.id = id;
+
+        this.pipeNetworkConfig = new PipeNetworkConfig(urls.serverUrl);
+
         this.init();
         this.hideRoad = new HideRoad(this.modelHide, this.textureTool, this.transparent);
         this.trajectoryFreeroam = new TrajectoryFreeroam(this.roam, this.pick);
-        this.showInformationBox = new ShowInformationBox();
+        this.showInformationBox = new ShowInformationBox(this.pipeNetworkConfig);
         this.showInformationBox.setRemoveEvents(function () {
             self.trajectoryFreeroam.removeEvents();
         });
@@ -165,7 +168,7 @@ export class AutoCreatePipeLine {
     getPipelinesData() {
         const self = this;
         $.ajax({
-            url: PipeNetworkConfig.GET_PIPES_DATA_URL,
+            url: self.pipeNetworkConfig.GET_PIPES_DATA_URL,
             type: "GET",
             success: function (d) {
                 self.pipelines = d.data
@@ -180,7 +183,7 @@ export class AutoCreatePipeLine {
     getWellsData() {
         const self = this;
         $.ajax({
-            url: PipeNetworkConfig.GET_WELLS_DATA_URL,
+            url: self.pipeNetworkConfig.GET_WELLS_DATA_URL,
             type: "GET",
             success: function (d) {
                 self.wells = d.data

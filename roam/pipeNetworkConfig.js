@@ -1,5 +1,17 @@
 export class PipeNetworkConfig {
 
+    constructor(serverUrl) {
+        this.url = serverUrl;
+
+        //获取（管道/管井）生成数据地址192.168.80.169     192.168.16.231:8099
+        this.GET_PIPES_DATA_URL = this.url + "/api/v1/article/monitor/pipelineModeling";
+        this.GET_WELLS_DATA_URL = this.url + "/api/v1/article/monitor/wellPointModeling";
+
+        //获取（管道/管井）展示数据地址
+        this.GET_PIPE_PRESENT_DATA_URL = this.url + "/api/v1/article/monitor/pipelineId";
+        this.GET_WELL_PRESENT_DATA_URL = this.url + "/api/v1/article/monitor/wellPointId";
+    }
+
     //过渡相机
     static TRANSITION_CAMERA = {
         position: { x: -1692.6964275679534, y: 30, z: 117.58047372102737 },
@@ -22,14 +34,6 @@ export class PipeNetworkConfig {
 
     };
 
-    static url = 'http://192.168.0.99:8099';
-    //获取（管道/管井）生成数据地址192.168.80.169     192.168.16.231:8099
-    static GET_PIPES_DATA_URL = this.url + "/api/v1/article/monitor/pipelineModeling";
-    static GET_WELLS_DATA_URL = this.url + "/api/v1/article/monitor/wellPointModeling";
-
-    //获取（管道/管井）展示数据地址
-    static GET_PIPE_PRESENT_DATA_URL = this.url + "/api/v1/article/monitor/pipelineId";
-    static GET_WELL_PRESENT_DATA_URL = this.url + "/api/v1/article/monitor/wellPointId";
 
     static PROGRESS_BAR_CLASS_NAME = ".loading";
     static PROGRESS_BAR_WIDTH_MAX = '800px'

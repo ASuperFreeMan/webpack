@@ -4,8 +4,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const config = {
     mode: 'production',
     entry: {
-        map: ['./map/mapControls.js']
-        // autoCreatePipeLine: ['./roam/autoCreatePipeLine.js']
+        // map: ['./map/mapControls.js']
+        autoCreatePipeLine: ['./roam/autoCreatePipeLine.js']
         // quarters: ['./quarters/freeRoam.js']
         // station: ['./roam/station.js']
     },
@@ -14,8 +14,8 @@ const config = {
     // 失败之后中断并抛出错误
     bail: true,
     output: {
-        filename: 'MapControls.min.js',
-        // filename: 'AutoCreatePipeLine.min.js',
+        // filename: 'MapControls.min.js',
+        filename: 'AutoCreatePipeLine.min.js',
         // filename: 'FreeRoam.min.js',
         // filename: 'station.min.js',
         path: path.resolve(__dirname, 'dist'), // 把一个路径或路径片段的序列解析为一个绝对路径

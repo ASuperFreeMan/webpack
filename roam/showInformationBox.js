@@ -1,8 +1,9 @@
 import { PipeNetworkConfig } from './pipeNetworkConfig';
 export class ShowInformationBox {
-    constructor() {
+    constructor(pipeNetworkConfig) {
         this.removeEvents;
         this.addEvents;
+        this.pipeNetworkConfig = pipeNetworkConfig;
     }
 
     setRemoveEvents(callback) {
@@ -25,7 +26,7 @@ export class ShowInformationBox {
         const self = this;
         if (modelName == PipeNetworkConfig.PIPE_MODEL_PREFIX) {
             $.ajax({
-                url: PipeNetworkConfig.GET_PIPE_PRESENT_DATA_URL,
+                url: this.pipeNetworkConfig.GET_PIPE_PRESENT_DATA_URL,
                 data: {
                     pipelineId: nodeName
                 },
@@ -46,7 +47,7 @@ export class ShowInformationBox {
         }
         if (modelName == PipeNetworkConfig.WELL_MODEL_PREFIX) {
             $.ajax({
-                url: PipeNetworkConfig.GET_WELL_PRESENT_DATA_URL,
+                url: this.pipeNetworkConfig.GET_WELL_PRESENT_DATA_URL,
                 data: {
                     wellPointId: nodeName
                 },
